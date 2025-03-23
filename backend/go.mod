@@ -4,7 +4,6 @@ go 1.24.1
 
 require (
 	github.com/gin-gonic/gin v1.10.0
-	github.com/shjk0531/moye-be v0.0.0-20250320162000-f51ee64c5a48
 	github.com/spf13/viper v1.20.0
 	go.mongodb.org/mongo-driver v1.17.3
 	gorm.io/driver/postgres v1.5.11
