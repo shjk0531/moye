@@ -1,3 +1,4 @@
+// internal/global/routes/routes.go
 package routes
 
 import (
@@ -8,13 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 
 	// PostgreSQL: User 도메인
-	userContainer "github.com/shjk0531/moye/backend/internal/domain/user/controller"
-	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/repository"
-	userService "github.com/shjk0531/moye/backend/internal/domain/user/service"
+	userContainer "github.com/shjk0531/moye/backend/internal/domain/user/user/controller"
+	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/user/repository"
+	userService "github.com/shjk0531/moye/backend/internal/domain/user/user/service"
 
-	// MongoDB: Message 도메인
-	messageContainer "github.com/shjk0531/moye/backend/internal/domain/message/controller"
-	messageRepository "github.com/shjk0531/moye/backend/internal/domain/message/repository"
+	// MongoDB: chat 도메인
+	chatContainer "github.com/shjk0531/moye/backend/internal/domain/chat/message/controller"
+	chatRepository "github.com/shjk0531/moye/backend/internal/domain/chat/message/repository"
 
 	"github.com/shjk0531/moye/backend/internal/global/config"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -38,7 +39,7 @@ func RegisterRoutes(router *gin.Engine) {
 		panic("PostgreSQL 연결 실패: " + err.Error())
 	}
 
-	api := router.Group("/api/v1")
+	api := router.Group("/api")
 
 	// User 도메인 라우트 등록 (PostgreSQL 사용)
 	userRepo := userRepository.NewRepository(pgDB)
@@ -58,8 +59,8 @@ func RegisterRoutes(router *gin.Engine) {
 		panic("MongoDB ping 실패: " + err.Error())
 	}
 
-	// Message 도메인 라우트 등록 (MongoDB 사용)
-	msgRepo := messageRepository.NewRepository(mongoClient, config.Config.MongoDB)
-	msgCtrl := messageContainer.NewController(msgRepo)
+	// chat 도메인 라우트 등록 (MongoDB 사용)
+	msgRepo := chatRepository.NewRepository(mongoClient, config.Config.MongoDB)
+	msgCtrl := chatContainer.NewController(msgRepo)
 	msgCtrl.RegisterRoutes(api)
 }
