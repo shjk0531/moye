@@ -13,7 +13,7 @@ import (
 	wsmsg "github.com/shjk0531/moye/backend/internal/global/websocket/message"
 )
 
-// Controller 는 알림 관련 HTTP 핸들러를 제공합니다.
+// Controller 는 알림 관련 HTTP 핸들러를 제공
 type Controller struct {
 	Service *service.Service
 	Hub     *hub.Hub
@@ -21,7 +21,7 @@ type Controller struct {
 	Store map[uuid.UUID][]model.Notification
 }
 
-// NewController 는 Controller 인스턴스를 생성합니다.
+// NewController 는 Controller 인스턴스를 생성
 func NewController(svc *service.Service, h *hub.Hub) *Controller {
 	return &Controller{
 		Service: svc,
@@ -30,7 +30,7 @@ func NewController(svc *service.Service, h *hub.Hub) *Controller {
 	}
 }
 
-// PollNotifications 은 사용자가 폴링 방식으로 알림을 조회할 수 있도록 합니다.
+// PollNotifications 은 사용자가 폴링 방식으로 알림을 조회
 func (c *Controller) PollNotifications(ctx *gin.Context) {
 	userIDStr := ctx.Query("user_id")
 	if userIDStr == "" {
@@ -49,7 +49,7 @@ func (c *Controller) PollNotifications(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, notifs)
 }
 
-// SimulateNotification 은 테스트용 API로 알림을 생성하고 전송합니다.
+// SimulateNotification 은 테스트용 API로 알림을 생성하고 전송
 // (예: 다른 유저가 스터디 리더에게 지원 요청을 보냈을 때 알림)
 func (c *Controller) SimulateNotification(ctx *gin.Context) {
 	userIDStr := ctx.Query("user_id")

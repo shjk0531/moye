@@ -6,7 +6,7 @@ import (
 	"github.com/kamva/mgm/v3"
 )
 
-// Message 모델은 채팅 메시지를 저장합니다.
+// Message 모델은 채팅 메시지를 저장
 type Message struct {
 	mgm.DefaultModel `bson:",inline"`
 

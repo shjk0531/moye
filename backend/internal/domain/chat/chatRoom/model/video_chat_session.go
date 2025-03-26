@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// VideoChatSession 모델은 화상채팅 세션 정보를 저장합니다.
+// VideoChatSession 모델은 화상채팅 세션 정보를 저장
 type VideoChatSession struct {
 	ID         uint      `gorm:"primaryKey;autoIncrement" json:"id"` // session_id
 	ChatRoomID uint      `gorm:"not null" json:"chatroom_id"`        // 채팅방 외래키 (화상채팅 전용 또는 그룹채팅 연계)
