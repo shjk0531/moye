@@ -1,18 +1,19 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { AuthPage } from "@/pages";
-import { AppLayout } from "@/shared/layout";
+import { createRouter, createWebHistory } from 'vue-router';
+import { AuthPage, MainPage } from '@/pages';
+import AppLayout from '@/shared/layout/components/AppLayout.vue';
 
 const routes = [
-  {
-    path: "/",
-    component: AppLayout,
-    children: [{ path: "/login", component: AuthPage }],
-  },
-  // HomePage는 필요에 따라 추가하세요.
-  // { path: '/', component: () => import('@/pages/auth') },
+    {
+        path: '/',
+        component: AppLayout,
+        children: [
+            { path: '', component: MainPage },
+            { path: '/login', component: AuthPage },
+        ],
+    },
 ];
 
 export const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 });

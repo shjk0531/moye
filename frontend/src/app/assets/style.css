@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+@import 'tailwindcss-primeui';
+
+:root {
+    --custom-app-top-bar-height: 1rem;
+    --custom-app-bottom-pannel-height: 3rem;
+    --custom-side-bar-left-width: 250px;
+    --custom-chat-room-list-width: 300px;
+    --custom-study-list-width: 300px;
+
+    --study-list-sutdy-icon-size: 1.5rem;
+}
+
+.discord-app {
+    display: flex;
+    height: 100vh;
+}
