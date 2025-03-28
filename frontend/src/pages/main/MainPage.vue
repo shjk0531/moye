@@ -1,36 +1,37 @@
 <template>
-    <div class="chat-window">
-        <div class="chat-header">
-            <h3># general</h3>
-        </div>
-        <div class="chat-messages">
-            <!-- ScrollPanel 대신에 채팅 메시지 영역에 스크롤을 적용하거나, 
+    <div class="bg-gray-850 text-gray-50">
+        <h3># general</h3>
+    </div>
+    <div class="chat-messages bg-gray-850">
+        <!-- ScrollPanel 대신에 채팅 메시지 영역에 스크롤을 적용하거나, 
                  ScrollPanel 내부에 100% 높이 지정 -->
-            <ScrollPanel style="height: 100%">
-                <div
-                    v-for="message in messages"
-                    :key="message.id"
-                    class="message-item"
-                >
-                    <img :src="message.avatar" class="avatar" alt="avatar" />
-                    <div class="message-content">
-                        <div class="message-header">
-                            <span class="username">{{ message.username }}</span>
-                            <span class="timestamp">{{
-                                message.timestamp
-                            }}</span>
-                        </div>
-                        <div class="message-body">
-                            <p>{{ message.text }}</p>
-                        </div>
+        <ScrollPanel style="height: 100%">
+            <div
+                v-for="message in messages"
+                :key="message.id"
+                class="message-item"
+            >
+                <img :src="message.avatar" class="avatar" alt="avatar" />
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="username text-gray-50 text-md">
+                            {{ message.username }}</span
+                        >
+                        <span class="timestamp text-gray-300 text-sm">
+                            {{ message.timestamp }}</span
+                        >
+                    </div>
+                    <div
+                        class="flex message-body text-gray-50 text-md justify-start"
+                    >
+                        <p>{{ message.text }}</p>
                     </div>
                 </div>
-            </ScrollPanel>
-        </div>
-        <div class="chat-input">
-            <MessageInput @sendMessage="handleSendMessage" />
-        </div>
+            </div>
+        </ScrollPanel>
     </div>
+
+    <MessageInput @sendMessage="handleSendMessage" />
 </template>
 
 <script>
@@ -234,7 +235,9 @@ export default {
         handleSendMessage(messageText) {
             const newMessage = {
                 id: this.messages.length + 1,
-                avatar: 'https://via.placeholder.com/40',
+                avatar:
+                    'https://picsum.photos/200/300?random=' +
+                    (this.messages.length + 1),
                 username: 'You',
                 timestamp: new Date().toLocaleTimeString(),
                 text: messageText,
@@ -250,28 +253,18 @@ export default {
 .chat-window {
     height: 100vh;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-template-columns: subgrid;
     background-color: #36393f;
     position: relative;
-}
-
-.chat-header {
-    padding: 15px;
-    background-color: #2f3136;
-    border-bottom: 1px solid #202225;
-}
-
-.chat-header h3 {
-    margin: 0;
-    font-size: 16px;
 }
 
 /* 채팅 메시지 영역은 flex로 남은 공간을 채우고, 스크롤이 적용됨 */
 .chat-messages {
     flex: 1;
-    padding: 15px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* ScrollPanel 내부에 100% 높이를 부여하여 부모의 높이를 상속받도록 함 */
@@ -316,32 +309,5 @@ export default {
 
 .message-content {
     max-width: 80%;
-}
-
-.message-header {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    margin-bottom: 5px;
-}
-
-.username {
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.timestamp {
-    color: #72767d;
-    font-size: 12px;
-}
-
-.message-body {
-    font-size: 14px;
-}
-
-.chat-input {
-    padding: 10px;
-    border-top: 1px solid #202225;
-    background-color: #40444b;
 }
 </style>

@@ -1,11 +1,36 @@
 @import 'tailwindcss';
 @import 'tailwindcss-primeui';
 
+@theme {
+    /* 하위 구간: gray-950 → gray-850 (감마 1.405 적용) */
+    --color-gray-950: oklch(18.31% 0.004 285.99);
+    --color-gray-900: oklch(19.68% 0.0054 285.9);
+    --color-gray-850: oklch(21.95% 0.0077 285.74);
+
+    /* 상위 구간: gray-850 → gray-50 (감마 1.405 적용) */
+    --color-gray-800: oklch(23.5% 0.00755 285.74);
+    --color-gray-750: oklch(26.06% 0.00729 285.73);
+    --color-gray-700: oklch(29.24% 0.00696 285.72);
+    --color-gray-650: oklch(32.79% 0.0066 285.71);
+    --color-gray-600: oklch(36.74% 0.0062 285.69);
+    --color-gray-550: oklch(41.12% 0.00576 285.68);
+    --color-gray-500: oklch(45.73% 0.00529 285.66);
+    --color-gray-450: oklch(50.63% 0.00479 285.65);
+    --color-gray-400: oklch(55.9% 0.00427 285.63);
+    --color-gray-350: oklch(61.31% 0.00371 285.62);
+    --color-gray-300: oklch(66.75% 0.00316 285.6);
+    --color-gray-250: oklch(72.72% 0.00256 285.58);
+    --color-gray-200: oklch(78.73% 0.00195 285.56);
+    --color-gray-150: oklch(84.98% 0.00132 285.54);
+    --color-gray-100: oklch(91.4% 0.00067 285.52);
+    --color-gray-50: oklch(98% 0 285.5);
+}
+
 :root {
     --custom-app-top-bar-height: 1rem;
     --custom-app-bottom-pannel-height: 3rem;
     --custom-side-bar-left-width: 250px;
-    --custom-chat-room-list-width: 300px;
+    --custom-chat-room-list-width: 15rem;
     --custom-study-list-width: 300px;
 
     --study-list-sutdy-icon-size: 1.5rem;

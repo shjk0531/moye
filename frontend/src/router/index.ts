@@ -7,7 +7,7 @@ const routes = [
         path: '/',
         component: AppLayout,
         children: [
-            { path: '', component: MainPage },
+            { path: '/', component: MainPage },
             { path: '/login', component: AuthPage },
         ],
     },

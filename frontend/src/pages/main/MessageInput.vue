@@ -1,12 +1,12 @@
 <template>
-    <div class="message-input-container">
+    <div class="flex border-none rounded-lg p-2 gap-2 mr-2 h-12">
         <InputText
             v-model="message"
             autoResize
             placeholder="Message #general"
-            class="message-input"
+            class="!bg-gray-800 !border-none !text-white !focus:ring-0 !focus:shadow-none !focus:border-none !p-3 !flex-1"
+            @keyup.enter="send"
         />
-        <Button label="Send" @click="send" class="send-button" />
     </div>
 </template>
 
@@ -29,27 +29,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.message-input-container {
-    display: flex;
-    align-items: center;
-}
-
-.message-input {
-    flex: 1;
-    margin-right: 10px;
-    background-color: #40444b;
-    border: none;
-    color: #dcddde;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.send-button {
-    background-color: #7289da;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-}
-</style>
+<style scoped></style>
