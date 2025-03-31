@@ -10,35 +10,7 @@
         </div>
 
         <!-- 사이드바 -->
-        <div class="sideBar">
-            <div class="sideList">
-                <nav class="iconList">
-                    <div class="titleIcon">
-                        <li class="w-8 h-8 bg-gray-400 rounded-full">
-                            <p>타이틀아이콘</p>
-                        </li>
-                    </div>
-                    <ul class="studyList">
-                        <li class="nav-item">
-                            <p>스터디리스트</p>
-                        </li>
-                    </ul>
-                </nav>
-                <div
-                    class="studyChats border-l-1 border-t-1 border-gray-700 rounded-tl-lg"
-                >
-                    <div class="notice">
-                        <p class="font-bold p-2 text-gray-50">공지사항</p>
-                    </div>
-                    <div class="chatRoomList">
-                        <p>채팅방리스트</p>
-                    </div>
-                </div>
-            </div>
-            <div class="userPannel">
-                <p>유저패널</p>
-            </div>
-        </div>
+        <Sidebar />
 
         <!-- 본문 -->
         <div class="page">
@@ -107,8 +79,13 @@
 </template>
 
 <script>
+import { Sidebar } from '@/widgets/sidebar';
+
 export default {
     name: 'AppLayout',
+    components: {
+        Sidebar,
+    },
 };
 </script>
 
@@ -118,7 +95,7 @@ export default {
     grid-template-columns:
         [start] min-content
         [studiesEnd] min-content
-        [chatRoomsEnd] 1fr
+        [channelEnd] 1fr
         [end];
     grid-template-rows:
         [top]
@@ -134,7 +111,7 @@ export default {
         'titleBar     titleBar      titleBar'
         'titleIcon    notice        notice'
         'studyList    chatRoomList  page'
-        'userPannel   userPannel    page';
+        'userPanel   userPanel    page';
     position: relative;
     overflow: hidden;
     height: 100vh;
@@ -145,11 +122,11 @@ export default {
     grid-area: titleBar;
 }
 
-.sideBar {
+.sidebar {
     display: grid;
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
-    grid-column: start / chatRoomsEnd;
+    grid-column: start / channelEnd;
     grid-row: titleBarEnd / end;
 }
 
@@ -157,7 +134,7 @@ export default {
     display: grid;
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
-    grid-column: start / chatRoomsEnd;
+    grid-column: start / channelEnd;
     grid-row: titleBarEnd / contentEnd;
 }
 
@@ -173,7 +150,7 @@ export default {
     display: grid;
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
-    grid-column: studiesEnd / chatRoomsEnd;
+    grid-column: studiesEnd / channelEnd;
     grid-row: titleBarEnd / contentEnd;
 
     .chatRoomList {
@@ -186,23 +163,11 @@ export default {
     display: grid;
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
-    grid-column: chatRoomsEnd / end;
+    grid-column: channelEnd / end;
     grid-row: titleBarEnd / end;
 }
 
 .notice {
     grid-area: notice;
-}
-.userPannel {
-    grid-area: userPannel;
-}
-
-.titleIcon {
-    grid-area: titleIcon;
-}
-
-.studyList {
-    grid-area: studyList;
-    // width: var(--custom-study-list-width);
 }
 </style>
