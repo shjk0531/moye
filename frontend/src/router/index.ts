@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { AuthPage, MainPage } from '@/pages';
+import { AuthPage, MainPage, ChatPage } from '@/pages';
 import AppLayout from '@/shared/layout/components/AppLayout.vue';
 
 const routes = [
@@ -7,8 +7,10 @@ const routes = [
         path: '/',
         component: AppLayout,
         children: [
-            { path: '/', component: MainPage },
+            { path: '/', component: ChatPage },
+            { path: '/me', component: MainPage },
             { path: '/login', component: AuthPage },
+            { path: '/study/:studyId/:chennalId', component: ChatPage },
         ],
     },
 ];

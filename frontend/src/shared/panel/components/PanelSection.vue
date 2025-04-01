@@ -8,8 +8,8 @@
                 <span class="ml-1">{{ label }}</span>
                 <span class="items-center justify-center flex">
                     <i
-                        class="pi pi-angle-up transition-transform duration-300 text-sm ml-1"
-                        :class="{ 'rotate-180': !expanded }"
+                        class="pi pi-angle-down transition-transform duration-300 text-sm ml-1"
+                        :class="{ 'rotate--90': !expanded }"
                     ></i>
                 </span>
             </div>
@@ -22,11 +22,17 @@
                     :key="item.id"
                     :item="item"
                     :isActive="item.id === activeChannelId"
+                    @click.native="handleItemClick(item)"
                 />
             </div>
         </transition>
+        <!-- 그룹이 닫혔을 때, 현재 활성 채널만 표시 -->
         <div v-if="!expanded && activeItem">
-            <PanelItem :item="activeItem" :isActive="true" />
+            <PanelItem
+                :item="activeItem"
+                :isActive="true"
+                @click.native="handleItemClick(activeItem)"
+            />
         </div>
     </div>
 </template>
@@ -50,7 +56,7 @@ export default {
         },
         defaultExpanded: {
             type: Boolean,
-            default: false,
+            default: true, // 기본값 true
         },
         // 현재 사용자가 들어가 있는 채널의 id
         activeChannelId: {
@@ -80,8 +86,16 @@ export default {
             this.expanded = !this.expanded;
             this.$emit('toggle', this.expanded);
         },
+        handleItemClick(item) {
+            // 클릭된 채널 정보를 상위 컴포넌트로 emit
+            this.$emit('channel-click', item);
+        },
     },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.rotate--90 {
+    transform: rotate(-90deg);
+}
+</style>

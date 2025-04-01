@@ -267,31 +267,26 @@ export default {
     overflow-x: hidden;
 }
 
-/* ScrollPanel 내부에 100% 높이를 부여하여 부모의 높이를 상속받도록 함 */
-.chat-messages ::v-deep .p-scrollpanel-content {
+.chat-messages :deep(.p-scrollpanel-content) {
     height: 100%;
 }
 
-/* ScrollPanel 기본 스타일 오버라이드 */
-.chat-messages ::v-deep .p-scrollpanel-bar {
-    background-color: #ccc; /* 연한 회색 배경 */
+.chat-messages :deep(.p-scrollpanel-bar) {
+    background-color: var(--custom-scrollbar-color);
     border-radius: 4px;
     transition: background-color 0.3s ease;
 }
 
-/* 마우스 오버 시 조금 더 진한 회색 */
-.chat-messages ::v-deep .p-scrollpanel-bar:hover {
-    background-color: #aaa;
+.chat-messages :deep(.p-scrollpanel-bar:hover) {
+    background-color: var(--custom-scrollbar-color-hover);
 }
 
-/* 수직 스크롤바(p-scrollpanel-bar-y)의 너비를 고정 */
-.chat-messages ::v-deep .p-scrollpanel-bar-y {
-    width: 8px !important;
+.chat-messages :deep(.p-scrollpanel-bar:active) {
+    background-color: var(--custom-scrollbar-color-active);
 }
 
-/* 수평 스크롤바(p-scrollpanel-bar-x)의 높이를 고정 */
-.chat-messages ::v-deep .p-scrollpanel-bar-x {
-    height: 8px !important;
+.chat-messages :deep(.p-scrollpanel-bar-y) {
+    width: calc(var(--spacing) * 2) !important;
 }
 
 /* 메시지 항목 스타일 */
