@@ -1,8 +1,7 @@
 <template>
     <div class="chat-page bg-gray-800">
-        <div class="bg-gray-850 text-gray-50">
-            <h3># general</h3>
-        </div>
+        <Notice />
+
         <div class="chat-messages">
             <ScrollPanel style="height: 100%">
                 <MessageItem
@@ -21,12 +20,14 @@
 
 <script>
 import { MessageInput, MessageItem } from '@/features/chat';
+import { Notice } from '@/widgets/notice';
 
 export default {
     name: 'ChatPage',
     components: {
         MessageInput,
         MessageItem,
+        Notice,
     },
     data() {
         return {
