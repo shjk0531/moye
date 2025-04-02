@@ -6,7 +6,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import PanelMenu from 'primevue/panelmenu';
 import ScrollPanel from 'primevue/scrollpanel';
-import 'primeicons/primeicons.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 import './assets/style.css';
 

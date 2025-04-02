@@ -8,7 +8,7 @@
                 <span class="ml-1">{{ label }}</span>
                 <span class="items-center justify-center flex">
                     <i
-                        class="pi pi-angle-down transition-transform duration-300 text-sm ml-1"
+                        class="mdi mdi-chevron-down transition-transform duration-300 text-md ml-1 font-bold"
                         :class="{ 'rotate--90': !expanded }"
                     ></i>
                 </span>

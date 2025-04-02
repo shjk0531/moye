@@ -20,24 +20,28 @@
         </div>
 
         <!-- 액션 버튼: 마이크, 헤드셋, 설정 -->
-        <div class="user-actions flex space-x-2">
+        <div class="user-actions flex space-x-0.5">
             <button
                 @click="toggleMic"
                 class="action-button p-1 hover:bg-gray-700 rounded"
             >
-                <i :class="micClass" class="pi pi-microphone"></i>
+                <!-- Font Awesome 아이콘 사용 -->
+                <!-- 마이크 아이콘: 상태에 따라 아이콘, 색상 변경 -->
+                <i v-if="user.micOn" class="mdi mdi-microphone"></i>
+                <i v-else class="mdi mdi-microphone-off text-red-500"></i>
             </button>
             <button
                 @click="toggleHeadset"
                 class="action-button p-1 hover:bg-gray-700 rounded"
             >
-                <i :class="headsetClass" class="pi pi-headphones"></i>
+                <i v-if="user.headsetOn" class="mdi mdi-headphones"></i>
+                <i v-else class="mdi mdi-headphones-off text-red-500"></i>
             </button>
             <button
                 @click="openSettings"
                 class="action-button p-1 hover:bg-gray-700 rounded"
             >
-                <i class="pi pi-cog"></i>
+                <i class="mdi mdi-cog"></i>
             </button>
         </div>
     </div>

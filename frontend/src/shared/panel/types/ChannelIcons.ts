@@ -1,9 +1,9 @@
 export const channelIcons = {
-    bell: 'pi pi-bell',
-    newspaper: 'pi pi-newspaper',
-    comments: 'pi pi-comments',
-    comment: 'pi pi-comment',
-    microphone: 'pi pi-microphone',
-    gamepad: 'pi pi-gamepad',
+    bell: 'mdi mdi-bell',
+    newspaper: 'mdi mdi-newspaper-variant-multiple-outline',
+    comments: 'mdi mdi-comments',
+    comment: 'mdi mdi-comment',
+    microphone: 'mdi mdi-microphone',
+    gamepad: 'mdi mdi-gamepad',
     // 필요시 추가 매핑
 };
