@@ -10,7 +10,14 @@ const routes = [
             { path: '/', component: ChatPage },
             { path: '/me', component: MainPage },
             { path: '/login', component: AuthPage },
-            { path: '/study/:studyId/:chennalId', component: ChatPage },
+            {
+                path: '/study/:studyId/channel/:channelId?',
+                component: ChatPage,
+            },
+            {
+                path: '/study/:studyId',
+                component: ChatPage,
+            },
         ],
     },
 ];

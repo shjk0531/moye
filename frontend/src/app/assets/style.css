@@ -38,6 +38,8 @@
     --custom-scrollbar-color: oklch(66.75% 0.00316 285.6);
     --custom-scrollbar-color-hover: oklch(78.73% 0.00195 285.56);
     --custom-scrollbar-color-active: oklch(55.9% 0.00427 285.63);
+
+    --custom-bottom-pannel-height: calc(var(--spacing) * 14);
 }
 
 .discord-app {

@@ -74,24 +74,13 @@ export default {
             },
         },
     },
-    watch: {
-        // 채널 목록이 로드되고 아직 activeChannelId가 없다면 첫 번째 채널을 기본값으로 설정
-        mergedChannels(newVal) {
-            if (newVal.length > 0 && !this.activeChannelId) {
-                this.activeChannelId = newVal[0].id;
-                if (this.$route.params.channelId !== String(newVal[0].id)) {
-                    this.$router.replace(
-                        `/study/${this.currentStudyId}/${newVal[0].id}`,
-                    );
-                }
-            }
-        },
-    },
     methods: {
         handleChannelClick(channel) {
             // 선택한 채널을 전역 state에 업데이트 후 라우터 이동
             this.activeChannelId = channel.id;
-            this.$router.push(`/study/${this.currentStudyId}/${channel.id}`);
+            this.$router.push(
+                `/study/${this.currentStudyId}/channel/${channel.id}`,
+            );
         },
     },
     async created() {

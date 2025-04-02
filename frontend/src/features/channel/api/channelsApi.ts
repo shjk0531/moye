@@ -1,10 +1,6 @@
 // src/features/channel/api/channelsApi.ts
-// 이 파일은 채널 관련 API 호출을 처리하는 모듈입니다.
-// 실제 API 호출을 구현하는 대신 예시 데이터를 반환합니다.
-// 이 예시에서는 그룹화된 채널과 비그룹화된 채널을 가져오는 두 개의 함수를 제공합니다.
-// 이 파일은 TypeScript로 작성되었습니다.
+// 채널 관련 API 호출 모듈 (예시 데이터를 반환)
 export async function fetchChannelsGrouped() {
-    // 실제 API 호출 대신 예시 데이터를 반환합니다.
     return [
         {
             id: 1,

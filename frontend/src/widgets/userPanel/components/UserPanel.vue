@@ -1,6 +1,6 @@
 <template>
     <div
-        class="user-panel flex items-center p-2 bg-gray-750 text-white rounded-lg"
+        class="user-panel flex items-center p-2 bg-gray-750 text-white rounded-lg h-(--custom-bottom-pannel-height)"
     >
         <!-- 사용자 아이콘 -->
         <img

@@ -1,5 +1,4 @@
 <!-- src/entities/study/components/StudyIconList.vue -->
-
 <template>
     <!-- Study Icons List: 스크롤 가능한 영역으로 변경 -->
     <div class="study-list">
@@ -66,12 +65,17 @@ export default {
             this.$globalState.studyIcon = study.icon;
             // study.id를 문자열로 변환하여 사용
             const key = String(study.id);
-            // 해당 스터디에 저장된 activeChannelId가 없으면 기본값(예제에서는 11)으로 지정
-            const activeChannelId =
-                this.$globalState.activeChannelMap[key] || 11;
-            this.$globalState.activeChannelMap[key] = activeChannelId;
-            // 해당 스터디의 active 채널로 이동
-            this.$router.push(`/study/${study.id}/${activeChannelId}`);
+            // 해당 스터디에 저장된 activeChannelId가 있는지 확인
+            const activeChannelId = this.$globalState.activeChannelMap[key];
+            if (activeChannelId) {
+                // activeChannelId가 있으면 해당 채널로 이동
+                this.$router.push(
+                    `/study/${study.id}/channel/${activeChannelId}`,
+                );
+            } else {
+                // activeChannelId가 없으면 스터디의 기본 URL로 이동
+                this.$router.push(`/study/${study.id}`);
+            }
         },
         handleTitleIconClick() {
             this.$router.push('/me');

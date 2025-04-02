@@ -1,17 +1,22 @@
 <template>
-    <div class="bg-gray-850 text-gray-50">
-        <h3># general</h3>
+    <div class="chat-page bg-gray-800">
+        <div class="bg-gray-850 text-gray-50">
+            <h3># general</h3>
+        </div>
+        <div class="chat-messages">
+            <ScrollPanel style="height: 100%">
+                <MessageItem
+                    v-for="message in messages"
+                    :key="message.id"
+                    :message="message"
+                />
+            </ScrollPanel>
+        </div>
+
+        <div class="message-area pb-4 px-2">
+            <MessageInput @sendMessage="handleSendMessage" />
+        </div>
     </div>
-    <div class="chat-messages bg-gray-850">
-        <ScrollPanel style="height: 100%">
-            <MessageItem
-                v-for="message in messages"
-                :key="message.id"
-                :message="message"
-            />
-        </ScrollPanel>
-    </div>
-    <MessageInput @sendMessage="handleSendMessage" />
 </template>
 
 <script>
@@ -91,6 +96,14 @@ export default {
 </script>
 
 <style scoped>
+.chat-page {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-template-columns: subgrid;
+    grid-column: channelEnd / end;
+    grid-row: titlebarEnd / end;
+}
+
 .chat-messages {
     flex: 1;
     overflow-y: auto;
