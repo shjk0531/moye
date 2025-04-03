@@ -3,18 +3,21 @@
         <!-- 타이틀바 -->
         <TitleBar />
 
-        <!-- 사이드바 -->
-        <Sidebar />
+        <!-- 사이드바 영역: 이름이 지정된 router-view -->
+        <router-view name="sidebar">
+            <!-- fallback: 라우트에서 sidebar가 지정되지 않으면 기본 Sidebar 컴포넌트를 사용 -->
+            <Sidebar />
+        </router-view>
 
-        <!-- 공지사항 (isMemberListVisible prop 전달 및 이벤트 리스너 추가) -->
+        <!-- 공지사항 -->
         <Notice
             :isMemberListVisible="showMemberList"
             @toggle-member-list="toggleMemberList"
         />
 
-        <!-- 본문 -->
+        <!-- 본문 영역: 이름이 지정된 router-view -->
         <div class="page">
-            <router-view />
+            <router-view name="page" />
         </div>
 
         <!-- 멤버 리스트 (showMemberList 값에 따라 렌더링) -->
@@ -22,7 +25,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { StudyIconList } from '@/entities/study';
 import { Notice } from '@/widgets/notice';
 import { MemberList, Sidebar } from '@/widgets/sidebar';
