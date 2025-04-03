@@ -1,20 +1,22 @@
 <template>
     <div class="chat-page bg-gray-800">
-        <Notice />
+        <div class="main-area">
+            <div class="message-area">
+                <ScrollPanel style="height: 100%">
+                    <MessageItem
+                        v-for="message in messages"
+                        :key="message.id"
+                        :message="message"
+                    />
+                </ScrollPanel>
+            </div>
 
-        <div class="chat-messages">
-            <ScrollPanel style="height: 100%">
-                <MessageItem
-                    v-for="message in messages"
-                    :key="message.id"
-                    :message="message"
-                />
-            </ScrollPanel>
+            <div class="chat-area pb-4 px-2">
+                <MessageInput @sendMessage="handleSendMessage" />
+            </div>
         </div>
 
-        <div class="message-area pb-4 px-2">
-            <MessageInput @sendMessage="handleSendMessage" />
-        </div>
+        <div calss="member-area w-150 bg-gray-150"></div>
     </div>
 </template>
 
@@ -102,34 +104,54 @@ export default {
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
     grid-column: channelEnd / end;
-    grid-row: titlebarEnd / end;
+    grid-row: noticeEnd / end;
 }
 
-.chat-messages {
+.main-area {
+    display: grid;
+    grid-column: channelEnd / pageEnd;
+    grid-row: noticeEnd / end;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+}
+
+.message-area {
+    grid-column: channelEnd / pageEnd;
+    grid-row: noticeEnd / end;
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.chat-messages :deep(.p-scrollpanel-content) {
+.chat-area {
+    grid-column: channelEnd / pageEnd;
+    grid-row: contentEnd / end;
+}
+
+.member-area {
+    grid-column: pageEnd / end;
+    grid-row: noticeEnd / end;
+}
+
+.message-area :deep(.p-scrollpanel-content) {
     height: 100%;
 }
 
-.chat-messages :deep(.p-scrollpanel-bar) {
+.message-area :deep(.p-scrollpanel-bar) {
     background-color: var(--custom-scrollbar-color);
     border-radius: 4px;
     transition: background-color 0.3s ease;
 }
 
-.chat-messages :deep(.p-scrollpanel-bar:hover) {
+.message-area :deep(.p-scrollpanel-bar:hover) {
     background-color: var(--custom-scrollbar-color-hover);
 }
 
-.chat-messages :deep(.p-scrollpanel-bar:active) {
+.message-area :deep(.p-scrollpanel-bar:active) {
     background-color: var(--custom-scrollbar-color-active);
 }
 
-.chat-messages :deep(.p-scrollpanel-bar-y) {
+.message-area :deep(.p-scrollpanel-bar-y) {
     width: calc(var(--spacing) * 2) !important;
 }
 </style>
