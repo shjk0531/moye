@@ -7,12 +7,14 @@ import InputText from 'primevue/inputtext';
 import PanelMenu from 'primevue/panelmenu';
 import ScrollPanel from 'primevue/scrollpanel';
 import '@mdi/font/css/materialdesignicons.css';
-
+import 'es6-promise/auto';
 import './assets/style.css';
+import store from '@/store';
 
 const app = createApp(App);
 app.use(PrimeVue);
 app.use(router);
+app.use(store);
 app.component('Button', Button);
 app.component('InputText', InputText);
 app.component('PanelMenu', PanelMenu);

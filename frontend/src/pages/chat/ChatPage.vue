@@ -1,22 +1,15 @@
 <template>
-    <div class="chat-page bg-gray-800">
-        <div class="main-area">
-            <div class="message-area">
-                <ScrollPanel style="height: 100%">
-                    <MessageItem
-                        v-for="message in messages"
-                        :key="message.id"
-                        :message="message"
-                    />
-                </ScrollPanel>
-            </div>
-
-            <div class="chat-area pb-4 px-2">
-                <MessageInput @sendMessage="handleSendMessage" />
-            </div>
-        </div>
-
-        <div calss="member-area w-150 bg-gray-150"></div>
+    <div class="message-area">
+        <ScrollPanel style="height: 100%">
+            <MessageItem
+                v-for="message in messages"
+                :key="message.id"
+                :message="message"
+            />
+        </ScrollPanel>
+    </div>
+    <div class="chat-area pb-4 px-2">
+        <MessageInput @sendMessage="handleSendMessage" />
     </div>
 </template>
 
@@ -99,38 +92,17 @@ export default {
 </script>
 
 <style scoped>
-.chat-page {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-template-columns: subgrid;
-    grid-column: channelEnd / end;
-    grid-row: noticeEnd / end;
-}
-
-.main-area {
-    display: grid;
-    grid-column: channelEnd / pageEnd;
-    grid-row: noticeEnd / end;
-    grid-template-columns: subgrid;
-    grid-template-rows: subgrid;
-}
-
 .message-area {
     grid-column: channelEnd / pageEnd;
-    grid-row: noticeEnd / end;
+    grid-row: noticeEnd / contentEnd;
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 .chat-area {
-    grid-column: channelEnd / pageEnd;
-    grid-row: contentEnd / end;
-}
-
-.member-area {
     grid-column: pageEnd / end;
-    grid-row: noticeEnd / end;
+    grid-row: contentEnd / end;
 }
 
 .message-area :deep(.p-scrollpanel-content) {

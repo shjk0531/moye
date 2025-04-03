@@ -1,17 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { AuthPage, MainPage, ChatPage, LoginPage, SignupPage } from '@/pages';
 import AppLayout from '@/shared/layout/components/AppLayout.vue';
+import { ChannelListSidebar } from '@/widgets/sidebar';
 
 const routes = [
     {
         path: '/auth',
         children: [
             {
-                path: '/login',
+                path: 'login',
                 component: LoginPage,
             },
             {
-                path: '/signup',
+                path: 'signup',
                 component: SignupPage,
             },
         ],
@@ -21,20 +22,31 @@ const routes = [
         component: AppLayout,
         children: [
             {
-                path: '',
+                path: '/',
                 components: {
                     page: ChatPage,
+                    leftSide: ChannelListSidebar,
                 },
             },
-            { path: 'me', components: { page: ChatPage } },
-            { path: 'login', components: { page: AuthPage } },
+            {
+                path: '/me',
+                components: {
+                    page: ChatPage,
+
+                    leftSide: ChannelListSidebar,
+                },
+            },
+            {
+                path: '/login',
+                components: { page: AuthPage, leftSide: ChannelListSidebar },
+            },
             {
                 path: '/study/:studyId/channel/:channelId?',
-                components: { page: ChatPage },
+                components: { page: ChatPage, leftSide: ChannelListSidebar },
             },
             {
                 path: '/study/:studyId',
-                components: { page: ChatPage },
+                components: { page: ChatPage, leftSide: ChannelListSidebar },
             },
         ],
     },
@@ -46,7 +58,7 @@ const router = createRouter({
 });
 
 // Global Navigation Guard 등록
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
     // 로그인 없이 접근이 허용된 경로를 배열로 정의
     const publicPaths = ['/login', '/signup'];
 

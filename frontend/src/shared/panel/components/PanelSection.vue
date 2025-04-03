@@ -6,7 +6,7 @@
         >
             <div class="flex items-center justify-center">
                 <span class="ml-1">{{ label }}</span>
-                <span class="items-center justify-center flex">
+                <span class="flex items-center justify-center">
                     <i
                         class="mdi mdi-chevron-down transition-transform duration-300 text-md ml-1 font-bold"
                         :class="{ 'rotate--90': !expanded }"
@@ -22,7 +22,7 @@
                     :key="item.id"
                     :item="item"
                     :isActive="item.id === activeChannelId"
-                    @click.native="handleItemClick(item)"
+                    @click="handleItemClick(item)"
                 />
             </div>
         </transition>
@@ -31,67 +31,57 @@
             <PanelItem
                 :item="activeItem"
                 :isActive="true"
-                @click.native="handleItemClick(activeItem)"
+                @click="handleItemClick(activeItem)"
             />
         </div>
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, defineProps, defineEmits } from 'vue';
 import PanelItem from './PanelItem.vue';
 
-export default {
-    name: 'PanelSection',
-    components: {
-        PanelItem,
+const props = defineProps({
+    label: {
+        type: String,
+        required: true,
     },
-    props: {
-        label: {
-            type: String,
-            required: true,
-        },
-        items: {
-            type: Array,
-            default: () => [],
-        },
-        defaultExpanded: {
-            type: Boolean,
-            default: true, // 기본값 true
-        },
-        // 현재 사용자가 들어가 있는 채널의 id
-        activeChannelId: {
-            type: [Number, String],
-            default: null,
-        },
+    items: {
+        type: Array,
+        default: () => [],
     },
-    data() {
-        return {
-            expanded: this.defaultExpanded,
-        };
+    defaultExpanded: {
+        type: Boolean,
+        default: true,
     },
-    computed: {
-        // 그룹 내 채널을 order 기준으로 정렬
-        sortedItems() {
-            return [...this.items].sort(
-                (a, b) => (a.order || 0) - (b.order || 0),
-            );
-        },
-        // 그룹 내에서 active 채널을 찾습니다.
-        activeItem() {
-            return this.items.find((item) => item.id === this.activeChannelId);
-        },
+    activeChannelId: {
+        type: [Number, String],
+        default: null,
     },
-    methods: {
-        toggle() {
-            this.expanded = !this.expanded;
-            this.$emit('toggle', this.expanded);
-        },
-        handleItemClick(item) {
-            // 클릭된 채널 정보를 상위 컴포넌트로 emit
-            this.$emit('channel-click', item);
-        },
-    },
-};
+});
+
+const emits = defineEmits(['channel-click', 'toggle']);
+
+const expanded = ref(props.defaultExpanded);
+
+// 그룹 내 채널들을 order 기준으로 정렬
+const sortedItems = computed(() => {
+    return [...props.items].sort((a, b) => (a.order || 0) - (b.order || 0));
+});
+
+// 현재 그룹에서 활성 채널 찾기
+const activeItem = computed(() => {
+    return props.items.find((item) => item.id === props.activeChannelId);
+});
+
+function toggle() {
+    expanded.value = !expanded.value;
+    emits('toggle', expanded.value);
+}
+
+function handleItemClick(item) {
+    emits('channel-click', item);
+}
 </script>
 
 <style scoped>

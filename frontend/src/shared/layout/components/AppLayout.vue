@@ -3,20 +3,29 @@
         <!-- 타이틀바 -->
         <TitleBar />
 
-        <!-- 사이드바 영역: 이름이 지정된 router-view -->
-        <router-view name="sidebar">
-            <!-- fallback: 라우트에서 sidebar가 지정되지 않으면 기본 Sidebar 컴포넌트를 사용 -->
-            <Sidebar />
-        </router-view>
+        <!-- 스터디 아이콘 리스트 -->
+        <div class="icon-list">
+            <StudyListSidebar />
+        </div>
 
-        <!-- 공지사항 -->
+        <!-- 사이드바 -->
+        <div class="left-sidebar">
+            <router-view name="leftSide" />
+        </div>
+
+        <!-- 사용자 패널 -->
+        <div class="user-panel pb-4 px-2 border-rounded">
+            <UserPanel />
+        </div>
+
+        <!-- 공지사항 (isMemberListVisible prop 전달 및 이벤트 리스너 추가) -->
         <Notice
             :isMemberListVisible="showMemberList"
             @toggle-member-list="toggleMemberList"
         />
 
-        <!-- 본문 영역: 이름이 지정된 router-view -->
-        <div class="page">
+        <!-- 본문 -->
+        <div class="page bg-gray-800">
             <router-view name="page" />
         </div>
 
@@ -25,19 +34,17 @@
     </div>
 </template>
 
-<script lang="ts">
-import { StudyIconList } from '@/entities/study';
+<script>
 import { Notice } from '@/widgets/notice';
-import { MemberList, Sidebar } from '@/widgets/sidebar';
+import { MemberList, StudyListSidebar } from '@/widgets/sidebar';
 import { TitleBar } from '@/widgets/titlebar';
 import { UserPanel } from '@/widgets/userPanel';
 
 export default {
     name: 'AppLayout',
     components: {
-        Sidebar,
         TitleBar,
-        StudyIconList,
+        StudyListSidebar,
         UserPanel,
         MemberList,
         Notice,
@@ -86,11 +93,32 @@ export default {
     height: 100vh;
 }
 
+.left-sidebar {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-template-columns: subgrid;
+    grid-column: studiesEnd / channelEnd;
+    grid-row: titlebarEnd / contentEnd;
+}
+
 .page {
     display: grid;
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
     grid-column: channelEnd / pageEnd;
     grid-row: noticeEnd / end;
+}
+
+.icon-list {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-template-columns: subgrid;
+    grid-column: start / studiesEnd;
+    grid-row: titlebarEnd / contentEnd;
+    width: var(--custom-icon-list-width);
+}
+
+.user-panel {
+    grid-area: userPanel;
 }
 </style>

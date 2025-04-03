@@ -1,8 +1,12 @@
 <!-- MessageItem.vue -->
 <template>
-    <div class="message-item">
-        <img :src="message.avatar" class="avatar" alt="avatar" />
-        <div class="message-content">
+    <div class="flex mb-3 pl-4">
+        <img
+            :src="message.avatar"
+            class="w-10 h-10 rounded-full"
+            alt="avatar"
+        />
+        <div class="message-content max-w-[80%]">
             <div class="message-header">
                 <span class="username text-gray-50 text-md">
                     {{ message.username }}
@@ -30,20 +34,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.message-item {
-    display: flex;
-    margin-bottom: 15px;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    margin-right: 10px;
-}
-
-.message-content {
-    max-width: 80%;
-}
-</style>
+<style scoped></style>
