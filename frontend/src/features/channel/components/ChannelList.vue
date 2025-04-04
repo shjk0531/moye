@@ -13,11 +13,11 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import PanelList from '@/shared/panel/components/PanelList.vue';
+import { PanelList } from '@/shared/panel';
 import {
     fetchChannelsGrouped,
     fetchChannelsUngrouped,
-} from '@/features/channel/api/channelsApi';
+} from '@/features/channel';
 
 const route = useRoute();
 const router = useRouter();

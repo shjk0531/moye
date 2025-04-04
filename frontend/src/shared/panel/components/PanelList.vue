@@ -1,7 +1,7 @@
 <!-- src/shared/panel/components/PanelList.vue -->
 <template>
     <div class="w-(--custom-item-list-width) flex flex-col">
-        <div v-for="item in mergedList" :key="item.id">
+        <div v-for="(item, index) in mergedList" :key="`${item.id} - ${index}`">
             <!-- 그룹 데이터면 PanelSection 컴포넌트 사용 -->
             <PanelSection
                 v-if="item.type === 'group'"

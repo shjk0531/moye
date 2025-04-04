@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { fetchStudies } from '@/features/study/api/studiesApi';
+import { fetchStudies } from '@/features/study';
 import ScrollPanel from 'primevue/scrollpanel';
 
 export default {
@@ -60,13 +60,17 @@ export default {
     },
     methods: {
         handleStudyClick(study) {
-            // 전역 상태 업데이트
-            this.$globalState.studyName = study.name;
-            this.$globalState.studyIcon = study.icon;
+            // Vuex 스토어를 통한 전역 상태 업데이트
+            // (예: 스토어에 setStudyName, setStudyIcon mutation이 있다고 가정)
+            this.$store.commit('setStudyName', study.name);
+            this.$store.commit('setStudyIcon', study.icon);
+
             // study.id를 문자열로 변환하여 사용
             const key = String(study.id);
-            // 해당 스터디에 저장된 activeChannelId가 있는지 확인
-            const activeChannelId = this.$globalState.activeChannelMap[key];
+
+            // Vuex 스토어의 activeChannelMap에서 해당 스터디의 마지막 활성 채널 ID 조회
+            const activeChannelId = this.$store.state.activeChannelMap[key];
+
             if (activeChannelId) {
                 // activeChannelId가 있으면 해당 채널로 이동
                 this.$router.push(
@@ -79,9 +83,11 @@ export default {
         },
         handleTitleIconClick() {
             this.$router.push('/me');
-            this.$globalState.studyName = 'Moye';
-            this.$globalState.studyIcon =
-                'https://picsum.photos/200/300?random=1';
+            this.$store.commit('setStudyName', 'Moye');
+            this.$store.commit(
+                'setStudyIcon',
+                'https://picsum.photos/200/300?random=1',
+            );
         },
     },
 };
