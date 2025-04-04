@@ -1,6 +1,5 @@
 <!-- src/entities/study/components/StudyIconList.vue -->
 <template>
-    <!-- Study Icons List: 스크롤 가능한 영역으로 변경 -->
     <div class="study-list">
         <ScrollPanel style="height: 100%">
             <div class="flex flex-col items-center justify-start w-full gap-2">
@@ -10,7 +9,7 @@
                     class="relative flex items-center justify-center w-full group cursor-pointer"
                     @click="handleStudyClick(study)"
                 >
-                    <!-- indicator: 현재 스터디면 상시 활성 -->
+                    <!-- indicator: 현재 선택된 스터디면 왼쪽에 표시 -->
                     <div
                         :class="[
                             'absolute left-0 top-1/2 -translate-y-1/2 rounded transition-all duration-300',
@@ -38,15 +37,14 @@ import ScrollPanel from 'primevue/scrollpanel';
 
 export default {
     name: 'StudyIconList',
-    components: {
-        ScrollPanel,
-    },
+    components: { ScrollPanel },
     data() {
         return {
             studies: [],
         };
     },
     async created() {
+        // 스터디 데이터를 API를 통해 불러옵니다.
         this.studies = await fetchStudies();
     },
     computed: {
@@ -54,33 +52,29 @@ export default {
         currentStudyId() {
             return this.$route.params.studyId;
         },
-        isTitleActive() {
-            return this.$route.path === '/me';
-        },
     },
     methods: {
         handleStudyClick(study) {
-            // Vuex 스토어를 통한 전역 상태 업데이트
-            // (예: 스토어에 setStudyName, setStudyIcon mutation이 있다고 가정)
+            // Vuex 스토어에 스터디 관련 정보 업데이트
             this.$store.commit('setStudyName', study.name);
             this.$store.commit('setStudyIcon', study.icon);
 
             // study.id를 문자열로 변환하여 사용
             const key = String(study.id);
+            // 기본 목록 타입을 "channel"로 가정하여 activeItems에서 해당 값을 조회
+            const activeChannelId = this.$store.state.activeItems[key]?.channel;
 
-            // Vuex 스토어의 activeChannelMap에서 해당 스터디의 마지막 활성 채널 ID 조회
-            const activeChannelId = this.$store.state.activeChannelMap[key];
-
-            if (activeChannelId) {
-                // activeChannelId가 있으면 해당 채널로 이동
+            if (activeChannelId !== null && activeChannelId !== undefined) {
+                // 만약 해당 스터디에 저장된 마지막 접속 채널이 있다면, 해당 채널 URL로 이동합니다.
                 this.$router.push(
                     `/study/${study.id}/channel/${activeChannelId}`,
                 );
             } else {
-                // activeChannelId가 없으면 스터디의 기본 URL로 이동
+                // 없다면 기본 스터디 URL로 이동합니다.
                 this.$router.push(`/study/${study.id}`);
             }
         },
+        // 필요 시 타이틀 아이콘 클릭 이벤트 처리
         handleTitleIconClick() {
             this.$router.push('/me');
             this.$store.commit('setStudyName', 'Moye');

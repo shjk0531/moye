@@ -1,18 +1,17 @@
-<!-- src/features/channel/components/ChannelList.vue -->
-
+<!-- src/entities/channel/components/ChannelList.vue -->
 <template>
     <PanelList
         :groups="channelsGrouped"
         :items="channelsUngrouped"
-        :activeItemId="activeChannelId"
-        @item-click="handleChannelClick"
+        :activeItemId="activeItemId"
+        @item-click="handleItemClick"
     />
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useActiveItem } from '@/shared/composables';
 import { PanelList } from '@/shared/panel';
 import {
     fetchChannelsGrouped,
@@ -21,35 +20,25 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const store = useStore();
 
 const channelsGrouped = ref([]);
 const channelsUngrouped = ref([]);
 
+// 'channel' 리스트 타입을 지정하여 composable을 사용합니다.
+const { activeItemId, checkAndRedirect, currentStudyId } =
+    useActiveItem('channel');
+
 onMounted(async () => {
     channelsGrouped.value = await fetchChannelsGrouped();
     channelsUngrouped.value = await fetchChannelsUngrouped();
+
+    // URL에 channelId가 없으면 저장된 마지막 채널 ID로 리다이렉트합니다.
+    await checkAndRedirect(`/study/${currentStudyId.value}/channel`);
 });
 
-// URL에서 studyId 추출
-const currentStudyId = computed(() => route.params.studyId);
-
-// activeChannelId getter에서 nullish 연산자를 사용하여 0도 올바르게 인식하게 함
-const activeChannelId = computed({
-    get() {
-        return store.state.activeChannelMap[currentStudyId.value] ?? null;
-    },
-    set(val) {
-        store.commit('setActiveChannel', {
-            studyId: currentStudyId.value,
-            channelId: val,
-        });
-    },
-});
-
-// 채널 클릭 시 activeChannelId 업데이트 후 라우터 이동
-function handleChannelClick(item) {
-    activeChannelId.value = item.id;
+// 항목 클릭 시, 활성 항목을 업데이트하고 해당 채널 URL로 이동합니다.
+function handleItemClick(item) {
+    activeItemId.value = item.id;
     router.push(`/study/${currentStudyId.value}/channel/${item.id}`);
 }
 </script>
