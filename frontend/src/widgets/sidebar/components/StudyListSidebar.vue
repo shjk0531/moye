@@ -2,7 +2,7 @@ src/widgets/sidebar/components/StudyListSidebar.vue
 
 <template>
     <!-- Title Icon: '/me'로 이동 -->
-    <div class="">
+    <div class="icon-area">
         <div class="flex flex-col items-center justify-start w-full gap-2">
             <div
                 class="relative flex items-center justify-center w-full group cursor-pointer"
@@ -28,10 +28,10 @@ src/widgets/sidebar/components/StudyListSidebar.vue
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- 스터디 아이콘 리스트 -->
-    <StudyIconList />
+        <!-- 스터디 아이콘 리스트 -->
+        <StudyIconList />
+    </div>
 </template>
 
 <script lang="ts">
@@ -55,4 +55,13 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.icon-area {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    grid-column: start/studiesEnd;
+    grid-row: titlebarEnd/contentEnd;
+    width: var(--custom-study-list-width);
+}
+</style>

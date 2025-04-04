@@ -14,7 +14,7 @@
         </div>
 
         <!-- 사용자 패널 -->
-        <div class="user-panel pb-4 px-2 border-rounded">
+        <div class="user-panel">
             <UserPanel />
         </div>
 

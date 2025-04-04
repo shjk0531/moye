@@ -1,3 +1,4 @@
+<!-- src/shared/panel/components/PanelSection.vue -->
 <template>
     <div class="panel-section my-3">
         <div
@@ -14,19 +15,19 @@
                 </span>
             </div>
         </div>
-        <!-- 그룹이 열렸을 때: 모든 채널 렌더링 -->
+        <!-- 그룹이 열렸을 때: 모든 아이템 렌더링 -->
         <transition name="panel-transition">
             <div v-if="expanded" class="panel-body">
                 <PanelItem
                     v-for="item in sortedItems"
                     :key="item.id"
                     :item="item"
-                    :isActive="item.id === activeChannelId"
+                    :isActive="item.id === activeItemId"
                     @click="handleItemClick(item)"
                 />
             </div>
         </transition>
-        <!-- 그룹이 닫혔을 때, 현재 활성 채널만 표시 -->
+        <!-- 그룹이 닫혔을 때, 현재 활성 아이템만 표시 -->
         <div v-if="!expanded && activeItem">
             <PanelItem
                 :item="activeItem"
@@ -54,24 +55,24 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    activeChannelId: {
+    activeItemId: {
         type: [Number, String],
         default: null,
     },
 });
 
-const emits = defineEmits(['channel-click', 'toggle']);
+const emits = defineEmits(['item-click', 'toggle']);
 
 const expanded = ref(props.defaultExpanded);
 
-// 그룹 내 채널들을 order 기준으로 정렬
+// 그룹 내 아이템들을 order 기준으로 정렬
 const sortedItems = computed(() => {
     return [...props.items].sort((a, b) => (a.order || 0) - (b.order || 0));
 });
 
-// 현재 그룹에서 활성 채널 찾기
+// 현재 그룹에서 활성 아이템 찾기
 const activeItem = computed(() => {
-    return props.items.find((item) => item.id === props.activeChannelId);
+    return props.items.find((item) => item.id === props.activeItemId);
 });
 
 function toggle() {
@@ -80,7 +81,7 @@ function toggle() {
 }
 
 function handleItemClick(item) {
-    emits('channel-click', item);
+    emits('item-click', item);
 }
 </script>
 

@@ -1,48 +1,50 @@
 <template>
-    <div
-        class="user-panel flex items-center p-2 bg-gray-750 text-white rounded-lg h-(--custom-bottom-pannel-height)"
-    >
-        <!-- 사용자 아이콘 -->
-        <img
-            class="user-icon w-8 h-8 rounded-full mr-2"
-            :src="user.icon"
-            alt="User Icon"
-        />
+    <div class="pb-4 px-2 w-(--custom-side-bar-left-width)">
+        <div
+            class="user-panel flex items-center p-2 bg-gray-750 text-white rounded-lg h-(--custom-bottom-pannel-height)"
+        >
+            <!-- 사용자 아이콘 -->
+            <img
+                class="user-icon w-8 h-8 rounded-full mr-2"
+                :src="user.icon"
+                alt="User Icon"
+            />
 
-        <!-- 사용자 닉네임 및 태그 -->
-        <div class="user-info flex-grow flex flex-col items-start">
-            <p class="user-name font-bold m-0">
-                {{ user.nickname }}
-            </p>
-            <p class="user-discriminator text-xs text-gray-400 m-0">
-                #{{ user.discriminator }}
-            </p>
-        </div>
+            <!-- 사용자 닉네임 및 태그 -->
+            <div class="user-info flex-grow flex flex-col items-start">
+                <p class="user-name font-bold m-0">
+                    {{ user.nickname }}
+                </p>
+                <p class="user-discriminator text-xs text-gray-400 m-0">
+                    #{{ user.discriminator }}
+                </p>
+            </div>
 
-        <!-- 액션 버튼: 마이크, 헤드셋, 설정 -->
-        <div class="user-actions flex space-x-0.5">
-            <button
-                @click="toggleMic"
-                class="action-button p-1 hover:bg-gray-700 rounded"
-            >
-                <!-- Font Awesome 아이콘 사용 -->
-                <!-- 마이크 아이콘: 상태에 따라 아이콘, 색상 변경 -->
-                <i v-if="user.micOn" class="mdi mdi-microphone"></i>
-                <i v-else class="mdi mdi-microphone-off text-red-500"></i>
-            </button>
-            <button
-                @click="toggleHeadset"
-                class="action-button p-1 hover:bg-gray-700 rounded"
-            >
-                <i v-if="user.headsetOn" class="mdi mdi-headphones"></i>
-                <i v-else class="mdi mdi-headphones-off text-red-500"></i>
-            </button>
-            <button
-                @click="openSettings"
-                class="action-button p-1 hover:bg-gray-700 rounded"
-            >
-                <i class="mdi mdi-cog"></i>
-            </button>
+            <!-- 액션 버튼: 마이크, 헤드셋, 설정 -->
+            <div class="user-actions flex space-x-0.5">
+                <button
+                    @click="toggleMic"
+                    class="action-button p-1 hover:bg-gray-700 rounded"
+                >
+                    <!-- Font Awesome 아이콘 사용 -->
+                    <!-- 마이크 아이콘: 상태에 따라 아이콘, 색상 변경 -->
+                    <i v-if="user.micOn" class="mdi mdi-microphone"></i>
+                    <i v-else class="mdi mdi-microphone-off text-red-500"></i>
+                </button>
+                <button
+                    @click="toggleHeadset"
+                    class="action-button p-1 hover:bg-gray-700 rounded"
+                >
+                    <i v-if="user.headsetOn" class="mdi mdi-headphones"></i>
+                    <i v-else class="mdi mdi-headphones-off text-red-500"></i>
+                </button>
+                <button
+                    @click="openSettings"
+                    class="action-button p-1 hover:bg-gray-700 rounded"
+                >
+                    <i class="mdi mdi-cog"></i>
+                </button>
+            </div>
         </div>
     </div>
 </template>

@@ -29,10 +29,11 @@
 :root {
     --custom-app-top-bar-height: 1rem;
     --custom-app-bottom-pannel-height: 3rem;
-    --custom-side-bar-left-width: 250px;
-    --custom-chat-room-list-width: 15rem;
-    --custom-study-list-width: 300px;
-    --custom-chat-room-list-width: 15rem;
+    --custom-study-list-width: calc(var(--spacing) * 14);
+    --custom-item-list-width: calc(var(--spacing) * 60);
+    --custom-side-bar-left-width: calc(
+        var(--custom-study-list-width) + var(--custom-item-list-width)
+    );
     --study-list-sutdy-icon-size: 1.5rem;
 
     --custom-scrollbar-color: oklch(66.75% 0.00316 285.6);

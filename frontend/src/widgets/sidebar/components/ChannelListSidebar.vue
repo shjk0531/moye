@@ -9,7 +9,7 @@ src/widgets/sidebar/components/ChannelListSidebar.vue
 </template>
 
 <script lang="ts">
-import { ChannelList } from '@/entities/channel';
+import { ChannelList } from '@/features/channel';
 
 export default {
     name: 'ChannelListSidebar',
