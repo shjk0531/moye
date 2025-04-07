@@ -8,6 +8,7 @@
                 :label="item.label"
                 :items="item.items"
                 :activeItemId="activeItemId"
+                :listType="listType"
                 @item-click="handleItemClick"
             />
             <!-- 일반 아이템이면 PanelItem 컴포넌트 사용 -->
@@ -15,6 +16,7 @@
                 v-else
                 :item="item"
                 :isActive="item.id === activeItemId"
+                :listType="listType"
                 @click="handleItemClick(item)"
             />
         </div>
@@ -22,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits } from 'vue';
+import { computed } from 'vue';
 import PanelSection from './PanelSection.vue';
 import PanelItem from './PanelItem.vue';
 
@@ -38,6 +40,10 @@ const props = defineProps({
     activeItemId: {
         type: [Number, String],
         default: null,
+    },
+    listType: {
+        type: String,
+        default: 'channel',
     },
 });
 

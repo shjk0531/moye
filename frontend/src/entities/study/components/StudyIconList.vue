@@ -33,48 +33,114 @@
 
 <script>
 import { fetchStudies } from '@/features/study';
+import {
+    fetchChannelsGrouped,
+    fetchChannelsUngrouped,
+    findFirstChannel,
+} from '@/features/channel';
 import ScrollPanel from 'primevue/scrollpanel';
 
 export default {
     name: 'StudyIconList',
     components: { ScrollPanel },
+
     data() {
         return {
             studies: [],
         };
     },
-    async created() {
-        // 스터디 데이터를 API를 통해 불러옵니다.
-        this.studies = await fetchStudies();
-    },
+
     computed: {
         // URL의 studyId는 문자열입니다.
         currentStudyId() {
             return this.$route.params.studyId;
         },
     },
+
+    async created() {
+        await this.loadStudyData();
+    },
+
     methods: {
-        handleStudyClick(study) {
-            // Vuex 스토어에 스터디 관련 정보 업데이트
-            this.$store.commit('setStudyName', study.name);
-            this.$store.commit('setStudyIcon', study.icon);
-
-            // study.id를 문자열로 변환하여 사용
-            const key = String(study.id);
-            // 기본 목록 타입을 "channel"로 가정하여 activeItems에서 해당 값을 조회
-            const activeChannelId = this.$store.state.activeItems[key]?.channel;
-
-            if (activeChannelId !== null && activeChannelId !== undefined) {
-                // 만약 해당 스터디에 저장된 마지막 접속 채널이 있다면, 해당 채널 URL로 이동합니다.
-                this.$router.push(
-                    `/study/${study.id}/channel/${activeChannelId}`,
-                );
-            } else {
-                // 없다면 기본 스터디 URL로 이동합니다.
-                this.$router.push(`/study/${study.id}`);
+        // 스터디 데이터 로드
+        async loadStudyData() {
+            try {
+                this.studies = await fetchStudies();
+            } catch (error) {
+                console.error('스터디 데이터를 불러오는 중 오류 발생:', error);
+                this.studies = [];
             }
         },
-        // 필요 시 타이틀 아이콘 클릭 이벤트 처리
+
+        // 스터디 클릭 이벤트 핸들러
+        async handleStudyClick(study) {
+            this.updateStudyInfoInStore(study);
+
+            const studyId = String(study.id);
+            const activeChannelId = this.getActiveChannelId(studyId);
+
+            if (activeChannelId !== null && activeChannelId !== undefined) {
+                this.navigateToExistingChannel(study.id, activeChannelId);
+            } else {
+                await this.navigateToFirstChannel(study.id, studyId);
+            }
+        },
+
+        // Vuex 스토어에 스터디 정보 업데이트
+        updateStudyInfoInStore(study) {
+            this.$store.commit('setStudyName', study.name);
+            this.$store.commit('setStudyIcon', study.icon);
+        },
+
+        // 저장된 활성 채널 ID 가져오기
+        getActiveChannelId(studyId) {
+            return this.$store.state.activeItems[studyId]?.channel;
+        },
+
+        // 기존 활성 채널로 이동
+        navigateToExistingChannel(studyId, channelId) {
+            this.$router.push(`/study/${studyId}/channel/${channelId}`);
+        },
+
+        // 첫 번째 채널 찾아서 이동
+        async navigateToFirstChannel(studyId, studyKey) {
+            try {
+                // 채널 및 그룹 데이터 로드
+                const groups = await fetchChannelsGrouped();
+                const channels = await fetchChannelsUngrouped();
+
+                // 첫 번째 채널 ID 가져오기
+                const firstChannelId = findFirstChannel(groups, channels);
+
+                if (firstChannelId !== null) {
+                    // 첫 번째 채널 ID로 이동
+                    this.$router.push(
+                        `/study/${studyId}/channel/${firstChannelId}`,
+                    );
+
+                    // 첫 번째 채널 ID를 activeItemId로 저장
+                    this.saveActiveChannel(studyKey, String(firstChannelId));
+                } else {
+                    // 채널이 없는 경우 기본 스터디 URL로 이동
+                    this.$router.push(`/study/${studyId}`);
+                }
+            } catch (error) {
+                console.error('첫 번째 채널을 찾는 중 오류 발생:', error);
+                // 오류 발생시 기본 스터디 URL로 이동
+                this.$router.push(`/study/${studyId}`);
+            }
+        },
+
+        // 활성 채널 ID 저장
+        saveActiveChannel(studyId, channelId) {
+            this.$store.commit('setActiveItem', {
+                studyId,
+                listType: 'channel',
+                itemId: channelId,
+            });
+        },
+
+        // 타이틀 아이콘 클릭 이벤트 처리
         handleTitleIconClick() {
             this.$router.push('/me');
             this.$store.commit('setStudyName', 'Moye');

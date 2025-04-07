@@ -23,24 +23,29 @@
                     :key="item.id"
                     :item="item"
                     :isActive="item.id === activeItemId"
+                    :listType="listType"
                     @click="handleItemClick(item)"
                 />
             </div>
         </transition>
         <!-- 그룹이 닫혔을 때, 현재 활성 아이템만 표시 -->
-        <div v-if="!expanded && activeItem">
+        <div v-if="!expanded && activeItemCombined">
             <PanelItem
-                :item="activeItem"
+                :item="activeItemCombined"
                 :isActive="true"
-                @click="handleItemClick(activeItem)"
+                :listType="listType"
+                @click="handleItemClick(activeItemCombined)"
             />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import PanelItem from './PanelItem.vue';
+
+const route = useRoute();
 
 const props = defineProps({
     label: {
@@ -59,6 +64,10 @@ const props = defineProps({
         type: [Number, String],
         default: null,
     },
+    listType: {
+        type: String,
+        default: 'channel',
+    },
 });
 
 const emits = defineEmits(['item-click', 'toggle']);
@@ -70,9 +79,27 @@ const sortedItems = computed(() => {
     return [...props.items].sort((a, b) => (a.order || 0) - (b.order || 0));
 });
 
-// 현재 그룹에서 활성 아이템 찾기
-const activeItem = computed(() => {
+// ID 기반으로 현재 그룹에서 활성 아이템 찾기
+const activeItemById = computed(() => {
     return props.items.find((item) => item.id === props.activeItemId);
+});
+
+// URL 기반으로 현재 그룹에서 활성 아이템 찾기
+const activeItemByUrl = computed(() => {
+    // 리스트 타입에 따라 URL 파라미터 확인
+    if (props.listType === 'channel') {
+        const channelId = route.params.channelId;
+        if (channelId) {
+            return props.items.find((item) => String(item.id) === channelId);
+        }
+    }
+    // 추가적인 리스트 타입이 있다면 여기에 확장
+    return null;
+});
+
+// ID 기반 또는 URL 기반 활성 아이템 중 하나라도 있으면 반환
+const activeItemCombined = computed(() => {
+    return activeItemByUrl.value || activeItemById.value;
 });
 
 function toggle() {

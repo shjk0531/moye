@@ -4,6 +4,7 @@
         :groups="channelsGrouped"
         :items="channelsUngrouped"
         :activeItemId="activeItemId"
+        listType="channel"
         @item-click="handleItemClick"
     />
 </template>
@@ -29,16 +30,38 @@ const { activeItemId, checkAndRedirect, currentStudyId } =
     useActiveItem('channel');
 
 onMounted(async () => {
-    channelsGrouped.value = await fetchChannelsGrouped();
-    channelsUngrouped.value = await fetchChannelsUngrouped();
-
-    // URL에 channelId가 없으면 저장된 마지막 채널 ID로 리다이렉트합니다.
-    await checkAndRedirect(`/study/${currentStudyId.value}/channel`);
+    await loadChannelData();
+    await redirectToActiveChannel();
 });
 
-// 항목 클릭 시, 활성 항목을 업데이트하고 해당 채널 URL로 이동합니다.
+// 채널 데이터 로드 함수
+async function loadChannelData() {
+    try {
+        channelsGrouped.value = await fetchChannelsGrouped();
+        channelsUngrouped.value = await fetchChannelsUngrouped();
+    } catch (error) {
+        console.error('채널 데이터 로드 중 오류 발생:', error);
+    }
+}
+
+// 활성 채널로 리다이렉트 함수
+async function redirectToActiveChannel() {
+    try {
+        await checkAndRedirect(`/study/${currentStudyId.value}/channel`);
+    } catch (error) {
+        console.error('채널 리다이렉트 중 오류 발생:', error);
+    }
+}
+
+// 채널 아이템 클릭 핸들러
 function handleItemClick(item) {
+    // activeItemId 업데이트 및 해당 채널 URL로 이동
     activeItemId.value = item.id;
-    router.push(`/study/${currentStudyId.value}/channel/${item.id}`);
+    navigateToChannel(item.id);
+}
+
+// 채널 페이지로 이동하는 함수
+function navigateToChannel(channelId) {
+    router.push(`/study/${currentStudyId.value}/channel/${channelId}`);
 }
 </script>
