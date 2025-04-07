@@ -27,6 +27,7 @@
 import { computed } from 'vue';
 import PanelSection from './PanelSection.vue';
 import PanelItem from './PanelItem.vue';
+import { mergePanelItems } from '@/shared/lib/panelUtils';
 
 const props = defineProps({
     groups: {
@@ -49,22 +50,9 @@ const props = defineProps({
 
 const emits = defineEmits(['item-click']);
 
+// 공통 유틸리티 함수를 사용하여 그룹화 및 정렬된 아이템 목록 생성
 const mergedList = computed(() => {
-    // 그룹에 속한 아이템들을 해당 그룹 객체 안에 items 배열로 추가
-    const mergedGroups = props.groups.map((group) => {
-        const groupItems = props.items
-            .filter((item) => item.groupId === group.id)
-            .sort((a, b) => (a.order || 0) - (b.order || 0));
-        return { ...group, type: 'group', items: groupItems };
-    });
-    // 그룹에 속하지 않은 일반 아이템
-    const ungroupedItems = props.items
-        .filter((item) => item.groupId === null)
-        .map((item) => ({ ...item, type: 'ungrouped' }));
-    // 전체를 order 값 기준으로 정렬
-    return [...mergedGroups, ...ungroupedItems].sort(
-        (a, b) => (a.order || 9999) - (b.order || 9999),
-    );
+    return mergePanelItems(props.groups, props.items);
 });
 
 function handleItemClick(item) {

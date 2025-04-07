@@ -1,7 +1,6 @@
 // 공통으로 사용되는 훅 함수들
 
 import { ref, onMounted, onUnmounted } from 'vue';
-import type { Ref } from 'vue';
 
 /**
  * 윈도우 크기를 추적하는 훅
