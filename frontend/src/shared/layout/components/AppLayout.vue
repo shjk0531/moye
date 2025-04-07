@@ -19,7 +19,7 @@
         </div>
 
         <!-- 공지사항 (isMemberListVisible prop 전달 및 이벤트 리스너 추가) -->
-        <Notice
+        <StudyNotice
             :isMemberListVisible="showMemberList"
             @toggle-member-list="toggleMemberList"
         />
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { Notice } from '@/widgets/notice';
+import { StudyNotice } from '@/widgets/notice';
 import { MemberList, StudyListSidebar } from '@/widgets/sidebar';
 import { TitleBar } from '@/widgets/titlebar';
 import { UserPanel } from '@/widgets/userPanel';
@@ -47,7 +47,7 @@ export default {
         StudyListSidebar,
         UserPanel,
         MemberList,
-        Notice,
+        StudyNotice,
     },
     data() {
         return {

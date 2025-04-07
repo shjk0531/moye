@@ -18,6 +18,7 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { channelIcons } from '../types/ChannelIcons'; // 필요에 따라 아이콘 설정 로직 재사용 또는 일반화
+import { getParamName } from '@/widgets/notice/services/navigationService';
 
 const route = useRoute();
 
@@ -43,12 +44,9 @@ const iconClass = computed(() => {
 
 // URL 기반으로 현재 아이템이 활성 상태인지 확인
 const isUrlActive = computed(() => {
-    if (props.listType === 'channel') {
-        // 채널 타입인 경우 URL의 channelId와 아이템 ID 비교
-        return route.params.channelId === String(props.item.id);
-    }
-    // 다른 타입의 리스트를 처리하려면 여기에 조건 추가
-    return false;
+    // 지원되는 모든 아이템 타입에 대해 URL의 ID 파라미터와 아이템 ID 비교
+    const paramName = getParamName(props.listType);
+    return route.params[paramName] === String(props.item.id);
 });
 
 // isActive prop과 URL 기반 활성 상태 중 하나라도 true면 아이템을 활성화

@@ -15,14 +15,12 @@
 
 <script>
 import { MessageInput, MessageItem } from '@/features/chat';
-import { Notice } from '@/widgets/notice';
 
 export default {
     name: 'ChatPage',
     components: {
         MessageInput,
         MessageItem,
-        Notice,
     },
     data() {
         return {

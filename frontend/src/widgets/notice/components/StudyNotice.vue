@@ -7,20 +7,27 @@
                 <h2 class="text-lg font-semibold text-gray-50">Notice</h2>
             </div>
             <div class="notice-icons flex flex-row gap-4 text-2xl">
-                <span
+                <StudyNoticeIcon
                     v-for="(item, idx) in icons"
                     :key="idx"
-                    :class="getIconClass(item)"
-                    @click="handleClick(item)"
-                ></span>
+                    :item="item"
+                    :is-member-list-visible="isMemberListVisible"
+                    @toggle-member-list="$emit('toggle-member-list')"
+                    @icon-click="handleIconClick"
+                />
             </div>
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script>
+import StudyNoticeIcon from './StudyNoticeIcon.vue';
+
 export default {
-    name: 'Notice',
+    name: 'StudyNotice',
+    components: {
+        StudyNoticeIcon,
+    },
     props: {
         isMemberListVisible: {
             type: Boolean,
@@ -31,31 +38,36 @@ export default {
         return {
             icons: [
                 {
-                    icon: 'mdi mdi-message',
+                    icon: 'mdi-message',
+                    type: 'channel',
                     color: 'text-gray-400',
                     hover: 'hover:text-gray-200',
                     active: 'text-gray-150',
                 },
                 {
                     icon: 'mdi-calendar-check',
+                    type: 'calendar',
                     color: 'text-gray-400',
                     hover: 'hover:text-gray-200',
                     active: 'text-gray-150',
                 },
                 {
                     icon: 'mdi-post',
+                    type: 'post',
                     color: 'text-gray-400',
                     hover: 'hover:text-gray-200',
                     active: 'text-gray-150',
                 },
                 {
                     icon: 'mdi-note',
+                    type: 'note',
                     color: 'text-gray-400',
                     hover: 'hover:text-gray-200',
                     active: 'text-gray-150',
                 },
                 {
                     icon: 'mdi-account-group',
+                    type: 'member',
                     color: 'text-gray-400',
                     hover: 'hover:text-gray-200',
                     active: 'text-gray-150',
@@ -64,28 +76,11 @@ export default {
         };
     },
     methods: {
-        handleClick(item: { icon: string; color: string; hover: string }) {
-            // account-group 아이콘 클릭 시 toggle 이벤트 emit
-            if (item.icon === 'mdi-account-group') {
-                this.$emit('toggle-member-list');
-            }
-            // 다른 아이콘 클릭 시 필요한 동작 추가 가능
-        },
-        getIconClass(item: {
-            icon: string;
-            color: string;
-            hover: string;
-            active: string;
-        }) {
-            // 기본 클래스 문자열 구성
-            let classes = `mdi ${item.icon} ${item.hover} cursor-pointer `;
-            // account-group 아이콘의 경우 isMemberListVisible 값에 따라 색상 변경
-            if (item.icon === 'mdi-account-group') {
-                classes += this.isMemberListVisible ? item.active : item.color;
-            } else {
-                classes += item.color;
-            }
-            return classes;
+        handleIconClick(item) {
+            console.log(
+                `${item.type} 아이콘이 클릭되었지만 아직 처리 기능이 구현되지 않았습니다.`,
+            );
+            // 필요한 경우 추가 처리 로직 구현
         },
     },
 };

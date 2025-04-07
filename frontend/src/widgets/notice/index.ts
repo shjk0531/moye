@@ -1,1 +1,2 @@
-export { default as Notice } from './components/Notice.vue';
+export { default as StudyNotice } from './components/StudyNotice.vue';
+export * from './services/navigationService';

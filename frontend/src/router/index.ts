@@ -1,7 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { AuthPage, MainPage, ChatPage, LoginPage, SignupPage } from '@/pages';
+import {
+    AuthPage,
+    ChatPage,
+    LoginPage,
+    SignupPage,
+    CalendarPage,
+} from '@/pages';
 import AppLayout from '@/shared/layout/components/AppLayout.vue';
-import { ChannelListSidebar } from '@/widgets/sidebar';
+import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
 
 const routes = [
     {
@@ -48,6 +54,13 @@ const routes = [
                 path: '/study/:studyId',
                 components: { page: ChatPage, leftSide: ChannelListSidebar },
             },
+            {
+                path: '/study/:studyId/calendar/:calendarId?',
+                components: {
+                    page: CalendarPage,
+                    leftSide: CalendarListSidebar,
+                },
+            },
         ],
     },
 ];
@@ -69,7 +82,7 @@ router.beforeEach((to, _from, next) => {
     const jwtToken = localStorage.getItem('jwt');
     const isLoggedIn = !!jwtToken; // 토큰이 있으면 true
 
-    // 만약 사용자가 로그인하지 않았고(publicPaths가 아닌) 접근하려고 한다면
+    // 만약, 사용자가 로그인하지 않았으면서(isLoggedIn=false) 로그인이 필요한 페이지(publicPaths가 아닌)에 접근하려고 한다면
     if (!isLoggedIn && !isPublicRoute) {
         // /login 페이지로 리디렉션
         // return next('/login');
