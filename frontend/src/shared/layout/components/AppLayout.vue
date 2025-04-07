@@ -19,11 +19,13 @@
         </div>
 
         <!-- 공지사항 (isMemberListVisible prop 전달 및 이벤트 리스너 추가) -->
-        <StudyNotice
-            :isMemberListVisible="showMemberList"
-            @toggle-member-list="toggleMemberList"
-        />
-
+        <div class="notice bg-gray-850 px-4 py-2">
+            <router-view
+                name="notice"
+                :isMemberListVisible="showMemberList"
+                @toggle-member-list="toggleMemberList"
+            />
+        </div>
         <!-- 본문 -->
         <div class="page bg-gray-800">
             <router-view name="page" />
@@ -117,7 +119,10 @@ export default {
     grid-row: titlebarEnd / contentEnd;
     width: var(--custom-icon-list-width);
 }
-
+.notice {
+    grid-row: titlebarEnd / noticeEnd;
+    grid-column: channelEnd / end;
+}
 .user-panel {
     grid-area: userPanel;
 }

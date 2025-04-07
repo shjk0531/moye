@@ -8,7 +8,7 @@ import {
 } from '@/pages';
 import AppLayout from '@/shared/layout/components/AppLayout.vue';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
-
+import { StudyNotice } from '@/widgets/notice';
 const routes = [
     {
         path: '/auth',
@@ -48,11 +48,14 @@ const routes = [
             },
             {
                 path: '/study/:studyId/channel/:channelId?',
-                components: { page: ChatPage, leftSide: ChannelListSidebar },
-            },
-            {
-                path: '/study/:studyId',
-                components: { page: ChatPage, leftSide: ChannelListSidebar },
+                components: {
+                    page: ChatPage,
+                    leftSide: ChannelListSidebar,
+                    notice: StudyNotice,
+                },
+                props: {
+                    notice: true,
+                },
             },
             {
                 path: '/study/:studyId/calendar/:calendarId?',

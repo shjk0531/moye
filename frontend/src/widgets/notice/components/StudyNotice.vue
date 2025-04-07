@@ -1,21 +1,17 @@
 <template>
-    <div class="notice-panel">
-        <div
-            class="flex flex-row justify-between items-center bg-gray-850 px-4 py-2"
-        >
-            <div class="notice-header">
-                <h2 class="text-lg font-semibold text-gray-50">Notice</h2>
-            </div>
-            <div class="notice-icons flex flex-row gap-4 text-2xl">
-                <StudyNoticeIcon
-                    v-for="(item, idx) in icons"
-                    :key="idx"
-                    :item="item"
-                    :is-member-list-visible="isMemberListVisible"
-                    @toggle-member-list="$emit('toggle-member-list')"
-                    @icon-click="handleIconClick"
-                />
-            </div>
+    <div class="flex flex-row justify-between items-center">
+        <div class="notice-header">
+            <h2 class="text-lg font-semibold text-gray-50">Notice</h2>
+        </div>
+        <div class="notice-icons flex flex-row gap-4 text-2xl">
+            <StudyNoticeIcon
+                v-for="(item, idx) in icons"
+                :key="idx"
+                :item="item"
+                :is-member-list-visible="isMemberListVisible"
+                @toggle-member-list="$emit('toggle-member-list')"
+                @icon-click="handleIconClick"
+            />
         </div>
     </div>
 </template>
@@ -86,9 +82,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.notice-panel {
-    grid-row: titlebarEnd / noticeEnd;
-    grid-column: channelEnd / end;
-}
-</style>
+<style scoped></style>
