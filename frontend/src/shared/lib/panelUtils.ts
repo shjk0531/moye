@@ -25,6 +25,7 @@ export interface PanelItem {
  * 그룹 및 아이템 목록에서 첫 번째 아이템을 찾는 범용 함수
  *
  * 이 함수는 패널 리스트의 모든 종류(채널, 캘린더 등)에서 재사용할 수 있습니다.
+ * 비그룹 아이템과 그룹 내 아이템을 order 값에 따라 정렬하여 첫 번째 아이템을 찾습니다.
  *
  * @param groups 그룹 목록
  * @param items 아이템 목록
@@ -38,37 +39,42 @@ export function findFirstItem<G extends PanelGroup, I extends PanelItem>(
         return null;
     }
 
-    // 그룹 및 아이템을 order 기준으로 정렬
-    const sortedGroups = [...groups].sort(
-        (a, b) => (a.order || 0) - (b.order || 0),
-    );
-    const sortedItems = [...items].sort(
-        (a, b) => (a.order || 0) - (b.order || 0),
-    );
+    // 그룹과 아이템 복사
+    const allGroups = [...groups];
+    const allItems = [...items];
 
-    // 그룹이 있는 경우
-    if (sortedGroups.length > 0) {
-        // 가장 첫 번째 그룹 찾기
-        const firstGroup = sortedGroups[0];
+    // 모든 아이템 항목 생성 (비그룹 아이템 + 그룹 내 첫 번째 아이템)
+    const itemEntries: Array<{ id: number; order: number }> = [];
 
-        // 첫 번째 그룹에 속한 아이템들 찾기
-        const itemsInFirstGroup = sortedItems
-            .filter((item) => item.groupId === firstGroup.id)
+    // 비그룹 아이템 추가
+    const ungroupedItems = allItems.filter((item) => item.groupId === null);
+    ungroupedItems.forEach((item) => {
+        itemEntries.push({
+            id: item.id,
+            order: item.order || 0,
+        });
+    });
+
+    // 그룹 내 첫 번째 아이템 추가
+    allGroups.forEach((group) => {
+        // 해당 그룹의 아이템 찾기
+        const groupItems = allItems
+            .filter((item) => item.groupId === group.id)
             .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-        // 첫 번째 그룹에 아이템이 있으면 그 중 첫 번째 아이템 반환
-        if (itemsInFirstGroup.length > 0) {
-            return itemsInFirstGroup[0].id;
+        // 그룹에 아이템이 있으면 첫 번째 아이템을 그룹의 order로 등록
+        if (groupItems.length > 0) {
+            itemEntries.push({
+                id: groupItems[0].id,
+                order: group.order || 0,
+            });
         }
-    }
+    });
 
-    // 그룹이 없거나 첫 번째 그룹에 아이템이 없는 경우, 비그룹 아이템 중 첫 번째 아이템 찾기
-    const ungroupedItems = sortedItems
-        .filter((item) => item.groupId === null)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
-
-    if (ungroupedItems.length > 0) {
-        return ungroupedItems[0].id;
+    // 전체 항목을 order로 정렬하고 첫 번째 아이템 ID 반환
+    if (itemEntries.length > 0) {
+        itemEntries.sort((a, b) => a.order - b.order);
+        return itemEntries[0].id;
     }
 
     // 어떤 아이템도 없는 경우 null 반환
@@ -79,6 +85,7 @@ export function findFirstItem<G extends PanelGroup, I extends PanelItem>(
  * 그룹 및 아이템 데이터 구조 변환 함수
  *
  * 패널 리스트 컴포넌트에서 사용하는 형식으로 데이터를 변환합니다.
+ * 비그룹 아이템과 그룹을 order 값에 따라 정렬합니다.
  *
  * @param groups 그룹 목록
  * @param items 아이템 목록
@@ -93,7 +100,11 @@ export function mergePanelItems<G extends PanelGroup, I extends PanelItem>(
         const groupItems = items
             .filter((item) => item.groupId === group.id)
             .sort((a, b) => (a.order || 0) - (b.order || 0));
-        return { ...group, type: 'group', items: groupItems } as G & {
+        return {
+            ...group,
+            type: 'group',
+            items: groupItems,
+        } as G & {
             type: 'group';
             items: I[];
         };
@@ -107,8 +118,8 @@ export function mergePanelItems<G extends PanelGroup, I extends PanelItem>(
                 ({ ...item, type: 'ungrouped' } as I & { type: 'ungrouped' }),
         );
 
-    // 전체를 order 값 기준으로 정렬
-    return [...mergedGroups, ...ungroupedItems].sort(
-        (a, b) => (a.order || 9999) - (b.order || 9999),
+    // 비그룹 아이템과 그룹을 모두 order 값에 따라 정렬
+    return [...ungroupedItems, ...mergedGroups].sort(
+        (a, b) => (a.order || 0) - (b.order || 0),
     );
 }
