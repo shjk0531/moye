@@ -1,5 +1,5 @@
 <template>
-    <div class="member-area bg-gray-150 w-50">
+    <div class="bg-gray-150 h-full">
         <div class="member-header">
             <h2 class="text-lg font-semibold text-gray-50">Members</h2>
         </div>
@@ -7,13 +7,14 @@
 </template>
 
 <script lang="ts">
+import { mapState } from 'vuex';
+
 export default {
     name: 'MemberList',
+    computed: {
+        ...mapState(['isMemberListVisible']),
+    },
 };
 </script>
 
-<style scoped lang="scss">
-.member-area {
-    grid-area: memberList;
-}
-</style>
+<style scoped lang="scss"></style>

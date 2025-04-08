@@ -10,7 +10,7 @@
 
         <!-- 사이드바 -->
         <div class="left-sidebar">
-            <router-view name="leftSide" />
+            <component :is="leftSideComponent" v-if="leftSideComponent" />
         </div>
 
         <!-- 사용자 패널 -->
@@ -18,21 +18,20 @@
             <UserPanel />
         </div>
 
-        <!-- 공지사항 (isMemberListVisible prop 전달 및 이벤트 리스너 추가) -->
+        <!-- 공지사항 -->
         <div class="notice bg-gray-850 px-4 py-2">
-            <router-view
-                name="notice"
-                :isMemberListVisible="showMemberList"
-                @toggle-member-list="toggleMemberList"
-            />
-        </div>
-        <!-- 본문 -->
-        <div class="page bg-gray-800">
-            <router-view name="page" />
+            <component :is="noticeComponent" v-if="noticeComponent" />
         </div>
 
-        <!-- 멤버 리스트 (showMemberList 값에 따라 렌더링) -->
-        <MemberList v-if="showMemberList" />
+        <!-- 본문 -->
+        <div class="page bg-gray-800">
+            <router-view />
+        </div>
+
+        <!-- 멤버 리스트 -->
+        <div class="right-sidebar">
+            <MemberList class="w-50" v-if="isMemberListVisible" />
+        </div>
     </div>
 </template>
 
@@ -41,6 +40,7 @@ import { StudyNotice } from '@/widgets/notice';
 import { MemberList, StudyListSidebar } from '@/widgets/sidebar';
 import { TitleBar } from '@/widgets/titlebar';
 import { UserPanel } from '@/widgets/userPanel';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     name: 'AppLayout',
@@ -51,21 +51,17 @@ export default {
         MemberList,
         StudyNotice,
     },
-    data() {
-        return {
-            showChatPage: true, // 채팅 페이지 표시 여부
-            showMemberList: false, // 멤버 리스트 표시 여부
-        };
+    computed: {
+        ...mapState(['isMemberListVisible']),
+        leftSideComponent() {
+            return this.$route.meta.leftSide;
+        },
+        noticeComponent() {
+            return this.$route.meta.notice;
+        },
     },
     methods: {
-        toggleChatPage() {
-            // 채팅 페이지의 표시 상태를 토글함
-            this.showChatPage = !this.showChatPage;
-        },
-        toggleMemberList() {
-            // account-group 아이콘 클릭 시 멤버 리스트의 표시 상태를 토글함
-            this.showMemberList = !this.showMemberList;
-        },
+        ...mapMutations(['toggleMemberList']),
     },
 };
 </script>
@@ -125,5 +121,8 @@ export default {
 }
 .user-panel {
     grid-area: userPanel;
+}
+.right-sidebar {
+    grid-area: memberList;
 }
 </style>

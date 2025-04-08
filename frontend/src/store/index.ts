@@ -8,6 +8,8 @@ const store = createStore({
         activeItems: {} as Record<string, Record<string, string>>,
         studyName: '',
         studyIcon: '',
+        // 멤버 리스트 표시 여부
+        isMemberListVisible: false,
     }),
     mutations: {
         setActiveItem(
@@ -28,6 +30,9 @@ const store = createStore({
         },
         setStudyIcon(state, icon: string) {
             state.studyIcon = icon;
+        },
+        toggleMemberList(state) {
+            state.isMemberListVisible = !state.isMemberListVisible;
         },
     },
 });

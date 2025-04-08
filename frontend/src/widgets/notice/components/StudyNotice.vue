@@ -4,31 +4,32 @@
             <h2 class="text-lg font-semibold text-gray-50">Notice</h2>
         </div>
         <div class="notice-icons flex flex-row gap-4 text-2xl">
-            <StudyNoticeIcon
-                v-for="(item, idx) in icons"
-                :key="idx"
-                :item="item"
-                :is-member-list-visible="isMemberListVisible"
-                @toggle-member-list="$emit('toggle-member-list')"
-                @icon-click="handleIconClick"
-            />
+            <ChannelButton />
+            <CalendarButton />
+            <PostButton />
+            <NoteButton />
+            <MemberButton />
         </div>
     </div>
 </template>
 
 <script>
-import StudyNoticeIcon from './StudyNoticeIcon.vue';
+import {
+    ChannelButton,
+    CalendarButton,
+    PostButton,
+    NoteButton,
+    MemberButton,
+} from '@/shared/ui/Button';
 
 export default {
     name: 'StudyNotice',
     components: {
-        StudyNoticeIcon,
-    },
-    props: {
-        isMemberListVisible: {
-            type: Boolean,
-            default: false,
-        },
+        ChannelButton,
+        CalendarButton,
+        PostButton,
+        NoteButton,
+        MemberButton,
     },
     data() {
         return {

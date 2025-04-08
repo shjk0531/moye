@@ -9,6 +9,7 @@ import {
 import AppLayout from '@/shared/layout/components/AppLayout.vue';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
 import { StudyNotice } from '@/widgets/notice';
+
 const routes = [
     {
         path: '/auth',
@@ -28,41 +29,32 @@ const routes = [
         component: AppLayout,
         children: [
             {
-                path: '/',
-                components: {
-                    page: ChatPage,
-                    leftSide: ChannelListSidebar,
-                },
+                path: '',
+                component: ChatPage,
+                meta: { leftSide: ChannelListSidebar },
             },
             {
-                path: '/me',
-                components: {
-                    page: ChatPage,
-
-                    leftSide: ChannelListSidebar,
-                },
+                path: 'me',
+                component: ChatPage,
+                meta: { leftSide: ChannelListSidebar },
             },
             {
-                path: '/login',
-                components: { page: AuthPage, leftSide: ChannelListSidebar },
+                path: 'login',
+                component: AuthPage,
+                meta: { leftSide: ChannelListSidebar },
             },
             {
-                path: '/study/:studyId/channel/:channelId?',
-                components: {
-                    page: ChatPage,
+                path: 'study/:studyId/channel/:channelId?',
+                component: ChatPage,
+                meta: {
                     leftSide: ChannelListSidebar,
                     notice: StudyNotice,
                 },
-                props: {
-                    notice: true,
-                },
             },
             {
-                path: '/study/:studyId/calendar/:calendarId?',
-                components: {
-                    page: CalendarPage,
-                    leftSide: CalendarListSidebar,
-                },
+                path: 'study/:studyId/calendar/:calendarId?',
+                component: CalendarPage,
+                meta: { leftSide: CalendarListSidebar },
             },
         ],
     },
