@@ -36,7 +36,7 @@ export default {
 <style scoped>
 .notice {
     grid-row: titlebarEnd / noticeEnd;
-    grid-column: channelEnd / pageEnd;
+    grid-column: channelEnd / end;
 }
 
 .calendar-form {

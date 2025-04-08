@@ -103,10 +103,10 @@ export default {
 }
 .notice {
     grid-row: titlebarEnd / noticeEnd;
+    grid-column: channelEnd / end;
 }
 
 .chat-area {
-    grid-column: pageEnd / end;
     grid-row: contentEnd / end;
 }
 

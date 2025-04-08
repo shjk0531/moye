@@ -1,7 +1,7 @@
 <template>
-    <div class="grid-container bg-gray-950 h-100vh">
+    <div class="grid-container bg-gray-950 h-100vh pt-3">
         <!-- 타이틀바 -->
-        <TitleBar />
+        <!-- <TitleBar /> -->
 
         <!-- 스터디 아이콘 리스트 -->
         <div class="icon-list">
@@ -16,11 +16,6 @@
         <!-- 사용자 패널 -->
         <div class="user-panel">
             <UserPanel />
-        </div>
-
-        <!-- 공지사항 -->
-        <div class="notice bg-gray-850 px-4 py-2">
-            <component :is="noticeComponent" v-if="noticeComponent" />
         </div>
 
         <!-- 본문 -->
@@ -103,7 +98,7 @@ export default {
     display: grid;
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
-    grid-column: channelEnd / pageEnd;
+    grid-column: channelEnd / end;
     grid-row: titlebarEnd / end;
 }
 
@@ -115,10 +110,7 @@ export default {
     grid-row: titlebarEnd / contentEnd;
     width: var(--custom-icon-list-width);
 }
-.notice {
-    grid-row: titlebarEnd / noticeEnd;
-    grid-column: channelEnd / end;
-}
+
 .user-panel {
     grid-area: userPanel;
 }
