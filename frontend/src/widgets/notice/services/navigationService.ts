@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import type { Router, Route } from 'vue-router';
+import type { Router } from 'vue-router';
 import {
     fetchChannelsGrouped,
     fetchChannelsUngrouped,

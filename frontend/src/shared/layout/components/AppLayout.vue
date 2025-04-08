@@ -104,7 +104,7 @@ export default {
     grid-template-rows: subgrid;
     grid-template-columns: subgrid;
     grid-column: channelEnd / pageEnd;
-    grid-row: noticeEnd / end;
+    grid-row: titlebarEnd / end;
 }
 
 .icon-list {

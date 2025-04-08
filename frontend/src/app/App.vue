@@ -1,15 +1,10 @@
 <!-- src/app/App.vue -->
 
 <template>
-    <div id="app">
-        <router-view />
-    </div>
+    <router-view />
 </template>
 
-<script setup lang="ts">
-// App.vue에서는 라우트 등록이 필요 없습니다.
-// main.ts에서 createApp(App).use(router).mount('#app')로 이미 등록되어 있습니다.
-</script>
+<script setup lang="ts"></script>
 
 <style>
 #html,

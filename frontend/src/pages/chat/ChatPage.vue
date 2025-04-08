@@ -1,4 +1,7 @@
 <template>
+    <div class="notice bg-gray-850 px-4 py-2">
+        <ChatNotice />
+    </div>
     <div class="message-area">
         <ScrollPanel style="height: 100%">
             <MessageItem
@@ -15,12 +18,13 @@
 
 <script>
 import { MessageInput, MessageItem } from '@/features/chat';
-
+import { ChatNotice } from '@/widgets/notice';
 export default {
     name: 'ChatPage',
     components: {
         MessageInput,
         MessageItem,
+        ChatNotice,
     },
     data() {
         return {
@@ -96,6 +100,9 @@ export default {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
+}
+.notice {
+    grid-row: titlebarEnd / noticeEnd;
 }
 
 .chat-area {

@@ -8,7 +8,6 @@ import {
 } from '@/pages';
 import AppLayout from '@/shared/layout/components/AppLayout.vue';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
-import { StudyNotice } from '@/widgets/notice';
 
 const routes = [
     {
@@ -48,13 +47,14 @@ const routes = [
                 component: ChatPage,
                 meta: {
                     leftSide: ChannelListSidebar,
-                    notice: StudyNotice,
                 },
             },
             {
                 path: 'study/:studyId/calendar/:calendarId?',
                 component: CalendarPage,
-                meta: { leftSide: CalendarListSidebar },
+                meta: {
+                    leftSide: CalendarListSidebar,
+                },
             },
         ],
     },
