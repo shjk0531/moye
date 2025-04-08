@@ -2,7 +2,7 @@ src/widgets/sidebar/components/StudyListSidebar.vue
 
 <template>
     <!-- Title Icon: '/me'로 이동 -->
-    <div class="icon-area">
+    <div class="icon-area mt-3">
         <div class="flex flex-col items-center justify-start w-full gap-2">
             <div
                 class="relative flex items-center justify-center w-full group cursor-pointer"

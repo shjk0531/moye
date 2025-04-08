@@ -1,5 +1,5 @@
 <template>
-    <div class="grid-container bg-gray-950 h-100vh pt-3">
+    <div class="grid-container bg-gray-950 h-100vh">
         <!-- 타이틀바 -->
         <!-- <TitleBar /> -->
 
