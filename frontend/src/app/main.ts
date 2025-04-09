@@ -1,4 +1,5 @@
 import { createApp, reactive } from 'vue';
+import { createPinia } from 'pinia';
 import { App } from '@/app';
 import router from '@/router';
 import store from '@/store';
@@ -18,10 +19,12 @@ import './assets/style.css';
 
 // 애플리케이션 생성 및 설정
 const app = createApp(App);
+const pinia = createPinia();
 
 // 플러그인 등록
 app.use(PrimeVue);
 app.use(router);
+app.use(pinia);
 app.use(store);
 
 // 전역 컴포넌트 등록

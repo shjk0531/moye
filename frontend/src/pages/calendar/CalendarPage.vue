@@ -1,6 +1,9 @@
 <template>
     <div class="notice bg-gray-850 px-4 py-2">
-        <CalendarNotice @date-changed="handleDateChange" />
+        <CalendarNotice
+            @handle-date-change="handleDateChange"
+            :selected-date="selectedDate"
+        />
     </div>
     <div class="calendar-form">
         <CalendarForm :selected-date="selectedDate" />
@@ -22,7 +25,7 @@ export default {
         const selectedDate = ref(new Date());
 
         const handleDateChange = (date: Date) => {
-            selectedDate.value = date;
+            selectedDate.value = new Date(date);
         };
 
         return {

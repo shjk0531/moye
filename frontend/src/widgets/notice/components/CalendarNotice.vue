@@ -1,3 +1,5 @@
+<!-- src/widgets/notice/components/CalendarNotice.vue -->
+
 <template>
     <div class="flex flex-row justify-between items-center">
         <div class="flex flex-row items-center gap-2">
@@ -22,6 +24,7 @@
             <!-- 캘린더 월 선택 아이콘-->
             <span
                 class="mdi mdi-calendar-month text-gray-150 hover:text-gray-200 cursor-pointer"
+                @click="handleDateSelect"
             ></span>
         </div>
         <div class="notice-icons flex flex-row gap-4 text-2xl">
@@ -42,6 +45,7 @@ import {
     NoteButton,
     MemberButton,
 } from '@/shared/ui/Button';
+import { ref } from 'vue';
 
 export default {
     name: 'CalendarNotice',
@@ -52,19 +56,22 @@ export default {
         NoteButton,
         MemberButton,
     },
-    data() {
-        return {
-            selectedDate: new Date(),
-        };
+    props: {
+        selectedDate: {
+            type: Date,
+            required: true,
+        },
     },
     methods: {
         handlePrevMonth() {
-            this.selectedDate.setMonth(this.selectedDate.getMonth() - 1);
-            this.$emit('date-changed', new Date(this.selectedDate));
+            const newDate = new Date(this.selectedDate);
+            newDate.setMonth(newDate.getMonth() - 1);
+            this.$emit('handle-date-change', newDate);
         },
         handleNextMonth() {
-            this.selectedDate.setMonth(this.selectedDate.getMonth() + 1);
-            this.$emit('date-changed', new Date(this.selectedDate));
+            const newDate = new Date(this.selectedDate);
+            newDate.setMonth(newDate.getMonth() + 1);
+            this.$emit('handle-date-change', newDate);
         },
     },
 };

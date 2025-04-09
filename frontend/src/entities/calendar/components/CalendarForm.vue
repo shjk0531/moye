@@ -1,3 +1,5 @@
+// src/entities/calendar/components/CalendarForm.vue
+
 <script setup lang="ts">
 import '@mobiscroll/vue/dist/css/mobiscroll.scss';
 import {
@@ -21,12 +23,20 @@ import type {
     MbscEventCreatedEvent,
     MbscEventDeletedEvent,
 } from '@mobiscroll/vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 setOptions({
     theme: 'material',
     themeVariant: 'dark',
 });
+
+interface Props {
+    selectedDate: Date;
+}
+const props = defineProps<Props>();
+const emit = defineEmits<{
+    (e: 'handleDateChange', date: Date): void;
+}>();
 
 const myEvents = ref<MbscCalendarEvent[]>([
     {
@@ -81,7 +91,6 @@ const popupEventColor = ref<string>('');
 
 let addedEvent: MbscCalendarEvent | null = null;
 let editedEvent: MbscCalendarEvent | null = null;
-
 // Popup
 const myResponsive: any = {
     medium: {
@@ -271,6 +280,15 @@ function handleEventCreated(args: MbscEventCreatedEvent) {
     createAddPopup(args.event, args.target);
 }
 
+// 선택된 날짜가 변경될 때 달력을 해당 날짜로 이동
+watch(
+    () => props.selectedDate,
+    (newDate) => {
+        calInst.value?.instance.navigate(newDate);
+        emit('handleDateChange', newDate);
+    },
+);
+
 function deleteEvent(event: MbscCalendarEvent) {
     myEvents.value = myEvents.value.filter((item) => item.id !== event.id);
     isSnackbarOpen.value = true;
@@ -313,6 +331,10 @@ function handleColorClick(event: any) {
 function handleSnackbarClose() {
     isSnackbarOpen.value = false;
 }
+
+function handleDateChange(args: any) {
+    console.log(args);
+}
 </script>
 
 <template>
@@ -324,9 +346,11 @@ function handleSnackbarClose() {
         :dragToResize="true"
         :data="myEvents"
         :view="myView"
+        :show-controls="false"
         @event-click="handleEventClick"
         @event-created="handleEventCreated"
         @event-deleted="handleEventDeleted"
+        @change="handleDateChange"
     />
     <MbscPopup
         display="bottom"

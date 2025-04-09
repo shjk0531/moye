@@ -10,6 +10,9 @@ import { LoginProcess } from '@/processes/login';
 
 export default {
     name: 'LoginPage',
+    components: {
+        LoginProcess,
+    },
 };
 </script>
 
