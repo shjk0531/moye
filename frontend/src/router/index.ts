@@ -6,12 +6,13 @@ import {
     SignupPage,
     CalendarPage,
 } from '@/pages';
-import AppLayout from '@/shared/layout/components/AppLayout.vue';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
+import { AuthLayout, AppLayout } from '@/shared/layout';
 
 const routes = [
     {
         path: '/auth',
+        component: AuthLayout,
         children: [
             {
                 path: 'login',

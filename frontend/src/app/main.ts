@@ -8,6 +8,8 @@ import store from '@/store';
 import PrimeVue from 'primevue/config';
 import PanelMenu from 'primevue/panelmenu';
 import ScrollPanel from 'primevue/scrollpanel';
+import Tooltip from 'primevue/tooltip';
+import Password from 'primevue/password';
 
 // 공유 UI 컴포넌트
 import { Button, InputText } from '@/shared/ui';
@@ -27,12 +29,14 @@ app.use(router);
 app.use(pinia);
 app.use(store);
 
+app.directive('tooltip', Tooltip);
+
 // 전역 컴포넌트 등록
 app.component('Button', Button);
 app.component('InputText', InputText);
 app.component('PanelMenu', PanelMenu);
 app.component('ScrollPanel', ScrollPanel);
-
+app.component('Password', Password);
 // 전역 상태
 app.config.globalProperties.$globalState = reactive({
     studyName: '',

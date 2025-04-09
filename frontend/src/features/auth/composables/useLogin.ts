@@ -15,7 +15,7 @@ export function useLogin(emit: (event: 'success', user: any) => void) {
             localStorage.setItem('token', result.token);
             emit('success', result.user);
         } catch (e) {
-            error.value = '로그인 실패. 이메일과 비밀번호를 확인해주세요.';
+            error.value = '로그인 실패.';
         } finally {
             loading.value = false;
         }

@@ -41,6 +41,9 @@
     --custom-scrollbar-color-active: oklch(55.9% 0.00427 285.63);
 
     --custom-bottom-pannel-height: calc(var(--spacing) * 14);
+
+    --custom-auth-form-width: calc(var(--spacing) * 75);
+    --custom-auth-input-width: calc(var(--spacing) * 50);
 }
 
 .discord-app {
