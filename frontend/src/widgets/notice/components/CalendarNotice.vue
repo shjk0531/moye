@@ -21,11 +21,7 @@
                     @click="handleNextMonth"
                 ></span>
             </div>
-            <!-- 캘린더 월 선택 아이콘-->
-            <span
-                class="mdi mdi-calendar-month text-gray-150 hover:text-gray-200 cursor-pointer"
-                @click="handleDateSelect"
-            ></span>
+            <!-- 캘린더 월 선택 -->
         </div>
         <div class="notice-icons flex flex-row gap-4 text-2xl">
             <ChannelButton />

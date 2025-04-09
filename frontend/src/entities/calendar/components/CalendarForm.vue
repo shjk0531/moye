@@ -1,7 +1,7 @@
 // src/entities/calendar/components/CalendarForm.vue
 
 <script setup lang="ts">
-import '@mobiscroll/vue/dist/css/mobiscroll.scss';
+import '@mobiscroll/vue/dist/css/mobiscroll.min.css';
 import {
     MbscButton,
     MbscDatepicker,
