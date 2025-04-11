@@ -2,27 +2,27 @@
 @import 'tailwindcss-primeui';
 
 @theme {
-    /* 하위 구간: gray-950 → gray-850 (감마 1.405 적용) */
-    --color-gray-950: oklch(18.31% 0.004 285.99);
-    --color-gray-900: oklch(19.68% 0.0054 285.9);
-    --color-gray-850: oklch(21.95% 0.0077 285.74);
+    /* 어두운 구간: gray-950 → gray-850 */
+    --color-gray-950: oklch(18.31% 0.004 285.99); /* 기준색 */
+    --color-gray-900: oklch(20.16% 0.0111 270.85);
+    --color-gray-850: oklch(22% 0.0182 255.71); /* 새 중간값 */
 
-    /* 상위 구간: gray-850 → gray-50 (감마 1.405 적용) */
-    --color-gray-800: oklch(23.5% 0.00755 285.74);
-    --color-gray-750: oklch(26.06% 0.00729 285.73);
-    --color-gray-700: oklch(29.24% 0.00696 285.72);
-    --color-gray-650: oklch(32.79% 0.0066 285.71);
-    --color-gray-600: oklch(36.74% 0.0062 285.69);
-    --color-gray-550: oklch(41.12% 0.00576 285.68);
-    --color-gray-500: oklch(45.73% 0.00529 285.66);
-    --color-gray-450: oklch(50.63% 0.00479 285.65);
-    --color-gray-400: oklch(55.9% 0.00427 285.63);
-    --color-gray-350: oklch(61.31% 0.00371 285.62);
-    --color-gray-300: oklch(66.75% 0.00316 285.6);
-    --color-gray-250: oklch(72.72% 0.00256 285.58);
-    --color-gray-200: oklch(78.73% 0.00195 285.56);
-    --color-gray-150: oklch(84.98% 0.00132 285.54);
-    --color-gray-100: oklch(91.4% 0.00067 285.52);
+    /* 밝은 구간: gray-850 → gray-50 */
+    --color-gray-800: oklch(26.75% 0.01706 257.57);
+    --color-gray-750: oklch(31.5% 0.01593 259.43);
+    --color-gray-700: oklch(36.25% 0.01479 261.3);
+    --color-gray-650: oklch(41% 0.01365 263.16);
+    --color-gray-600: oklch(45.75% 0.01251 265.02);
+    --color-gray-550: oklch(50.5% 0.01138 266.88);
+    --color-gray-500: oklch(55.25% 0.01024 268.74);
+    --color-gray-450: oklch(60% 0.0091 270.61);
+    --color-gray-400: oklch(64.75% 0.008 272.47);
+    --color-gray-350: oklch(69.5% 0.00683 274.33);
+    --color-gray-300: oklch(74.25% 0.00569 276.19);
+    --color-gray-250: oklch(79% 0.00455 278.05);
+    --color-gray-200: oklch(83.75% 0.00341 279.91);
+    --color-gray-150: oklch(88.5% 0.00228 281.78);
+    --color-gray-100: oklch(93.25% 0.00114 283.64);
     --color-gray-50: oklch(98% 0 285.5);
 }
 
@@ -43,7 +43,7 @@
     --custom-bottom-pannel-height: calc(var(--spacing) * 14);
 
     --custom-auth-form-width: calc(var(--spacing) * 75);
-    --custom-auth-input-width: calc(var(--spacing) * 50);
+    --custom-auth-input-width: calc(var(--spacing) * 65);
 }
 
 .discord-app {

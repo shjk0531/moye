@@ -1,7 +1,5 @@
 <template>
-    <div class="auth-page">
-        <LoginProcess />
-    </div>
+    <LoginProcess />
 </template>
 
 <script lang="ts">
@@ -15,8 +13,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.auth-page {
-    grid-column: span 12;
-}
-</style>
+<style scoped></style>

@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import {
-    AuthPage,
     ChatPage,
     LoginPage,
     SignupPage,
     CalendarPage,
+    FindPasswordPage,
 } from '@/pages';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
 import { AuthLayout, AppLayout } from '@/shared/layout';
@@ -22,6 +22,10 @@ const routes = [
                 path: 'signup',
                 component: SignupPage,
             },
+            {
+                path: 'find-password',
+                component: FindPasswordPage,
+            },
         ],
     },
     {
@@ -36,11 +40,6 @@ const routes = [
             {
                 path: 'me',
                 component: ChatPage,
-                meta: { leftSide: ChannelListSidebar },
-            },
-            {
-                path: 'login',
-                component: AuthPage,
                 meta: { leftSide: ChannelListSidebar },
             },
             {

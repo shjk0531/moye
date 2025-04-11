@@ -2,12 +2,13 @@
     <div class="w-screen h-screen flex items-center flex-col bg-gray-950">
         <!-- 로고 아이콘 -->
         <div class="flex flex-row justify-center items-center py-10">
-            <div class="w-20 h-20 bg-gray-50 rounded-full"></div>
+            <!-- public/logo.svg 파일 사용 -->
+            <div class="bg-gray-50 rounded-full p-0.5">
+                <img src="/logo.svg" alt="logo" class="w-20 h-20" />
+            </div>
         </div>
         <!-- auth  폼 -->
-        <div
-            class="w-(--custom-auth-form-width) h-fit bg-gray-800 rounded-lg p-4 border border-gray-600"
-        >
+        <div class="h-fit">
             <router-view />
         </div>
         <!-- 하단 바 -->
