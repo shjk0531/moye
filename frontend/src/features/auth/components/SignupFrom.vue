@@ -1,7 +1,9 @@
+<!-- src/features/auth/components/SignupFrom.vue -->
+
 <template>
     <div class="flex justify-center flex-col gap-4">
         <form
-            @submit.prevent="login"
+            @submit.prevent="signUp"
             class="flex flex-col gap-4 bg-gray-850 rounded-lg p-4 border border-gray-700"
         >
             <div class="flex flex-col gap-1">
@@ -14,41 +16,47 @@
                 />
             </div>
             <div class="flex flex-col gap-1">
-                <div class="flex flex-row gap-1 justify-between items-center">
-                    <p class="text-gray-50 text-sm">비밀번호</p>
-                    <!-- 비밀번호 찾기 -->
-                    <router-link
-                        to="/auth/find-password"
-                        class="text-blue-500 text-xs hover:underline"
-                        >비밀번호를 잊으셨나요?</router-link
-                    >
-                </div>
+                <p class="text-gray-50 text-sm">비밀번호</p>
                 <Password
-                    name="password"
-                    required
+                    v-tooltip="'비밀번호'"
                     class="!bg-gray-950 !text-white !border-gray-700 !border !rounded-md !px-2 !py-1 !text-sm !w-(--custom-auth-input-width)"
+                    required
                 />
             </div>
-            <Button
-                type="submit"
-                class="!bg-green-700 !text-white !border-gray-700 !border !rounded-md !py-1 !hover:bg-green-700"
-                :disabled="loading"
-            >
-                로그인
-            </Button>
-            <p v-if="error" class="text-red-600 text-center text-sm">
-                {{ error }}
-            </p>
+            <div class="flex flex-col gap-1">
+                <p class="text-gray-50 text-sm">비밀번호 확인</p>
+                <Password
+                    v-tooltip="'비밀번호 확인'"
+                    class="!bg-gray-950 !text-white !border-gray-700 !border !rounded-md !px-2 !py-1 !text-sm !w-(--custom-auth-input-width)"
+                    required
+                />
+            </div>
+            <div class="flex flex-col gap-1">
+                <p class="text-gray-50 text-sm">닉네임</p>
+                <InputText
+                    v-tooltip="'이름'"
+                    class="!bg-gray-950 !text-white !border-gray-700 !border !rounded-md !px-2 !py-1 !text-sm !w-(--custom-auth-input-width)"
+                    required
+                />
+            </div>
+            <div class="flex flex-col gap-1">
+                <Button
+                    type="submit"
+                    class="!bg-green-700 !text-white !border-gray-700 !border !rounded-md !py-1 !hover:bg-green-800"
+                >
+                    회원가입
+                </Button>
+            </div>
         </form>
         <div
             class="flex flex-col gap-1 items-center border border-gray-700 p-4 rounded-lg"
         >
             <p class="text-gray-50 text-sm">
-                아직 회원이 아니신가요?
+                이미 회원이신가요?
                 <router-link
-                    to="/auth/signup"
+                    to="/auth/login"
                     class="text-blue-500 hover:underline"
-                    >회원가입</router-link
+                    >로그인</router-link
                 >
             </p>
         </div>
@@ -56,13 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import { useLogin } from '../composables/useLogin';
+import { ref } from 'vue';
 
-const emit = defineEmits<{
-    (e: 'success', user: any): void;
-}>();
+const email = ref('');
 
-const { email, password, login, loading, error } = useLogin(emit);
+const signUp = () => {
+    console.log(email.value);
+};
 </script>
 
 <style scoped>
