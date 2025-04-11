@@ -14,5 +14,5 @@ type StudyMember struct {
     ProfileURL string
     RoleFlags  int64     `gorm:"not null;default:0"`   // 권한 비트 필드
 
-    RoleID     *uuid.UUID `gorm:"type:uuid;index"`     // study_roles.id 참조 (nullable)
+    RoleID     uuid.UUID `gorm:"type:uuid;index"`     // study_roles.id 참조 (nullable)
 }
