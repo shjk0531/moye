@@ -6,10 +6,13 @@ import (
 
 	"time"
 
-	messageModel "github.com/shjk0531/moye/backend/internal/domain/message/model"
+	"github.com/kamva/mgm/v3"
+	channelModel "github.com/shjk0531/moye/backend/internal/domain/chat/channel/model"
 	notificationModel "github.com/shjk0531/moye/backend/internal/domain/notification/model"
-	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/model"
-	userModel "github.com/shjk0531/moye/backend/internal/domain/user/model"
+	recruitmentModel "github.com/shjk0531/moye/backend/internal/domain/study/recruitmentPost/model"
+	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/study/model"
+	userModel "github.com/shjk0531/moye/backend/internal/domain/user/user/model"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/shjk0531/moye/backend/internal/global/config"
 	"gorm.io/driver/postgres"
@@ -34,24 +37,44 @@ func main() {
 		log.Fatalf("데이터베이스 연결 실패: %v", err)
 	}
 
+	// UUID 확장 활성화
+	if err := db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"").Error; err != nil {
+		log.Fatalf("UUID 확장 활성화 실패: %v", err)
+	}
+
 	// 각 도메인 모델의 마이그레이션 실행
 	err = db.AutoMigrate(
 		&userModel.User{},
 		&studyModel.Study{},
-		&studyModel.Recruitment{},
-		&studyModel.UserStudy{},
-		&messageModel.ChatRoom{},
-		&messageModel.ChatRoomMember{},
-		&messageModel.Message{},
-		&messageModel.VideoChatSession{},
+		&studyModel.StudyMember{},
+		&studyModel.StudyRole{},
+		&recruitmentModel.Recruitment{},
+		&channelModel.Channel{},
+		&channelModel.ChannelsOrder{},
+		&channelModel.DMChannel{},
+		&channelModel.GroupChannel{},
+		&channelModel.GroupChannelsOrder{},
+		&channelModel.VideoChatSession{},
 		&notificationModel.Notification{},
 	)
+	
 	if err != nil {
 		log.Fatalf("마이그레이션 실패: %v", err)
 	}
 
-	log.Println("데이터베이스 마이그레이션 성공!")
+	log.Println("PostgreSQL 마이그레이션 성공!")
+
+	// MongoDB 초기화 (mgm)
+	initMongo()  // 위에서 정의한 초기화 함수 호출
+	log.Println("MongoDB 연결 성공!")
 
 	// (선택) 예시 데이터 삽입: 간단한 시간 값 테스트
 	log.Println("현재 시간:", time.Now())
+}
+
+func initMongo() {
+    err := mgm.SetDefaultConfig(nil, config.Config.MongoDB, options.Client().ApplyURI(config.Config.MongoURI))
+    if err != nil {
+        log.Fatalf("MongoDB 연결 실패: %v", err)
+    }
 }

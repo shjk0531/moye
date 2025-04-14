@@ -10,14 +10,14 @@ import (
 )
 
 type BaseModel struct {
-	ID        uuid.UUID      `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	CreatedAt time.Time      `gorm:"autoCreateTime"`
-	UpdatedAt time.Time      `gorm:"autoUpdateTime"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        uuid.UUID      `gorm:"type:uuid;default:uuid_generate_v4();primaryKey" json:"id"`
+	CreatedAt time.Time      `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt time.Time      `gorm:"autoUpdateTime" json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	CreatedBy *uuid.UUID `gorm:"type:uuid;index"`
-	UpdatedBy *uuid.UUID `gorm:"type:uuid;index"`
-	Version   int        `gorm:"version;default:1"`
+	CreatedBy *uuid.UUID `gorm:"type:uuid;index" json:"created_by"`
+	UpdatedBy *uuid.UUID `gorm:"type:uuid;index" json:"updated_by"`
+	Version   int        `gorm:"version;default:1" json:"version"`
 }
 
 // BeforeCreate sets the created/updated by fields and generates a UUID if not already set.

@@ -5,7 +5,7 @@ import (
 	"github.com/shjk0531/moye/backend/internal/global/model"
 )
 
-type ChatRoomsOrder struct {
+type ChannelsOrder struct {
 	model.BaseModel
 	StudyID    uuid.UUID `gorm:"not null;index" json:"study_id"`
 	Position   int       `gorm:"not null" json:"position"`

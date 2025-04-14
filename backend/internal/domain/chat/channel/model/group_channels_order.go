@@ -5,11 +5,11 @@ import (
 	"github.com/shjk0531/moye/backend/internal/global/model"
 )
 
-type GroupChatRoomsOrder struct {
+type GroupChannelsOrder struct {
 	model.BaseModel
 	GroupID uuid.UUID `gorm:"not null;index" json:"group_id"`
 	Position int       `gorm:"not null" json:"position"`
-	ChatRoomID uuid.UUID `gorm:"not null;index" json:"chatroom_id"`
+	ChannelID uuid.UUID `gorm:"not null;index" json:"channel_id"`
 
-	ChatRoom ChatRoom `gorm:"foreignKey:ChatRoomID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
+	Channel Channel `gorm:"foreignKey:ChannelID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
 }

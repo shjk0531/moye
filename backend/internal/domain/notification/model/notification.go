@@ -2,6 +2,7 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,15 +18,15 @@ const (
 
 // 기본 알림 구조체
 type Notification struct {
-	ID        uuid.UUID        `json:"id"`
-	UserID    uuid.UUID        `json:"user_id"`    // 알림 수신 대상 (예: 스터디 리더)
-	Type      NotificationType `json:"type"`       // 알림 유형: study_application, study_schedule 등
-	Title     string           `json:"title"`      // 알림 제목
-	Message   string           `json:"message"`    // 알림 내용 (기본 설명)
-	Data      any     		   `json:"data,omitempty"` // 추가 데이터: 타입에 따라 구조체를 할당
-	IsRead    bool             `json:"is_read"`    // 읽음 여부
-	CreatedAt time.Time        `json:"created_at"` // 생성 시간
-	UpdatedAt time.Time        `json:"updated_at"` // 수정 시간
+	ID        uuid.UUID        `gorm:"type:uuid;primary_key" json:"id"`
+	UserID    uuid.UUID        `gorm:"type:uuid;not null;index" json:"user_id"`    // 알림 수신 대상 (예: 스터디 리더)
+	Type      NotificationType `gorm:"type:varchar(50);not null" json:"type"`      // 알림 유형: study_application, study_schedule 등
+	Title     string           `gorm:"type:varchar(255);not null" json:"title"`    // 알림 제목
+	Message   string           `gorm:"type:text;not null" json:"message"`          // 알림 내용 (기본 설명)
+	Data      json.RawMessage  `gorm:"type:jsonb" json:"data,omitempty"`          // 추가 데이터: 타입에 따라 구조체를 할당
+	IsRead    bool             `gorm:"default:false" json:"is_read"`              // 읽음 여부
+	CreatedAt time.Time        `json:"created_at"`                                // 생성 시간
+	UpdatedAt time.Time        `json:"updated_at"`                                // 수정 시간
 }
 
 // 스터디 지원 알림에 담길 추가 데이터를 정의

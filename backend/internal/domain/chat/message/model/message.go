@@ -10,7 +10,7 @@ import (
 type Message struct {
 	mgm.DefaultModel `bson:",inline"`
 
-    RoomID    string    `bson:"room_id"`     // ChatRoom.ID
+    ChannelID    string    `bson:"channel_id"`     // ChatRoom.ID
     SenderID  string    `bson:"sender_id"`
     Content   string    `bson:"content"`
     Type      string    `bson:"type"`        // text, image, file 등

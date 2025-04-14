@@ -7,8 +7,8 @@ import (
 
 type Study struct {
     model.BaseModel
-    Name        string    `gorm:"not null"`
-    ProfileURL  string
-    Description string
-    LeaderID    uuid.UUID `gorm:"type:uuid;not null"`
+    Name        string    `gorm:"not null" json:"name"`
+    ProfileURL  string    `gorm:"not null" json:"profile_url"`
+    Description string    `gorm:"not null" json:"description"`
+    LeaderID    uuid.UUID `gorm:"type:uuid;not null;index" json:"leader_id"`
 }
