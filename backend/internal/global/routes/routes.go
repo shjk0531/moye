@@ -13,6 +13,11 @@ import (
 	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/user/repository"
 	userService "github.com/shjk0531/moye/backend/internal/domain/user/user/service"
 
+	// PostgreSQL: Study 도메인
+	studyController "github.com/shjk0531/moye/backend/internal/domain/study/study/controller"
+	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
+	studyService "github.com/shjk0531/moye/backend/internal/domain/study/study/service"
+
 	// MongoDB: chat 도메인
 	chatContainer "github.com/shjk0531/moye/backend/internal/domain/chat/message/controller"
 	chatRepository "github.com/shjk0531/moye/backend/internal/domain/chat/message/repository"
@@ -46,6 +51,12 @@ func RegisterRoutes(router *gin.Engine) {
 	userServ := userService.NewService(userRepo)
 	userCtrl := userContainer.NewController(userServ)
 	userCtrl.RegisterRoutes(api)
+
+	// Study 도메인 라우트 등록 (PostgreSQL 사용)
+	studyRepo := studyRepository.NewRepository(pgDB)
+	studyServ := studyService.NewService(studyRepo)
+	studyCtrl := studyController.NewController(studyServ)
+	studyCtrl.RegisterRoutes(api)
 
 	// MongoDB 연결 (메시지 데이터: 채팅, 로그 등)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
