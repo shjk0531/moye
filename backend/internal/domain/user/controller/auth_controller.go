@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shjk0531/moye/backend/internal/domain/user/dto"
 	"github.com/shjk0531/moye/backend/internal/domain/user/model"
 	"github.com/shjk0531/moye/backend/internal/domain/user/service"
 )
@@ -13,86 +14,83 @@ type AuthController struct {
 }
 
 func NewAuthController(authService service.AuthService) *AuthController {
-	return &AuthController{authService: authService}
+	return &AuthController{
+		authService: authService,
+	}
 }
 
-// 로그인 요청 바디
-type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+// RegisterRoutes는 인증 관련 라우트를 등록
+func (c *AuthController) RegisterRoutes(router *gin.RouterGroup) {
+	auth := router.Group("/auth")
+	{
+		auth.POST("/register", c.Register)
+		auth.POST("/login", c.Login)
+		auth.POST("/refresh", c.RefreshToken)
+	}
 }
 
-// 로그인 응답
-type LoginResponse struct {
-	Token string `json:"token"`
-}
-
-// 회원가입 요청 바디
-type RegisterRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=6"`
-	Nickname string `json:"nickname" binding:"required"`
-	Profile  string `json:"profile"`
-}
-
-// Login은 사용자 로그인 핸들러
-// @Summary 사용자 로그인
-// @Description 이메일과 비밀번호로 로그인하고 JWT 토큰을 반환
-// @Accept json
-// @Produce json
-// @Param loginRequest body LoginRequest true "로그인 정보"
-// @Success 200 {object} LoginResponse
-// @Failure 400 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Router /auth/login [post]
+// Login은 이메일과 비밀번호로 로그인하여 토큰을 발급
 func (c *AuthController) Login(ctx *gin.Context) {
-	var req LoginRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	var loginRequest dto.LoginRequest
+	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청 형식"})
 		return
 	}
 
-	// 로그인 시도
-	token, err := c.authService.Login(req.Email, req.Password)
+	// 인증 및 토큰 발급
+	tokenResponse, err := c.authService.Login(loginRequest.Email, loginRequest.Password)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
-	// JWT 토큰 반환
-	ctx.JSON(http.StatusOK, LoginResponse{Token: token})
+	ctx.JSON(http.StatusOK, tokenResponse)
 }
 
-// Register는 사용자 회원가입 핸들러
-// @Summary 사용자 회원가입
-// @Description 새 사용자 계정 생성
-// @Accept json
-// @Produce json
-// @Param registerRequest body RegisterRequest true "회원가입 정보"
-// @Success 201 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Router /auth/register [post]
+// Register는 새 사용자를 등록
 func (c *AuthController) Register(ctx *gin.Context) {
-	var req RegisterRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	var registerRequest dto.RegisterRequest
+	if err := ctx.ShouldBindJSON(&registerRequest); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청 형식"})
 		return
 	}
 
 	// 사용자 모델 생성
 	user := &model.User{
-		Email:    req.Email,
-		Password: req.Password,
-		Nickname: req.Nickname,
-		Profile:  req.Profile,
+		Email:    registerRequest.Email,
+		Password: registerRequest.Password,
+		Nickname: registerRequest.Nickname,
+		Profile:  registerRequest.Profile,
 	}
 
-	// 회원가입 시도
-	if err := c.authService.Register(user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// 사용자 등록
+	err := c.authService.Register(user)
+	if err != nil {
+		if err == service.ErrDuplicateEmail {
+			ctx.JSON(http.StatusConflict, gin.H{"error": "이미 등록된 이메일입니다"})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "등록 실패"})
 		return
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "회원가입 성공"})
 }
 
+// RefreshToken은 리프레시 토큰을 사용하여 새 토큰 쌍을 발급
+func (c *AuthController) RefreshToken(ctx *gin.Context) {
+	var refreshRequest dto.RefreshTokenRequest
+	if err := ctx.ShouldBindJSON(&refreshRequest); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청 형식"})
+		return
+	}
+
+	// 토큰 갱신
+	tokenResponse, err := c.authService.RefreshToken(refreshRequest.RefreshToken)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "유효하지 않은 리프레시 토큰"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, tokenResponse)
+}

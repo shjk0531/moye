@@ -17,8 +17,10 @@ var jwtService jwt.Service
 // InitJWTService는 JWT 서비스를 초기화
 func InitJWTService() {
 	jwtConfig := jwt.Config{
-		SecretKey:     config.Config.JWT.SecretKey,
-		TokenDuration: config.Config.JWT.TokenDuration,
+		AccessTokenSecret:  config.Config.JWT.AccessTokenSecret,
+		RefreshTokenSecret: config.Config.JWT.RefreshTokenSecret,
+		AccessDuration:     config.Config.JWT.AccessDuration,
+		RefreshDuration:    config.Config.JWT.RefreshDuration,
 	}
 	jwtService = jwt.NewService(jwtConfig)
 }
@@ -41,7 +43,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 
 		// JWT 토큰에서 사용자 ID 가져오기
-		userID, err := jwtService.GetUserID(token)
+		userID, err := jwtService.GetUserID(token, jwt.AccessToken)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 			return

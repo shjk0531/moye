@@ -14,23 +14,47 @@ var (
 	ErrExpiredToken = errors.New("token expired")
 )
 
+// TokenType은 토큰 유형을 나타냅니다
+type TokenType string
+
+const (
+	AccessToken  TokenType = "access"
+	RefreshToken TokenType = "refresh"
+)
+
 // Config는 JWT 설정을 담는 구조체
 type Config struct {
-	SecretKey     string
-	TokenDuration time.Duration
+	AccessTokenSecret  string
+	RefreshTokenSecret string
+	AccessDuration     time.Duration
+	RefreshDuration    time.Duration
+}
+
+// TokenDetails는 생성된 토큰의 세부 정보를 담는 구조체
+type TokenDetails struct {
+	AccessToken  string
+	RefreshToken string
+	AccessUUID   uuid.UUID
+	RefreshUUID  uuid.UUID
+	AtExpires    int64
+	RtExpires    int64
 }
 
 // Claims는 JWT 페이로드에 포함될 클레임
 type Claims struct {
-	UserID uuid.UUID `json:"user_id"`
+	UserID      uuid.UUID `json:"user_id"`
+	TokenUUID   uuid.UUID `json:"token_uuid"`
+	TokenType   TokenType `json:"token_type"`
+	Roles       []string  `json:"roles,omitempty"`
+	Permissions []string  `json:"permissions,omitempty"`
 	jwt.RegisteredClaims
 }
 
 // Service는 JWT 토큰 관련 기능을 제공하는 인터페이스
 type Service interface {
-	GenerateToken(userID uuid.UUID) (string, error)
-	ValidateToken(tokenString string) (*Claims, error)
-	GetUserID(tokenString string) (uuid.UUID, error)
+	GenerateTokenPair(userID uuid.UUID, roles []string, permissions []string) (*TokenDetails, error)
+	ValidateToken(tokenString string, tokenType TokenType) (*Claims, error)
+	GetUserID(tokenString string, tokenType TokenType) (uuid.UUID, error)
 }
 
 // service는 JWT 서비스 구현체
@@ -45,30 +69,73 @@ func NewService(config Config) Service {
 	}
 }
 
-// GenerateToken은 사용자 ID로 JWT 토큰을 생성
-func (s *service) GenerateToken(userID uuid.UUID) (string, error) {
-	now := time.Now()
-	claims := &Claims{
-		UserID: userID,
+// GenerateTokenPair는 사용자 ID로 access token과 refresh token 쌍을 생성
+func (s *service) GenerateTokenPair(userID uuid.UUID, roles []string, permissions []string) (*TokenDetails, error) {
+	td := &TokenDetails{
+		AccessUUID:  uuid.New(),
+		RefreshUUID: uuid.New(),
+		AtExpires:   time.Now().Add(s.config.AccessDuration).Unix(),
+		RtExpires:   time.Now().Add(s.config.RefreshDuration).Unix(),
+	}
+
+	// Access Token 생성
+	atClaims := &Claims{
+		UserID:      userID,
+		TokenUUID:   td.AccessUUID,
+		TokenType:   AccessToken,
+		Roles:       roles,
+		Permissions: permissions,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(now.Add(s.config.TokenDuration)),
-			IssuedAt:  jwt.NewNumericDate(now),
-			NotBefore: jwt.NewNumericDate(now),
+			ExpiresAt: jwt.NewNumericDate(time.Unix(td.AtExpires, 0)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(s.config.SecretKey))
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	var err error
+	td.AccessToken, err = at.SignedString([]byte(s.config.AccessTokenSecret))
+	if err != nil {
+		return nil, err
+	}
+
+	// Refresh Token 생성
+	rtClaims := &Claims{
+		UserID:    userID,
+		TokenUUID: td.RefreshUUID,
+		TokenType: RefreshToken,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Unix(td.RtExpires, 0)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+		},
+	}
+
+	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
+	td.RefreshToken, err = rt.SignedString([]byte(s.config.RefreshTokenSecret))
+	if err != nil {
+		return nil, err
+	}
+
+	return td, nil
 }
 
 // ValidateToken은 토큰 문자열을 검증하고 클레임을 반환
-func (s *service) ValidateToken(tokenString string) (*Claims, error) {
+func (s *service) ValidateToken(tokenString string, tokenType TokenType) (*Claims, error) {
+	// 토큰 유형에 따라 적절한 시크릿 키 선택
+	var secretKey string
+	if tokenType == AccessToken {
+		secretKey = s.config.AccessTokenSecret
+	} else {
+		secretKey = s.config.RefreshTokenSecret
+	}
+
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		// 서명 방식 확인
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, ErrInvalidToken
 		}
-		return []byte(s.config.SecretKey), nil
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
@@ -78,16 +145,22 @@ func (s *service) ValidateToken(tokenString string) (*Claims, error) {
 		return nil, ErrInvalidToken
 	}
 
-	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return claims, nil
+	claims, ok := token.Claims.(*Claims)
+	if !ok || !token.Valid {
+		return nil, ErrInvalidToken
 	}
 
-	return nil, ErrInvalidToken
+	// 토큰 유형 검증
+	if claims.TokenType != tokenType {
+		return nil, ErrInvalidToken
+	}
+
+	return claims, nil
 }
 
 // GetUserID는 토큰에서 사용자 ID를 추출
-func (s *service) GetUserID(tokenString string) (uuid.UUID, error) {
-	claims, err := s.ValidateToken(tokenString)
+func (s *service) GetUserID(tokenString string, tokenType TokenType) (uuid.UUID, error) {
+	claims, err := s.ValidateToken(tokenString, tokenType)
 	if err != nil {
 		return uuid.Nil, err
 	}

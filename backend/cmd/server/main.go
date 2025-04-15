@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// 환경 설정 초기화 (configs/config.yaml 사용)
-	config.InitConfig()
+	config.Init()
 
 	// Gin 엔진 생성
 	router := gin.Default()
@@ -17,5 +17,5 @@ func main() {
 	routes.RegisterRoutes(router)
 
 	// 서버 실행 (환경설정에서 포트 사용 가능)
-	router.Run(config.Config.ServerPort)
+	router.Run(config.Config.Server.Port)
 }

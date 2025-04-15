@@ -9,7 +9,7 @@ import (
 )
 
 func InitMongo() {
-	err := mgm.SetDefaultConfig(nil, config.Config.MongoDB, options.Client().ApplyURI(config.Config.MongoURI))
+	err := mgm.SetDefaultConfig(nil, config.Config.Mongo.DB, options.Client().ApplyURI(config.Config.Mongo.URI))
 	if err != nil {
 		log.Fatal("MongoDB(mgm) 초기화 실패: ", err)
 	}

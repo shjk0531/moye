@@ -21,16 +21,16 @@ import (
 
 func main() {
 	// 설정 로드
-	config.InitConfig()
+	config.Init()
 
 	// DSN 생성 (SSL 모드는 개발환경에 맞게 disable)
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Seoul",
-		config.Config.DBHost,
-		config.Config.DBUser,
-		config.Config.DBPassword,
-		config.Config.DBName,
-		config.Config.DBPort,
+		config.Config.Database.Host,
+		config.Config.Database.User,
+		config.Config.Database.Password,
+		config.Config.Database.DBName,
+		config.Config.Database.Port,
 	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -73,7 +73,7 @@ func main() {
 }
 
 func initMongo() {
-    err := mgm.SetDefaultConfig(nil, config.Config.MongoDB, options.Client().ApplyURI(config.Config.MongoURI))
+    err := mgm.SetDefaultConfig(nil, config.Config.Mongo.DB, options.Client().ApplyURI(config.Config.Mongo.URI))
     if err != nil {
         log.Fatalf("MongoDB 연결 실패: %v", err)
     }

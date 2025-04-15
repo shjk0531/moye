@@ -2,9 +2,9 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/shjk0531/moye/backend/internal/domain/user/model"
 	"github.com/shjk0531/moye/backend/internal/domain/user/service"
 )
@@ -43,13 +43,9 @@ func (ctrl *UserController) CreateUser(c *gin.Context) {
 // 사용자 조회
 func (ctrl *UserController) GetUser(c *gin.Context) {
 	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 ID"})
-		return
-	}
 
-	user, err := ctrl.service.GetUser(uint(id))
+
+	user, err := ctrl.service.GetUser(uuid.MustParse(idStr))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "사용자를 찾을 수 없음"})
 		return

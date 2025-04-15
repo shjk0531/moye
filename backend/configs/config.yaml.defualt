@@ -9,3 +9,9 @@ db_name: ''
 
 mongo_uri: "mongodb://{ user }:{ password }@{ host }:{ port }/{ mongo_db }?authSource={ user }"
 mongo_db: ''
+
+# JWT 설정
+jwt_access_token_secret: 'your_access_token_secret'
+jwt_refresh_token_secret: 'your_refresh_token_secret'
+jwt_access_duration: '{}m'
+jwt_refresh_duration: '{}d'

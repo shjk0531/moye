@@ -32,11 +32,11 @@ func RegisterRoutes(router *gin.Engine) {
 	// PostgreSQL 연결 (정형 데이터: User, Study, Notification 등)
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Seoul",
-		config.Config.DBHost,
-		config.Config.DBUser,
-		config.Config.DBPassword,
-		config.Config.DBName,
-		config.Config.DBPort,
+		config.Config.Database.Host,
+		config.Config.Database.User,
+		config.Config.Database.Password,
+		config.Config.Database.DBName,
+		config.Config.Database.Port,
 	)
 	pgDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -59,7 +59,7 @@ func RegisterRoutes(router *gin.Engine) {
 	// MongoDB 연결 (메시지 데이터: 채팅, 로그 등)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(config.Config.MongoURI))
+	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(config.Config.Mongo.URI))
 	if err != nil {
 		panic("MongoDB 연결 실패: " + err.Error())
 	}
@@ -69,7 +69,7 @@ func RegisterRoutes(router *gin.Engine) {
 	}
 
 	// chat 도메인 라우트 등록 (MongoDB 사용)
-	msgRepo := chatRepository.NewRepository(mongoClient, config.Config.MongoDB)
+	msgRepo := chatRepository.NewRepository(mongoClient, config.Config.Mongo.DB)
 	msgCtrl := chatContainer.NewController(msgRepo)
 	msgCtrl.RegisterRoutes(api)
 }
