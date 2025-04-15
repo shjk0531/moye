@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shjk0531/moye/backend/internal/domain/user/user/model"
-	"github.com/shjk0531/moye/backend/internal/domain/user/user/service"
+	"github.com/shjk0531/moye/backend/internal/domain/user/model"
+	"github.com/shjk0531/moye/backend/internal/domain/user/service"
 )
 
 type Controller struct {

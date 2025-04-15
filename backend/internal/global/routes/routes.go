@@ -9,14 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 
 	// PostgreSQL: User 도메인
-	userContainer "github.com/shjk0531/moye/backend/internal/domain/user/user/controller"
-	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/user/repository"
-	userService "github.com/shjk0531/moye/backend/internal/domain/user/user/service"
+	userContainer "github.com/shjk0531/moye/backend/internal/domain/user/controller"
+	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/repository"
+	userService "github.com/shjk0531/moye/backend/internal/domain/user/service"
 
 	// PostgreSQL: Study 도메인
-	studyController "github.com/shjk0531/moye/backend/internal/domain/study/study/controller"
-	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
-	studyService "github.com/shjk0531/moye/backend/internal/domain/study/study/service"
+	studyController "github.com/shjk0531/moye/backend/internal/domain/study/controller"
+	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/repository"
+	studyService "github.com/shjk0531/moye/backend/internal/domain/study/service"
 
 	// MongoDB: chat 도메인
 	chatContainer "github.com/shjk0531/moye/backend/internal/domain/chat/message/controller"

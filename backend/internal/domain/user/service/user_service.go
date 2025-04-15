@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/shjk0531/moye/backend/internal/domain/user/user/model"
-	"github.com/shjk0531/moye/backend/internal/domain/user/user/repository"
+	"github.com/shjk0531/moye/backend/internal/domain/user/model"
+	"github.com/shjk0531/moye/backend/internal/domain/user/repository"
 )
 
 type Service interface {

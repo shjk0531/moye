@@ -9,9 +9,9 @@ import (
 	"github.com/kamva/mgm/v3"
 	channelModel "github.com/shjk0531/moye/backend/internal/domain/chat/channel/model"
 	notificationModel "github.com/shjk0531/moye/backend/internal/domain/notification/model"
-	recruitmentModel "github.com/shjk0531/moye/backend/internal/domain/study/recruitmentPost/model"
-	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/study/model"
-	userModel "github.com/shjk0531/moye/backend/internal/domain/user/user/model"
+	recruitmentModel "github.com/shjk0531/moye/backend/internal/domain/recruitment/model"
+	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/model"
+	userModel "github.com/shjk0531/moye/backend/internal/domain/user/model"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/shjk0531/moye/backend/internal/global/config"
