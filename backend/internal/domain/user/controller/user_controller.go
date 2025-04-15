@@ -9,22 +9,23 @@ import (
 	"github.com/shjk0531/moye/backend/internal/domain/user/service"
 )
 
-type Controller struct {
+type UserController struct {
 	service service.Service
 }
 
-func NewController(s service.Service) *Controller {
-	return &Controller{service: s}
+func NewUserController(s service.Service) *UserController {
+	return &UserController{service: s}
 }
 
 // RegisterRoutes는 /users 경로 하위의 라우트를 등록합니다.
-func (ctrl *Controller) RegisterRoutes(rg *gin.RouterGroup) {
+func (ctrl *UserController) RegisterRoutes(rg *gin.RouterGroup) {
 	r := rg.Group("/users")
 	r.POST("/", ctrl.CreateUser)
 	r.GET("/:id", ctrl.GetUser)
 }
 
-func (ctrl *Controller) CreateUser(c *gin.Context) {
+// 사용자 생성
+func (ctrl *UserController) CreateUser(c *gin.Context) {
 	var user model.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -39,7 +40,8 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-func (ctrl *Controller) GetUser(c *gin.Context) {
+// 사용자 조회
+func (ctrl *UserController) GetUser(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {

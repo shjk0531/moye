@@ -9,9 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	// PostgreSQL: User 도메인
-	userContainer "github.com/shjk0531/moye/backend/internal/domain/user/controller"
+	userController "github.com/shjk0531/moye/backend/internal/domain/user/controller"
 	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/repository"
-	userService "github.com/shjk0531/moye/backend/internal/domain/user/service"
 
 	// PostgreSQL: Study 도메인
 	studyController "github.com/shjk0531/moye/backend/internal/domain/study/controller"
@@ -48,8 +47,7 @@ func RegisterRoutes(router *gin.Engine) {
 
 	// User 도메인 라우트 등록 (PostgreSQL 사용)
 	userRepo := userRepository.NewRepository(pgDB)
-	userServ := userService.NewService(userRepo)
-	userCtrl := userContainer.NewController(userServ)
+	userCtrl := userController.Init(userRepo)
 	userCtrl.RegisterRoutes(api)
 
 	// Study 도메인 라우트 등록 (PostgreSQL 사용)

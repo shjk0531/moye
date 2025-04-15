@@ -17,5 +17,5 @@ func main() {
 	routes.RegisterRoutes(router)
 
 	// 서버 실행 (환경설정에서 포트 사용 가능)
-	router.Run(":8080")
+	router.Run(config.Config.ServerPort)
 }

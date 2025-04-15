@@ -7,11 +7,30 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/shjk0531/moye/backend/internal/global/config"
+	"github.com/shjk0531/moye/backend/internal/global/jwt"
 )
+
+// jwtService는 JWT 서비스의 싱글톤 인스턴스
+var jwtService jwt.Service
+
+// InitJWTService는 JWT 서비스를 초기화
+func InitJWTService() {
+	jwtConfig := jwt.Config{
+		SecretKey:     config.Config.JWT.SecretKey,
+		TokenDuration: config.Config.JWT.TokenDuration,
+	}
+	jwtService = jwt.NewService(jwtConfig)
+}
 
 // AuthMiddleware는 JWT 토큰을 검증하고 userID를 context에 저장
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// JWT 서비스가 초기화되지 않았으면 초기화
+		if jwtService == nil {
+			InitJWTService()
+		}
+
 		// 예시: Authorization 헤더에서 Bearer 토큰 추출
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
@@ -21,9 +40,8 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 
-		// TODO: 실제 JWT 파싱 및 검증 로직
-		// 여기는 예시로 userID를 mock 처리
-		userID, err := parseJWTAndGetUserID(token)
+		// JWT 토큰에서 사용자 ID 가져오기
+		userID, err := jwtService.GetUserID(token)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 			return
