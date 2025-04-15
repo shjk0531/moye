@@ -1,11 +1,11 @@
-server_port: "8080"
+server_port: ':{ port }'
 
 # PostgreSQL 설정 (관계형 데이터)
-db_host: 
-db_port: 
-db_user: 
-db_password:
-db_name:
+db_host: ''
+db_port: ''
+db_user: ''
+db_password: ''
+db_name: ''
 
 mongo_uri: "mongodb://{ user }:{ password }@{ host }:{ port }/{ mongo_db }?authSource={ user }"
-mongo_db: 
+mongo_db: ''
