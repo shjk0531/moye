@@ -14,42 +14,6 @@ var (
 	ErrExpiredToken = errors.New("token expired")
 )
 
-// TokenType은 토큰 유형을 나타냅니다
-type TokenType string
-
-const (
-	AccessToken  TokenType = "access"
-	RefreshToken TokenType = "refresh"
-)
-
-// Config는 JWT 설정을 담는 구조체
-type Config struct {
-	AccessTokenSecret  string
-	RefreshTokenSecret string
-	AccessDuration     time.Duration
-	RefreshDuration    time.Duration
-}
-
-// TokenDetails는 생성된 토큰의 세부 정보를 담는 구조체
-type TokenDetails struct {
-	AccessToken  string
-	RefreshToken string
-	AccessUUID   uuid.UUID
-	RefreshUUID  uuid.UUID
-	AtExpires    int64
-	RtExpires    int64
-}
-
-// Claims는 JWT 페이로드에 포함될 클레임
-type Claims struct {
-	UserID      uuid.UUID `json:"user_id"`
-	TokenUUID   uuid.UUID `json:"token_uuid"`
-	TokenType   TokenType `json:"token_type"`
-	Roles       []string  `json:"roles,omitempty"`
-	Permissions []string  `json:"permissions,omitempty"`
-	jwt.RegisteredClaims
-}
-
 // Service는 JWT 토큰 관련 기능을 제공하는 인터페이스
 type Service interface {
 	GenerateTokenPair(userID uuid.UUID, roles []string, permissions []string) (*TokenDetails, error)

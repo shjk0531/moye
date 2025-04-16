@@ -2,11 +2,13 @@ package controller
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shjk0531/moye/backend/internal/domain/user/dto"
 	"github.com/shjk0531/moye/backend/internal/domain/user/model"
 	"github.com/shjk0531/moye/backend/internal/domain/user/service"
+	"github.com/shjk0531/moye/backend/internal/global/config"
 )
 
 type AuthController struct {
@@ -38,12 +40,25 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	}
 
 	// 인증 및 토큰 발급
-	tokenResponse, err := c.authService.Login(loginRequest.Email, loginRequest.Password)
+	tokenResponse, refreshToken, err := c.authService.Login(loginRequest.Email, loginRequest.Password)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	// Refresh Token을 HttpOnly 쿠키로 설정
+	refreshTokenExpiry := time.Duration(config.Config.JWT.RefreshDuration) * time.Second
+	ctx.SetCookie(
+		"refresh_token",
+		refreshToken,
+		int(refreshTokenExpiry.Seconds()),
+		"/",
+		"",
+		true,  // HTTPS만 사용
+		true,  // HttpOnly
+	)
+
+	// Access Token만 응답 본문에 포함하여 반환
 	ctx.JSON(http.StatusOK, tokenResponse)
 }
 
@@ -79,18 +94,32 @@ func (c *AuthController) Register(ctx *gin.Context) {
 
 // RefreshToken은 리프레시 토큰을 사용하여 새 토큰 쌍을 발급
 func (c *AuthController) RefreshToken(ctx *gin.Context) {
-	var refreshRequest dto.RefreshTokenRequest
-	if err := ctx.ShouldBindJSON(&refreshRequest); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청 형식"})
+	// 쿠키에서 리프레시 토큰 추출
+	refreshToken, err := ctx.Cookie("refresh_token")
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "리프레시 토큰 쿠키가 없습니다"})
 		return
 	}
 
 	// 토큰 갱신
-	tokenResponse, err := c.authService.RefreshToken(refreshRequest.RefreshToken)
+	tokenResponse, newRefreshToken, err := c.authService.RefreshToken(refreshToken)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "유효하지 않은 리프레시 토큰"})
 		return
 	}
 
+	// 새 리프레시 토큰을 HttpOnly 쿠키로 설정
+	refreshTokenExpiry := time.Duration(config.Config.JWT.RefreshDuration) * time.Second
+	ctx.SetCookie(
+		"refresh_token",
+		newRefreshToken,
+		int(refreshTokenExpiry.Seconds()),
+		"/",
+		"",
+		true,  // HTTPS만 사용
+		true,  // HttpOnly
+	)
+
+	// 액세스 토큰만 응답 본문에 포함
 	ctx.JSON(http.StatusOK, tokenResponse)
 }
