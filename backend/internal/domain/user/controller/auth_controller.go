@@ -21,16 +21,6 @@ func NewAuthController(authService service.AuthService) *AuthController {
 	}
 }
 
-// RegisterRoutes는 인증 관련 라우트를 등록
-func (c *AuthController) RegisterRoutes(router *gin.RouterGroup) {
-	auth := router.Group("/auth")
-	{
-		auth.POST("/register", c.Register)
-		auth.POST("/login", c.Login)
-		auth.POST("/refresh", c.RefreshToken)
-	}
-}
-
 // Login은 이메일과 비밀번호로 로그인하여 토큰을 발급
 func (c *AuthController) Login(ctx *gin.Context) {
 	var loginRequest dto.LoginRequest
@@ -46,17 +36,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	// Refresh Token을 HttpOnly 쿠키로 설정
-	refreshTokenExpiry := time.Duration(config.Config.JWT.RefreshDuration) * time.Second
-	ctx.SetCookie(
-		"refresh_token",
-		refreshToken,
-		int(refreshTokenExpiry.Seconds()),
-		"/",
-		"",
-		true,  // HTTPS만 사용
-		true,  // HttpOnly
-	)
+	c.SetRefreshToken(ctx, refreshToken)
 
 	// Access Token만 응답 본문에 포함하여 반환
 	ctx.JSON(http.StatusOK, tokenResponse)
@@ -96,6 +76,7 @@ func (c *AuthController) Register(ctx *gin.Context) {
 func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	// 쿠키에서 리프레시 토큰 추출
 	refreshToken, err := ctx.Cookie("refresh_token")
+	print("refreshToken", refreshToken)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "리프레시 토큰 쿠키가 없습니다"})
 		return
@@ -108,18 +89,24 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 		return
 	}
 
-	// 새 리프레시 토큰을 HttpOnly 쿠키로 설정
-	refreshTokenExpiry := time.Duration(config.Config.JWT.RefreshDuration) * time.Second
-	ctx.SetCookie(
-		"refresh_token",
-		newRefreshToken,
-		int(refreshTokenExpiry.Seconds()),
-		"/",
-		"",
-		true,  // HTTPS만 사용
-		true,  // HttpOnly
-	)
+	c.SetRefreshToken(ctx, newRefreshToken)
 
 	// 액세스 토큰만 응답 본문에 포함
 	ctx.JSON(http.StatusOK, tokenResponse)
+}
+
+
+// cookie에 refresh 토큰 저장
+func (c *AuthController) SetRefreshToken(ctx *gin.Context, refreshToken string) {
+	refreshTokenExpiry := time.Duration(config.Config.JWT.RefreshDuration) * time.Second
+	ctx.SetSameSite(http.SameSiteNoneMode)
+	ctx.SetCookie(
+		"refresh_token",
+		refreshToken,
+		int(refreshTokenExpiry.Seconds()),
+		"/",
+		"localhost",
+		true,  // 개발 환경에서는 HTTP 허용
+		true,   // HttpOnly
+	)
 }

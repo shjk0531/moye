@@ -42,5 +42,6 @@ func (c *RootController) RegisterRoutes(router *gin.RouterGroup) {
 		// 인증 관련 엔드포인트
 		authAPI.POST("/login", c.authCtrl.Login)
 		authAPI.POST("/register", c.authCtrl.Register)
+		authAPI.POST("/refresh", c.authCtrl.RefreshToken)
 	}
 }

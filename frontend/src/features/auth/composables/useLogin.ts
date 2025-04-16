@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { loginApi } from '../api/authApi';
 
-export function useLogin(emit: (event: 'success', user: any) => void) {
+export function useLogin(emit: (event: 'success') => void) {
     const email = ref('');
     const password = ref('');
     const loading = ref(false);
@@ -12,9 +12,11 @@ export function useLogin(emit: (event: 'success', user: any) => void) {
             loading.value = true;
             error.value = '';
             const result = await loginApi(email.value, password.value);
-            localStorage.setItem('token', result.token);
-            emit('success', result.user);
+            console.log(result);
+            localStorage.setItem('access_token', result.access_token);
+            emit('success');
         } catch (e) {
+            console.log(e);
             error.value = '로그인 실패.';
         } finally {
             loading.value = false;

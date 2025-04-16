@@ -24,6 +24,7 @@
                     >
                 </div>
                 <Password
+                    v-model="password"
                     name="password"
                     required
                     class="!bg-gray-950 !text-white !border-gray-700 !border !rounded-md !px-2 !py-1 !text-sm !w-(--custom-auth-input-width)"
@@ -59,7 +60,7 @@
 import { useLogin } from '../composables/useLogin';
 
 const emit = defineEmits<{
-    (e: 'success', user: any): void;
+    (e: 'success'): void;
 }>();
 
 const { email, password, login, loading, error } = useLogin(emit);

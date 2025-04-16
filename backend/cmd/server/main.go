@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/shjk0531/moye/backend/internal/global/config"
+	"github.com/shjk0531/moye/backend/internal/global/middleware"
 	"github.com/shjk0531/moye/backend/internal/global/routes"
 )
 
@@ -12,6 +13,9 @@ func main() {
 
 	// Gin 엔진 생성
 	router := gin.Default()
+	
+	// CORS 미들웨어 추가
+	router.Use(middleware.CorsMiddleware())
 
 	// 전역 라우터 등록 (각 도메인 컨트롤러 연결)
 	routes.RegisterRoutes(router)
