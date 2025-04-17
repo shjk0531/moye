@@ -3,19 +3,21 @@
 </template>
 
 <script>
+import { useAppStore } from '@/store';
+
 export default {
     name: 'MemberButton',
-    data() {
-        return {
-            // vuex에서 멤버 리스트 보여줄지 안 보여줄지 로드
-            isMemberListVisible: this.$store.state.isMemberListVisible,
-        };
+    setup() {
+        const appStore = useAppStore();
+        return { appStore };
     },
     computed: {
         iconClasses() {
             const baseClasses = `mdi mdi-account-group hover:text-gray-200 cursor-pointer`;
             return `${baseClasses} ${
-                this.isMemberListVisible ? 'text-gray-150' : 'text-gray-400'
+                this.appStore.isMemberListVisible
+                    ? 'text-gray-150'
+                    : 'text-gray-400'
             }`;
         },
         title() {
@@ -24,8 +26,7 @@ export default {
     },
     methods: {
         handleClick() {
-            // vuex에 멤버 리스트 보여줄지 안보여줄지 저장(toggleMemberList)
-            this.$store.commit('toggleMemberList');
+            this.appStore.toggleMemberList();
         },
     },
 };

@@ -25,7 +25,7 @@
 
         <!-- 멤버 리스트 -->
         <div class="right-sidebar">
-            <MemberList class="w-50" v-if="isMemberListVisible" />
+            <MemberList class="w-50" v-if="appStore.isMemberListVisible" />
         </div>
     </div>
 </template>
@@ -35,7 +35,7 @@ import { StudyNotice } from '@/widgets/notice';
 import { MemberList, StudyListSidebar } from '@/widgets/sidebar';
 import { TitleBar } from '@/widgets/titlebar';
 import { UserPanel } from '@/widgets/userPanel';
-import { mapState, mapMutations } from 'vuex';
+import { useAppStore, useStudyStore } from '@/store';
 
 export default {
     name: 'AppLayout',
@@ -46,8 +46,16 @@ export default {
         MemberList,
         StudyNotice,
     },
+    setup() {
+        const appStore = useAppStore();
+        const studyStore = useStudyStore();
+
+        return {
+            appStore,
+            studyStore,
+        };
+    },
     computed: {
-        ...mapState(['isMemberListVisible']),
         leftSideComponent() {
             return this.$route.meta.leftSide;
         },
@@ -56,7 +64,9 @@ export default {
         },
     },
     methods: {
-        ...mapMutations(['toggleMemberList']),
+        toggleMemberList() {
+            this.appStore.toggleMemberList();
+        },
     },
 };
 </script>

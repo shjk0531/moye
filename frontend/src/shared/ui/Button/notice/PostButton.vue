@@ -7,16 +7,16 @@ import {
     navigateToItem,
     isItemActive,
 } from '@/widgets/notice/services/navigationService';
+import { useRouter, useRoute } from 'vue-router';
 
 export default {
     name: 'PostButton',
-    data() {
-        return {
-            // url에 따라 활성화 여부 결정
-            // true: /study/:studyId/post
-            // false: /study/:studyId/다른 페이지
-            isActive: this.$route.path.includes('/post'),
-        };
+    setup() {
+        const router = useRouter();
+        const route = useRoute();
+        const isActive = route.path.includes('/post');
+
+        return { router, route, isActive };
     },
     computed: {
         iconClasses() {
@@ -31,16 +31,14 @@ export default {
     },
     methods: {
         async handleClick() {
-            const store = this.$store;
-            const router = this.$router;
-            const studyId = this.$route.params.studyId;
+            const studyId = this.route.params.studyId;
 
             if (!studyId) {
                 console.error('유효한 studyId가 없습니다.');
                 return;
             }
 
-            await navigateToItem('post', studyId, store, router);
+            await navigateToItem('post', studyId, this.router);
         },
     },
 };

@@ -2,7 +2,6 @@ import { createApp, reactive } from 'vue';
 import { createPinia } from 'pinia';
 import { App } from '@/app';
 import router from '@/router';
-import store from '@/store';
 
 // UI 라이브러리
 import PrimeVue from 'primevue/config';
@@ -27,7 +26,6 @@ const pinia = createPinia();
 app.use(PrimeVue);
 app.use(router);
 app.use(pinia);
-app.use(store);
 
 app.directive('tooltip', Tooltip);
 

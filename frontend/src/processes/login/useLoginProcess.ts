@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../../entities/user';
+import { useUserStore } from '@/store';
 
 export function useLoginProcess() {
     const router = useRouter();

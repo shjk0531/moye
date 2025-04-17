@@ -39,6 +39,7 @@ import {
     findFirstChannel,
 } from '@/features/channel';
 import ScrollPanel from 'primevue/scrollpanel';
+import { useStudyStore } from '@/store';
 
 export default {
     name: 'StudyIconList',
@@ -86,15 +87,17 @@ export default {
             }
         },
 
-        // Vuex 스토어에 스터디 정보 업데이트
+        // Pinia 스토어에 스터디 정보 업데이트
         updateStudyInfoInStore(study) {
-            this.$store.commit('setStudyName', study.name);
-            this.$store.commit('setStudyIcon', study.icon);
+            const studyStore = useStudyStore();
+            studyStore.setStudyName(study.name);
+            studyStore.setStudyIcon(study.icon);
         },
 
         // 저장된 활성 채널 ID 가져오기
         getActiveChannelId(studyId) {
-            return this.$store.state.activeItems[studyId]?.channel;
+            const studyStore = useStudyStore();
+            return studyStore.activeItems[studyId]?.channel;
         },
 
         // 기존 활성 채널로 이동
@@ -133,7 +136,8 @@ export default {
 
         // 활성 채널 ID 저장
         saveActiveChannel(studyId, channelId) {
-            this.$store.commit('setActiveItem', {
+            const studyStore = useStudyStore();
+            studyStore.setActiveItem({
                 studyId,
                 listType: 'channel',
                 itemId: channelId,
@@ -143,11 +147,9 @@ export default {
         // 타이틀 아이콘 클릭 이벤트 처리
         handleTitleIconClick() {
             this.$router.push('/me');
-            this.$store.commit('setStudyName', 'Moye');
-            this.$store.commit(
-                'setStudyIcon',
-                'https://picsum.photos/200/300?random=1',
-            );
+            const studyStore = useStudyStore();
+            studyStore.setStudyName('Moye');
+            studyStore.setStudyIcon('https://picsum.photos/200/300?random=1');
         },
     },
 };

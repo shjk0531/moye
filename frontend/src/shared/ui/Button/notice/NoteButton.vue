@@ -7,13 +7,16 @@ import {
     navigateToItem,
     isItemActive,
 } from '@/widgets/notice/services/navigationService';
+import { useRouter, useRoute } from 'vue-router';
 
 export default {
     name: 'NoteButton',
-    data() {
-        return {
-            isActive: false,
-        };
+    setup() {
+        const router = useRouter();
+        const route = useRoute();
+        const isActive = route.path.includes('/note');
+
+        return { router, route, isActive };
     },
     computed: {
         iconClasses() {
@@ -28,16 +31,14 @@ export default {
     },
     methods: {
         async handleClick() {
-            const store = this.$store;
-            const router = this.$router;
-            const studyId = this.$route.params.studyId;
+            const studyId = this.route.params.studyId;
 
             if (!studyId) {
                 console.error('유효한 studyId가 없습니다.');
                 return;
             }
 
-            await navigateToItem('note', studyId, store, router);
+            await navigateToItem('note', studyId, this.router);
         },
     },
 };

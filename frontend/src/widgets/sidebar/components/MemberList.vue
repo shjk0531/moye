@@ -7,12 +7,13 @@
 </template>
 
 <script lang="ts">
-import { mapState } from 'vuex';
+import { useAppStore } from '@/store';
 
 export default {
     name: 'MemberList',
-    computed: {
-        ...mapState(['isMemberListVisible']),
+    setup() {
+        const appStore = useAppStore();
+        return { appStore };
     },
 };
 </script>

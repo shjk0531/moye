@@ -1,7 +1,7 @@
 // src/shared/composables/useActiveItem/useActiveItem.ts
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useStudyStore } from '@/store';
 
 // 각 리스트 타입별 API 함수 import
 import {
@@ -40,7 +40,7 @@ const apiMapping: Record<string, ApiMapping> = {
 export function useActiveItem(listType: string) {
     const route = useRoute();
     const router = useRouter();
-    const store = useStore();
+    const studyStore = useStudyStore();
 
     // 지원하지 않는 listType인 경우 경고 로그 출력
     if (!apiMapping[listType]) {
@@ -52,16 +52,15 @@ export function useActiveItem(listType: string) {
     // URL에서 studyId를 추출합니다.
     const currentStudyId = computed(() => route.params.studyId as string);
 
-    // Vuex 스토어의 activeItems를 읽거나 업데이트합니다.
+    // Pinia 스토어의 activeItems를 읽거나 업데이트합니다.
     const activeItemId = computed({
         get() {
             return (
-                store.state.activeItems[currentStudyId.value]?.[listType] ??
-                null
+                studyStore.activeItems[currentStudyId.value]?.[listType] ?? null
             );
         },
         set(val: string) {
-            store.commit('setActiveItem', {
+            studyStore.setActiveItem({
                 studyId: currentStudyId.value,
                 listType,
                 itemId: val,

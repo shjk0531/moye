@@ -1,4 +1,3 @@
-import { Store } from 'vuex';
 import type { Router } from 'vue-router';
 import {
     fetchChannelsGrouped,
@@ -10,6 +9,7 @@ import {
     fetchCalendarsUngrouped,
     findFirstCalendar,
 } from '@/features/calender';
+import { useStudyStore } from '@/store';
 
 interface ApiFunction {
     fetchGroups: () => Promise<any[]>;
@@ -70,14 +70,12 @@ export function isItemTypeSupported(itemType: string): boolean {
  * 사용자가 마지막으로 접속한 아이템으로 이동하는 함수
  * @param itemType - 이동할 아이템 타입 ('channel', 'calendar' 등)
  * @param studyId - 스터디 ID
- * @param store - Vuex 스토어
  * @param router - Vue 라우터
  * @returns Promise<void>
  */
 export async function navigateToItem(
     itemType: string,
     studyId: string,
-    store: Store<any>,
     router: Router,
 ): Promise<void> {
     try {
@@ -99,8 +97,10 @@ export async function navigateToItem(
             return;
         }
 
+        const studyStore = useStudyStore();
+
         // 마지막 접속 아이템 ID 가져오기
-        const lastActiveItemId = store.state.activeItems[studyId]?.[itemType];
+        const lastActiveItemId = studyStore.activeItems[studyId]?.[itemType];
 
         if (lastActiveItemId !== null && lastActiveItemId !== undefined) {
             // 마지막 접속 아이템이 있으면 해당 아이템으로 이동
@@ -116,7 +116,7 @@ export async function navigateToItem(
                 router.push(api.route(studyId, firstItemId));
 
                 // 첫 번째 아이템 ID를 activeItemId로 저장
-                store.commit('setActiveItem', {
+                studyStore.setActiveItem({
                     studyId,
                     listType: itemType,
                     itemId: String(firstItemId),

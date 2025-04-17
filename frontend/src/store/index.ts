@@ -1,40 +1,12 @@
 // src/store/index.ts
-import { createStore } from 'vuex';
+import { createPinia } from 'pinia';
 
-const store = createStore({
-    state: () => ({
-        // studyId별 각 목록(listType별)의 마지막 활성 항목을 저장합니다.
-        // 예: { '1': { channel: '채널1의 id', calendar: '캘린더2의 id' } }
-        activeItems: {} as Record<string, Record<string, string>>,
-        studyName: '',
-        studyIcon: '',
-        // 멤버 리스트 표시 여부
-        isMemberListVisible: false,
-    }),
-    mutations: {
-        setActiveItem(
-            state,
-            {
-                studyId,
-                listType,
-                itemId,
-            }: { studyId: string; listType: string; itemId: string },
-        ) {
-            if (!state.activeItems[studyId]) {
-                state.activeItems[studyId] = {};
-            }
-            state.activeItems[studyId][listType] = itemId;
-        },
-        setStudyName(state, name: string) {
-            state.studyName = name;
-        },
-        setStudyIcon(state, icon: string) {
-            state.studyIcon = icon;
-        },
-        toggleMemberList(state) {
-            state.isMemberListVisible = !state.isMemberListVisible;
-        },
-    },
-});
+// 각 모듈 스토어 내보내기
+export { useAppStore } from './app';
+export { useUserStore } from './user';
+export { useStudyStore } from './study';
 
-export default store;
+// Pinia 인스턴스 생성
+const pinia = createPinia();
+
+export default pinia;
