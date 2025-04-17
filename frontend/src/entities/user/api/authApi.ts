@@ -1,32 +1,23 @@
 import { apiClient } from '@/shared/api';
-import type { User } from '@/entities/user';
-
-export interface TokenResponse {
-    access_token: string;
-    token_type: string;
-    expires_in: number;
-}
+import type {
+    User,
+    LoginResponse,
+    LoginRequest,
+    SignupResponse,
+    SignupRequest,
+} from '@/entities/user';
 
 export async function loginApi(
-    email: string,
-    password: string,
-): Promise<TokenResponse> {
-    const response = await apiClient.post('/auth/login', { email, password });
+    loginRequest: LoginRequest,
+): Promise<LoginResponse> {
+    const response = await apiClient.post('/auth/login', loginRequest);
     return response.data;
 }
 
 export async function signupApi(
-    email: string,
-    password: string,
-    nickname: string,
-    profile: string,
-): Promise<{ message: string }> {
-    const response = await apiClient.post('/auth/register', {
-        email,
-        password,
-        nickname,
-        profile,
-    });
+    signupRequest: SignupRequest,
+): Promise<SignupResponse> {
+    const response = await apiClient.post('/auth/register', signupRequest);
     return response.data;
 }
 

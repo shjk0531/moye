@@ -1,4 +1,5 @@
-import type { User } from '../../entities/user/models/model';
+// src/store/user/state.ts
+import type { User } from '@/entities/user';
 
 export interface UserState {
     user: User | null;

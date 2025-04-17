@@ -8,8 +8,7 @@ import {
 } from '@/pages';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
 import { AuthLayout, AppLayout } from '@/shared/layout';
-import { isAuthenticated } from '@/entities/user';
-
+import { useUserStore } from '@/store/user';
 const routes = [
     {
         path: '/auth',
@@ -72,16 +71,17 @@ const router = createRouter({
 
 // Global Navigation Guard 등록
 router.beforeEach((to, _from, next) => {
+    const userStore = useUserStore();
     const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
     // 인증이 필요한 페이지에 접근할 때 로그인 여부 확인
-    if (requiresAuth && !isAuthenticated()) {
+    if (requiresAuth && !userStore.checkAuth()) {
         // 로그인 페이지로 리디렉션
         return next('/auth/login');
     }
 
     // 이미 로그인된 사용자가 인증 페이지(로그인, 회원가입 등)에 접근하려고 할 때
-    if (!requiresAuth && isAuthenticated() && to.path.startsWith('/auth')) {
+    if (!requiresAuth && userStore.checkAuth() && to.path.startsWith('/auth')) {
         // 메인 페이지로 리디렉션
         return next('/');
     }

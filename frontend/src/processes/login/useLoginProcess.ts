@@ -10,7 +10,7 @@ export function useLoginProcess() {
 
     const handleLoginSuccess = (user: User) => {
         userStore.setUser(user);
-        message.value = `${user.email}님 환영합니다!`;
+        message.value = `${user.nickname}님 환영합니다!`;
         setTimeout(() => {
             router.push('/');
         }, 1500);

@@ -1,5 +1,7 @@
+// src/store/app/getters.ts
 import type { AppState } from './state';
 
 export const getters = {
-    // 추후 필요한 게터를 추가할 수 있습니다.
+    isMicOn: (state: AppState) => state.micOn,
+    isHeadsetOn: (state: AppState) => state.headsetOn,
 };

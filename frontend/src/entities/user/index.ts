@@ -2,7 +2,8 @@
 export * from './api/authApi';
 
 // Models
-export * from './models/model';
+export * from './models/user';
 
-// Utils
-export * from './lib/userStorage';
+// DTO
+export * from './dto/loginDto';
+export * from './dto/signupDto';

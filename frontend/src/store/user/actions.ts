@@ -1,3 +1,4 @@
+// src/store/user/actions.ts
 import type { User } from '@/entities/user';
 import type { UserState } from './state';
 
@@ -8,6 +9,11 @@ export const actions = {
 
     clearUser(this: UserState) {
         this.user = null;
+    },
+
+    login(this: UserState, user: User, token: string) {
+        this.user = user;
+        localStorage.setItem('access_token', token);
     },
 
     logout(this: UserState) {
@@ -21,5 +27,12 @@ export const actions = {
             this.user = null;
         }
         return !!token;
+    },
+
+    getToken(this: UserState) {
+        if (!this.user) {
+            return null;
+        }
+        return localStorage.getItem('access_token');
     },
 };
