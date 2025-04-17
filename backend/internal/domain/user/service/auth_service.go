@@ -23,7 +23,7 @@ var (
 )
 
 type AuthService interface {
-	Login(email, password string) (*dto.TokenResponse, string, error)
+	Login(email, password string) (*dto.LoginResponse, string, error)
 	Register(user *model.User) error
 	RefreshToken(refreshToken string) (*dto.TokenResponse, string, error)
 	ValidateToken(token string) (uuid.UUID, error)
@@ -50,7 +50,7 @@ func NewAuthService(repo repository.Repository) AuthService {
 }
 
 // Login은 이메일과 비밀번호로 사용자를 인증하고 JWT 토큰을 반환
-func (s *authService) Login(email, password string) (*dto.TokenResponse, string, error) {
+func (s *authService) Login(email, password string) (*dto.LoginResponse, string, error) {
 	// 이메일로 사용자 검색
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {
@@ -63,13 +63,12 @@ func (s *authService) Login(email, password string) (*dto.TokenResponse, string,
 	}
 
 	// 사용자 ID 변환
-	userID := user.ID
-	if userID == uuid.Nil {
+	if user.ID == uuid.Nil {
 		return nil, "", errors.New("유효하지 않은 사용자 ID")
 	}
 
 	// 사용자 역할 및 권한 조회
-	userWithRoles, err := s.repo.FindUserWithRolesAndPermissions(userID)
+	userWithRoles, err := s.repo.FindUserWithRolesAndPermissions(user.ID)
 	if err != nil {
 		return nil, "", errors.New("사용자 권한 조회 실패")
 	}
@@ -87,15 +86,22 @@ func (s *authService) Login(email, password string) (*dto.TokenResponse, string,
 	}
 
 	// JWT 토큰 생성
-	tokenDetails, err := s.jwtService.GenerateTokenPair(userID, roles, permStrings)
+	tokenDetails, err := s.jwtService.GenerateTokenPair(user.ID, roles, permStrings)
 	if err != nil {
 		return nil, "", errors.New("토큰 생성 실패")
 	}
 
-	return &dto.TokenResponse{
+	// ID를 int로 변환 (필요한 경우 실제 타입에 맞게 조정)
+	userInfo := dto.User{
+		ID:       user.ID,
+		Email:    user.Email,
+		Nickname: user.Nickname,
+		Profile:  user.Profile,
+	}
+
+	return &dto.LoginResponse{
 		AccessToken: tokenDetails.AccessToken,
-		TokenType:   "Bearer",
-		ExpiresIn:   int(time.Until(time.Unix(tokenDetails.AtExpires, 0)).Seconds()),
+		User:        userInfo,
 	}, tokenDetails.RefreshToken, nil
 }
 

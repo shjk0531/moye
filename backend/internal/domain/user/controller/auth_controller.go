@@ -30,7 +30,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	}
 
 	// 인증 및 토큰 발급
-	tokenResponse, refreshToken, err := c.authService.Login(loginRequest.Email, loginRequest.Password)
+	loginResponse, refreshToken, err := c.authService.Login(loginRequest.Email, loginRequest.Password)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
@@ -38,8 +38,8 @@ func (c *AuthController) Login(ctx *gin.Context) {
 
 	c.SetRefreshToken(ctx, refreshToken)
 
-	// Access Token만 응답 본문에 포함하여 반환
-	ctx.JSON(http.StatusOK, tokenResponse)
+	// LoginResponse 응답 본문에 포함하여 반환
+	ctx.JSON(http.StatusOK, loginResponse)
 }
 
 // Register는 새 사용자를 등록
@@ -55,7 +55,6 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		Email:    registerRequest.Email,
 		Password: registerRequest.Password,
 		Nickname: registerRequest.Nickname,
-		Profile:  registerRequest.Profile,
 	}
 
 	// 사용자 등록

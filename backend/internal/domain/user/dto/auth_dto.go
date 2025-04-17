@@ -6,8 +6,3 @@ type TokenResponse struct {
 	TokenType   string `json:"token_type"`
 	ExpiresIn   int    `json:"expires_in"`
 }
-
-// RefreshTokenRequest는 토큰 갱신 요청 구조체
-type RefreshTokenRequest struct {
-	RefreshToken string `json:"refresh_token" binding:"required"`
-} 

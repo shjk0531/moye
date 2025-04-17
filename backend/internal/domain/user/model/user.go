@@ -11,7 +11,7 @@ type User struct {
     Email       string         `gorm:"uniqueIndex;not null;" json:"email"`
     Nickname    string         `gorm:"not null" json:"nickname"`
     Password    string         `gorm:"not null" json:"password"`
-    Profile     string         `gorm:"not null" json:"profile"`
+    Profile     *string        `gorm:"" json:"profile"`
     Roles       pq.StringArray `gorm:"type:text[]" json:"roles"`
     Permissions pq.StringArray `gorm:"type:text[]" json:"permissions"`
 }
