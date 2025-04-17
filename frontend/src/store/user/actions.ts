@@ -1,4 +1,4 @@
-import type { User } from '../../entities/user/models/model';
+import type { User } from '@/entities/user';
 import type { UserState } from './state';
 
 export const actions = {
@@ -6,8 +6,20 @@ export const actions = {
         this.user = user;
     },
 
+    clearUser(this: UserState) {
+        this.user = null;
+    },
+
     logout(this: UserState) {
         this.user = null;
-        localStorage.removeItem('token');
+        localStorage.removeItem('access_token');
+    },
+
+    checkAuth(this: UserState) {
+        const token = localStorage.getItem('access_token');
+        if (!token && this.user) {
+            this.user = null;
+        }
+        return !!token;
     },
 };

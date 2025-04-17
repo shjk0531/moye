@@ -8,6 +8,7 @@ import {
 } from '@/pages';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
 import { AuthLayout, AppLayout } from '@/shared/layout';
+import { isAuthenticated } from '@/entities/user';
 
 const routes = [
     {
@@ -17,20 +18,24 @@ const routes = [
             {
                 path: 'login',
                 component: LoginPage,
+                meta: { requiresAuth: false },
             },
             {
                 path: 'signup',
                 component: SignupPage,
+                meta: { requiresAuth: false },
             },
             {
                 path: 'find-password',
                 component: FindPasswordPage,
+                meta: { requiresAuth: false },
             },
         ],
     },
     {
         path: '/',
         component: AppLayout,
+        meta: { requiresAuth: true },
         children: [
             {
                 path: '',
@@ -67,20 +72,18 @@ const router = createRouter({
 
 // Global Navigation Guard 등록
 router.beforeEach((to, _from, next) => {
-    // 로그인 없이 접근이 허용된 경로를 배열로 정의
-    const publicPaths = ['/login', '/signup'];
+    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-    // 현재 접근하려는 경로가 publicPaths에 포함되어 있는지 체크
-    const isPublicRoute = publicPaths.includes(to.path);
+    // 인증이 필요한 페이지에 접근할 때 로그인 여부 확인
+    if (requiresAuth && !isAuthenticated()) {
+        // 로그인 페이지로 리디렉션
+        return next('/auth/login');
+    }
 
-    // localStorage나 다른 저장소에서 JWT 토큰을 확인 (여기서는 localStorage 사용)
-    const jwtToken = localStorage.getItem('jwt');
-    const isLoggedIn = !!jwtToken; // 토큰이 있으면 true
-
-    // 만약, 사용자가 로그인하지 않았으면서(isLoggedIn=false) 로그인이 필요한 페이지(publicPaths가 아닌)에 접근하려고 한다면
-    if (!isLoggedIn && !isPublicRoute) {
-        // /login 페이지로 리디렉션
-        // return next('/login');
+    // 이미 로그인된 사용자가 인증 페이지(로그인, 회원가입 등)에 접근하려고 할 때
+    if (!requiresAuth && isAuthenticated() && to.path.startsWith('/auth')) {
+        // 메인 페이지로 리디렉션
+        return next('/');
     }
 
     // 조건을 만족하면 정상적으로 라우팅 진행

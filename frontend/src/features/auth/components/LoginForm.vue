@@ -60,7 +60,7 @@
 import { useLogin } from '../composables/useLogin';
 
 const emit = defineEmits<{
-    (e: 'success'): void;
+    (e: 'success', user: any): void;
 }>();
 
 const { email, password, login, loading, error } = useLogin(emit);

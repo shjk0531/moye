@@ -1,4 +1,4 @@
-// widgets 레이어 내보내기
+// UI Widgets
 export * from './notice';
 export * from './sidebar';
 export * from './titlebar';

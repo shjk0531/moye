@@ -1,4 +1,11 @@
-// entities 레이어 내보내기
+// User
 export * from './user';
-export * from './study';
+
+// Calendar
+export * from './calendar';
+
+// Channel
 export * from './channel';
+
+// Study
+export * from './study';

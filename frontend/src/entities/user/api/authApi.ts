@@ -1,5 +1,5 @@
-import { apiClient } from '../../../shared/api';
-import type { User } from '../../../entities/user';
+import { apiClient } from '@/shared/api';
+import type { User } from '@/entities/user';
 
 export interface TokenResponse {
     access_token: string;
@@ -27,5 +27,10 @@ export async function signupApi(
         nickname,
         profile,
     });
+    return response.data;
+}
+
+export async function fetchUserProfile(): Promise<User> {
+    const response = await apiClient.get('/users/profile');
     return response.data;
 }

@@ -8,7 +8,7 @@ import {
     fetchCalendarsGrouped,
     fetchCalendarsUngrouped,
     findFirstCalendar,
-} from '@/features/calender';
+} from '@/features/calendar';
 import { useStudyStore } from '@/store';
 
 interface ApiFunction {

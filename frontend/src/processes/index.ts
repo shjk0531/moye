@@ -1,4 +1,4 @@
-// processes 레이어 내보내기
+// Authentication
 export * from './login';
 export * from './signup';
 export * from './findPassword';

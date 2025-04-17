@@ -19,7 +19,7 @@ import {
     fetchCalendarsGrouped,
     fetchCalendarsUngrouped,
     findFirstCalendar,
-} from '@/features/calender';
+} from '@/entities/calendar';
 
 const route = useRoute();
 const router = useRouter();

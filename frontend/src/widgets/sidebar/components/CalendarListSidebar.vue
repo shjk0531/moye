@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { CalendarList } from '@/features/calender';
+import { CalendarList } from '@/features/calendar';
 
 export default {
     name: 'CalendarListSidebar',

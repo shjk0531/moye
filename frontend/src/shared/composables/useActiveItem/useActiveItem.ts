@@ -13,7 +13,7 @@ import {
     fetchCalendarsGrouped,
     fetchCalendarsUngrouped,
     findFirstCalendar,
-} from '@/features/calender';
+} from '@/features/calendar';
 
 // API 함수 타입 정의
 interface ApiMapping {

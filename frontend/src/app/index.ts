@@ -1,3 +1,3 @@
-// app 레이어 내보내기
+// App
 import App from './App.vue';
 export { App };
