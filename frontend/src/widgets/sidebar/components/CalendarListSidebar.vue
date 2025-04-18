@@ -1,20 +1,21 @@
 <template>
-    <div class="calendar-notice text-white p-2">
-        <p>공지사항</p>
-    </div>
+    <div class="flex flex-col">
+        <div
+            class="flex channel-notice text-white p-2 h-(--custom-notice-bar-height) items-center justify-center"
+        >
+            <p
+                class="text-lg font-bold w-full justify-center items-center text-center"
+            >
+                공지사항
+            </p>
+        </div>
 
-    <CalendarList />
+        <CalendarList />
+    </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { CalendarList } from '@/features/calendar';
-
-export default {
-    name: 'CalendarListSidebar',
-    components: {
-        CalendarList,
-    },
-};
 </script>
 
 <style scoped lang="scss"></style>

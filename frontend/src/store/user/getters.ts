@@ -13,8 +13,8 @@ export const getters = {
     },
 
     // 사용자 이메일 (없으면 빈 문자열 반환)
-    userEmail: (state: UserState): string => {
-        return state.user?.email || '';
+    userEmail: (state: UserState): string | null => {
+        return state.user?.email || null;
     },
 
     // 사용자 ID (없으면 null 반환)

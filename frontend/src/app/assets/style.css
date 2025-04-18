@@ -27,6 +27,7 @@
 }
 
 :root {
+    --custom-notice-bar-height: calc(var(--spacing) * 15);
     --custom-app-top-bar-height: 1rem;
     --custom-app-bottom-pannel-height: 3rem;
     --custom-study-list-width: calc(var(--spacing) * 14);
@@ -44,9 +45,16 @@
 
     --custom-auth-form-width: calc(var(--spacing) * 75);
     --custom-auth-input-width: calc(var(--spacing) * 65);
+
+    --custom-right-sidebar-width: calc(var(--spacing) * 20);
 }
 
 .discord-app {
     display: flex;
+    height: 100vh;
+}
+
+.app {
+    width: 100vw;
     height: 100vh;
 }

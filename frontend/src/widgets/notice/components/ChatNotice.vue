@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-row justify-between items-center">
-        <div class="notice-header">
+    <div class="flex flex-row w-full justify-between items-center">
+        <div class="flex flex-row flex-1 items-center gap-2">
             <h2 class="text-lg font-semibold text-gray-50">Notice</h2>
         </div>
         <div class="notice-icons flex flex-row gap-4 text-2xl">
@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import {
     ChannelButton,
     CalendarButton,
@@ -33,7 +33,7 @@ export default {
     },
 
     methods: {
-        handleIconClick(item) {
+        handleIconClick(item: { type: string }) {
             console.log(
                 `${item.type} 아이콘이 클릭되었지만 아직 처리 기능이 구현되지 않았습니다.`,
             );

@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import {
     ChannelButton,
     CalendarButton,
@@ -22,65 +22,11 @@ import {
     MemberButton,
 } from '@/shared/ui/Button';
 
-export default {
-    name: 'StudyNotice',
-    components: {
-        ChannelButton,
-        CalendarButton,
-        PostButton,
-        NoteButton,
-        MemberButton,
-    },
-    data() {
-        return {
-            icons: [
-                {
-                    icon: 'mdi-message',
-                    type: 'channel',
-                    color: 'text-gray-400',
-                    hover: 'hover:text-gray-200',
-                    active: 'text-gray-150',
-                },
-                {
-                    icon: 'mdi-calendar-check',
-                    type: 'calendar',
-                    color: 'text-gray-400',
-                    hover: 'hover:text-gray-200',
-                    active: 'text-gray-150',
-                },
-                {
-                    icon: 'mdi-post',
-                    type: 'post',
-                    color: 'text-gray-400',
-                    hover: 'hover:text-gray-200',
-                    active: 'text-gray-150',
-                },
-                {
-                    icon: 'mdi-note',
-                    type: 'note',
-                    color: 'text-gray-400',
-                    hover: 'hover:text-gray-200',
-                    active: 'text-gray-150',
-                },
-                {
-                    icon: 'mdi-account-group',
-                    type: 'member',
-                    color: 'text-gray-400',
-                    hover: 'hover:text-gray-200',
-                    active: 'text-gray-150',
-                },
-            ],
-        };
-    },
-    methods: {
-        handleIconClick(item) {
-            console.log(
-                `${item.type} 아이콘이 클릭되었지만 아직 처리 기능이 구현되지 않았습니다.`,
-            );
-            // 필요한 경우 추가 처리 로직 구현
-        },
-    },
-};
+function handleIconClick(item: { type: string }) {
+    console.log(
+        `${item.type} 아이콘이 클릭되었지만 아직 처리 기능이 구현되지 않았습니다.`,
+    );
+}
 </script>
 
 <style scoped></style>

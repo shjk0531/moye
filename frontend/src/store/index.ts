@@ -6,6 +6,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 export { useAppStore } from './app';
 export { useUserStore } from './user';
 export { useStudyStore } from './study';
+export { useNoticeStore } from './notice';
 
 // Pinia 인스턴스 생성
 const pinia = createPinia();

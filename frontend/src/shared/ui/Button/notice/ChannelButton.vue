@@ -2,45 +2,33 @@
     <span :class="iconClasses" @click="handleClick" :title="title"></span>
 </template>
 
-<script>
-import {
-    navigateToItem,
-    isItemActive,
-} from '@/widgets/notice/services/navigationService';
+<script setup lang="ts">
+import { navigateToItem } from '@/widgets/notice';
 import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
 
-export default {
-    name: 'ChannelButton',
-    setup() {
-        const router = useRouter();
-        const route = useRoute();
-        const isActive = route.path.includes('/channel');
+const router = useRouter();
+const route = useRoute();
+const isActive = route.path.includes('/channel');
 
-        return { router, route, isActive };
-    },
-    computed: {
-        iconClasses() {
-            const baseClasses = `mdi mdi-message hover:text-gray-200 cursor-pointer`;
-            return `${baseClasses} ${
-                this.isActive ? 'text-gray-150' : 'text-gray-400'
-            }`;
-        },
-        title() {
-            return '채널';
-        },
-    },
-    methods: {
-        async handleClick() {
-            const studyId = this.route.params.studyId;
+const iconClasses = computed(() => {
+    const baseClasses = `mdi mdi-message hover:text-gray-200 cursor-pointer`;
+    return `${baseClasses} ${isActive ? 'text-gray-150' : 'text-gray-400'}`;
+});
 
-            if (!studyId) {
-                console.error('유효한 studyId가 없습니다.');
-                return;
-            }
+const title = computed(() => {
+    return '채널';
+});
 
-            await navigateToItem('channel', studyId, this.router);
-        },
-    },
+const handleClick = async () => {
+    const studyId = route.params.studyId as string;
+
+    if (!studyId) {
+        console.error('유효한 studyId가 없습니다.');
+        return;
+    }
+
+    await navigateToItem('channel', studyId, router);
 };
 </script>
 

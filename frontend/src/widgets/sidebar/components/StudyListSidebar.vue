@@ -2,8 +2,10 @@ src/widgets/sidebar/components/StudyListSidebar.vue
 
 <template>
     <!-- Title Icon: '/me'로 이동 -->
-    <div class="icon-area mt-3">
-        <div class="flex flex-col items-center justify-start w-full gap-2">
+    <div class="w-(--custom-study-list-width) flex flex-col">
+        <div
+            class="flex flex-col items-center justify-center w-full gap-2 h-(--custom-notice-bar-height)"
+        >
             <div
                 class="relative flex items-center justify-center w-full group cursor-pointer"
                 @click="handleTitleIconClick"
@@ -21,9 +23,9 @@ src/widgets/sidebar/components/StudyListSidebar.vue
                     class="w-10 h-10 mx-2 my-1 overflow-hidden border-2 rounded-lg"
                 >
                     <img
-                        src="https://picsum.photos/200/300?random=1"
-                        alt="title icon"
-                        class="w-full h-full"
+                        src="/logo.svg"
+                        alt="logo"
+                        class="w-full h-full bg-gray-50"
                     />
                 </div>
             </div>
@@ -55,13 +57,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.icon-area {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-template-rows: subgrid;
-    grid-column: start/studiesEnd;
-    grid-row: titlebarEnd/contentEnd;
-    width: var(--custom-study-list-width);
-}
-</style>
+<style scoped lang="scss"></style>

@@ -7,7 +7,7 @@ import {
     FindPasswordPage,
 } from '@/pages';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
-import { AuthLayout, AppLayout } from '@/shared/layout';
+import { AuthLayout, AppLayout, PageLayout } from '@/shared/layout';
 import { useUserStore } from '@/store/user';
 const routes = [
     {
@@ -38,26 +38,30 @@ const routes = [
         children: [
             {
                 path: '',
-                component: ChatPage,
-                meta: { leftSide: ChannelListSidebar },
+                components: {
+                    page: ChatPage,
+                    sidebar: ChannelListSidebar,
+                },
             },
             {
                 path: 'me',
-                component: ChatPage,
-                meta: { leftSide: ChannelListSidebar },
+                components: {
+                    page: ChatPage,
+                    sidebar: ChannelListSidebar,
+                },
             },
             {
                 path: 'study/:studyId/channel/:channelId?',
-                component: ChatPage,
-                meta: {
-                    leftSide: ChannelListSidebar,
+                components: {
+                    page: ChatPage,
+                    sidebar: ChannelListSidebar,
                 },
             },
             {
                 path: 'study/:studyId/calendar/:calendarId?',
-                component: CalendarPage,
-                meta: {
-                    leftSide: CalendarListSidebar,
+                components: {
+                    page: CalendarPage,
+                    sidebar: CalendarListSidebar,
                 },
             },
         ],

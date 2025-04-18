@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useUserStore, useAppStore } from '@/store';
 
 // 임시 사용자 데이터 (실제 구현에서는 props 또는 전역 상태 관리로 대체)
