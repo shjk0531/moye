@@ -9,10 +9,14 @@ export interface AppState {
 
     // 헤드셋 켜짐 여부
     headsetOn: boolean;
+
+    // 마지막 경로
+    lastRoute: string;
 }
 
 export const state = (): AppState => ({
     isMemberListVisible: false,
     micOn: true,
     headsetOn: true,
+    lastRoute: '/',
 });

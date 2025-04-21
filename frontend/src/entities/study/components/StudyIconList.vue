@@ -31,8 +31,10 @@
     </div>
 </template>
 
-<script>
-import { fetchStudies } from '@/features/study';
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { fetchStudies, type Study } from '@/entities/study';
 import {
     fetchChannelsGrouped,
     fetchChannelsUngrouped,
@@ -41,118 +43,109 @@ import {
 import ScrollPanel from 'primevue/scrollpanel';
 import { useStudyStore } from '@/store';
 
-export default {
-    name: 'StudyIconList',
-    components: { ScrollPanel },
+const router = useRouter();
+const route = useRoute();
+const studies = ref<Study[]>([]);
+const studyStore = useStudyStore();
 
-    data() {
-        return {
-            studies: [],
-        };
-    },
+// URL의 studyId는 문자열입니다.
+const currentStudyId = computed(() => {
+    return route.params.studyId;
+});
 
-    computed: {
-        // URL의 studyId는 문자열입니다.
-        currentStudyId() {
-            return this.$route.params.studyId;
-        },
-    },
+// 스터디 데이터 로드
+async function loadStudyData() {
+    try {
+        studies.value = await fetchStudies();
+    } catch (error) {
+        console.error('스터디 데이터를 불러오는 중 오류 발생:', error);
+        studies.value = [];
+    }
+}
 
-    async created() {
-        await this.loadStudyData();
-    },
+// 저장된 활성 채널 ID 가져오기
+function getActiveChannelId(studyId: string) {
+    return studyStore.activeItems[studyId]?.channel;
+}
 
-    methods: {
-        // 스터디 데이터 로드
-        async loadStudyData() {
-            try {
-                this.studies = await fetchStudies();
-            } catch (error) {
-                console.error('스터디 데이터를 불러오는 중 오류 발생:', error);
-                this.studies = [];
-            }
-        },
+// 기존 활성 채널로 이동
+function navigateToExistingChannel(
+    studyId: number | string,
+    channelId: string,
+) {
+    router.push(`/study/${studyId}/channel/${channelId}`);
+}
 
-        // 스터디 클릭 이벤트 핸들러
-        async handleStudyClick(study) {
-            this.updateStudyInfoInStore(study);
+// 활성 채널 ID 저장
+function saveActiveChannel(studyId: string, channelId: string) {
+    studyStore.setActiveItem({
+        studyId,
+        listType: 'channel',
+        itemId: channelId,
+    });
+}
 
-            const studyId = String(study.id);
-            const activeChannelId = this.getActiveChannelId(studyId);
+// 첫 번째 채널 찾아서 이동
+async function navigateToFirstChannel(
+    studyId: number | string,
+    studyKey: string,
+) {
+    try {
+        // 채널 및 그룹 데이터 로드
+        const groups = await fetchChannelsGrouped();
+        const channels = await fetchChannelsUngrouped();
 
-            if (activeChannelId !== null && activeChannelId !== undefined) {
-                this.navigateToExistingChannel(study.id, activeChannelId);
-            } else {
-                await this.navigateToFirstChannel(study.id, studyId);
-            }
-        },
+        // 첫 번째 채널 ID 가져오기
+        const firstChannelId = findFirstChannel(groups, channels);
 
-        // Pinia 스토어에 스터디 정보 업데이트
-        updateStudyInfoInStore(study) {
-            const studyStore = useStudyStore();
-            studyStore.setStudyName(study.name);
-            studyStore.setStudyIcon(study.icon);
-        },
+        if (firstChannelId !== null) {
+            // 첫 번째 채널 ID로 이동
+            router.push(`/study/${studyId}/channel/${firstChannelId}`);
 
-        // 저장된 활성 채널 ID 가져오기
-        getActiveChannelId(studyId) {
-            const studyStore = useStudyStore();
-            return studyStore.activeItems[studyId]?.channel;
-        },
+            // 첫 번째 채널 ID를 activeItemId로 저장
+            saveActiveChannel(studyKey, String(firstChannelId));
+        } else {
+            // 채널이 없는 경우 기본 스터디 URL로 이동
+            router.push(`/study/${studyId}`);
+        }
+    } catch (error) {
+        console.error('첫 번째 채널을 찾는 중 오류 발생:', error);
+        // 오류 발생시 기본 스터디 URL로 이동
+        router.push(`/study/${studyId}`);
+    }
+}
 
-        // 기존 활성 채널로 이동
-        navigateToExistingChannel(studyId, channelId) {
-            this.$router.push(`/study/${studyId}/channel/${channelId}`);
-        },
+// Pinia 스토어에 스터디 정보 업데이트
+function updateStudyInfoInStore(study: any) {
+    studyStore.setStudyName(study.name);
+    studyStore.setStudyIcon(study.icon);
+}
 
-        // 첫 번째 채널 찾아서 이동
-        async navigateToFirstChannel(studyId, studyKey) {
-            try {
-                // 채널 및 그룹 데이터 로드
-                const groups = await fetchChannelsGrouped();
-                const channels = await fetchChannelsUngrouped();
+// 스터디 클릭 이벤트 핸들러
+async function handleStudyClick(study: any) {
+    updateStudyInfoInStore(study);
 
-                // 첫 번째 채널 ID 가져오기
-                const firstChannelId = findFirstChannel(groups, channels);
+    const studyId = String(study.id);
+    const activeChannelId = getActiveChannelId(studyId);
 
-                if (firstChannelId !== null) {
-                    // 첫 번째 채널 ID로 이동
-                    this.$router.push(
-                        `/study/${studyId}/channel/${firstChannelId}`,
-                    );
+    if (activeChannelId !== null && activeChannelId !== undefined) {
+        navigateToExistingChannel(study.id, activeChannelId);
+    } else {
+        await navigateToFirstChannel(study.id, studyId);
+    }
+}
 
-                    // 첫 번째 채널 ID를 activeItemId로 저장
-                    this.saveActiveChannel(studyKey, String(firstChannelId));
-                } else {
-                    // 채널이 없는 경우 기본 스터디 URL로 이동
-                    this.$router.push(`/study/${studyId}`);
-                }
-            } catch (error) {
-                console.error('첫 번째 채널을 찾는 중 오류 발생:', error);
-                // 오류 발생시 기본 스터디 URL로 이동
-                this.$router.push(`/study/${studyId}`);
-            }
-        },
+// 타이틀 아이콘 클릭 이벤트 처리
+function handleTitleIconClick() {
+    router.push('/me');
+    studyStore.setStudyName('Moye');
+    studyStore.setStudyIcon('https://picsum.photos/200/300?random=1');
+}
 
-        // 활성 채널 ID 저장
-        saveActiveChannel(studyId, channelId) {
-            const studyStore = useStudyStore();
-            studyStore.setActiveItem({
-                studyId,
-                listType: 'channel',
-                itemId: channelId,
-            });
-        },
-
-        // 타이틀 아이콘 클릭 이벤트 처리
-        handleTitleIconClick() {
-            this.$router.push('/me');
-            const studyStore = useStudyStore();
-            studyStore.setStudyName('Moye');
-            studyStore.setStudyIcon('https://picsum.photos/200/300?random=1');
-        },
-    },
-};
+// 컴포넌트 생성 시 데이터 로드
+onMounted(async () => {
+    await loadStudyData();
+});
 </script>
 
 <style scoped>

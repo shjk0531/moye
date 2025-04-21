@@ -94,18 +94,33 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, tokenResponse)
 }
 
+// Logout은 클라이언트에 저장된 refresh_token 쿠키를 삭제합니다.
+func (c *AuthController) Logout(ctx *gin.Context) {
+    c.SetRefreshToken(ctx, "")
+    ctx.JSON(http.StatusOK, gin.H{"message": "로그아웃 성공"})
+}
+
 
 // cookie에 refresh 토큰 저장
 func (c *AuthController) SetRefreshToken(ctx *gin.Context, refreshToken string) {
-	refreshTokenExpiry := time.Duration(config.Config.JWT.RefreshDuration) * time.Second
-	ctx.SetSameSite(http.SameSiteNoneMode)
-	ctx.SetCookie(
-		"refresh_token",
-		refreshToken,
-		int(refreshTokenExpiry.Seconds()),
-		"/",
-		"localhost",
-		true,  // 개발 환경에서는 HTTP 허용
-		true,   // HttpOnly
-	)
+    var maxAge int
+    if refreshToken == "" {
+        // 빈 토큰이면 즉시 삭제
+        maxAge = -1
+    } else {
+        // 설정된 만료 기간(초) 적용
+        refreshTokenExpiry := time.Duration(config.Config.JWT.RefreshDuration) * time.Second
+        maxAge = int(refreshTokenExpiry.Seconds())
+    }
+
+    ctx.SetSameSite(http.SameSiteNoneMode)
+    ctx.SetCookie(
+        "refresh_token",
+        refreshToken,
+        maxAge,
+        "/",
+        "localhost", // 운영환경에 맞게 도메인 설정
+        true,        // Secure
+        true,        // HttpOnly
+    )
 }

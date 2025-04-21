@@ -1,13 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import type { RouteLocationNormalized } from 'vue-router';
 import {
     ChatPage,
     LoginPage,
     SignupPage,
     CalendarPage,
     FindPasswordPage,
+    SettingPage,
 } from '@/pages';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
-import { AuthLayout, AppLayout, PageLayout } from '@/shared/layout';
+import { AuthLayout, AppLayout, SettingLayout } from '@/shared/layout';
 import { useUserStore } from '@/store/user';
 const routes = [
     {
@@ -28,6 +30,46 @@ const routes = [
                 path: 'find-password',
                 component: FindPasswordPage,
                 meta: { requiresAuth: false },
+            },
+        ],
+    },
+    {
+        path: '/settings',
+        component: SettingLayout,
+        name: 'Settings',
+        meta: { requiresAuth: true },
+        props: (route: RouteLocationNormalized) => ({
+            section: route.params.section,
+        }),
+        children: [
+            {
+                path: '',
+                component: SettingPage,
+            },
+            { path: 'account', component: SettingPage },
+            {
+                path: 'profile',
+                component: SettingPage,
+            },
+            {
+                path: 'display',
+                component: SettingPage,
+            },
+            {
+                path: 'notifications',
+                component: SettingPage,
+            },
+            {
+                path: 'privacy',
+                component: SettingPage,
+            },
+            {
+                path: 'theme',
+                component: SettingPage,
+            },
+            {
+                path: 'language',
+                component: SettingPage,
             },
         ],
     },

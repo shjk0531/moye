@@ -8,3 +8,6 @@ export { default as FindPasswordPage } from './auth/FindPasswordPage.vue';
 
 // Calendar
 export { default as CalendarPage } from './calendar/CalendarPage.vue';
+
+// Setting
+export { default as SettingPage } from './setting/SettingPage.vue';

@@ -54,6 +54,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useUserStore, useAppStore } from '@/store';
+import { useRouter, useRoute } from 'vue-router';
+
+// 라우터 초기화
+const router = useRouter();
+const route = useRoute();
 
 // 임시 사용자 데이터 (실제 구현에서는 props 또는 전역 상태 관리로 대체)
 const userStore = useUserStore();
@@ -75,8 +80,8 @@ function toggleHeadset() {
 }
 
 function openSettings() {
-    // 사용자 설정 모달 열기 등의 처리를 여기에 구현합니다.
-    console.log('User settings opened');
+    appStore.saveLastRoute(route.fullPath);
+    router.push('/settings');
 }
 </script>
 

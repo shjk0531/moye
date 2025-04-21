@@ -16,4 +16,8 @@ export const actions = {
         const headsetOn = this.headsetOn;
         this.headsetOn = !headsetOn;
     },
+
+    saveLastRoute(this: AppState, route: string) {
+        this.lastRoute = route;
+    },
 };
