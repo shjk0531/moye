@@ -50,10 +50,10 @@ func main() {
 		&studyModel.StudyRole{},
 		&recruitmentModel.Recruitment{},
 		&channelModel.Channel{},
-		&channelModel.ChannelsOrder{},
+		&channelModel.ChannelOrder{},
 		&channelModel.DMChannel{},
-		&channelModel.GroupChannel{},
-		&channelModel.GroupChannelsOrder{},
+		&channelModel.ChannelGroup{},
+		&channelModel.ChannelGroupOrder{},
 		&channelModel.VideoChatSession{},
 		&notificationModel.Notification{},
 	)
