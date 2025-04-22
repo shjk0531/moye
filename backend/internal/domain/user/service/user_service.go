@@ -6,23 +6,23 @@ import (
 	"github.com/shjk0531/moye/backend/internal/domain/user/repository"
 )
 
-type Service interface {
+type UserService interface {
 	RegisterUser(user *model.User) error
 	GetUser(id uuid.UUID) (*model.User, error)
 }
 
-type service struct {
+type userService struct {
 	repo repository.Repository
 }
 
-func NewService(repo repository.Repository) Service {
-	return &service{repo: repo}
+func NewUserService(repo repository.Repository) UserService {
+	return &userService{repo: repo}
 }
 
-func (s *service) RegisterUser(user *model.User) error {
+func (s *userService) RegisterUser(user *model.User) error {
 	return s.repo.Create(user)
 }
 
-func (s *service) GetUser(id uuid.UUID) (*model.User, error) {
+func (s *userService) GetUser(id uuid.UUID) (*model.User, error) {
 	return s.repo.FindByID(id)
 }

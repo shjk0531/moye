@@ -10,6 +10,8 @@ import Tooltip from 'primevue/tooltip';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 
 // 스타일
 import '@mdi/font/css/materialdesignicons.css';
@@ -25,6 +27,7 @@ const app = createApp(App);
 // 플러그인 등록
 app.use(pinia);
 app.use(PrimeVue);
+app.use(ToastService);
 app.use(router);
 
 app.directive('tooltip', Tooltip);
@@ -35,6 +38,7 @@ app.component('InputText', InputText);
 app.component('PanelMenu', PanelMenu);
 app.component('ScrollPanel', ScrollPanel);
 app.component('Password', Password);
+app.component('Toast', Toast);
 
 // 애플리케이션 마운트
 app.mount('#app');

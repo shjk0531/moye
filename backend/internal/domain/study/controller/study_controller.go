@@ -9,24 +9,17 @@ import (
 	"github.com/shjk0531/moye/backend/internal/domain/study/service"
 )
 
-type Controller struct {
-	service service.Service
+
+type StudyController struct {
+	service service.StudyService
 }
 
-func NewController(s service.Service) *Controller {
-	return &Controller{service: s}
-}
-
-// RegisterRoutes는 /studies 경로 하위의 라우트를 등록합니다.
-func (ctrl *Controller) RegisterRoutes(rg *gin.RouterGroup) {
-	r := rg.Group("/studies")
-	r.POST("/", ctrl.CreateStudy)
-	r.GET("/:id", ctrl.GetStudy)
-	r.GET("/", ctrl.GetAllStudies)
+func NewStudyController(s service.StudyService) *StudyController {
+	return &StudyController{service: s}
 }
 
 // CreateStudy는 새로운 스터디를 생성합니다.
-func (ctrl *Controller) CreateStudy(c *gin.Context) {
+func (ctrl *StudyController) CreateStudy(c *gin.Context) {
 	var study model.Study
 	if err := c.ShouldBindJSON(&study); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -53,7 +46,7 @@ func (ctrl *Controller) CreateStudy(c *gin.Context) {
 }
 
 // GetStudy는 ID로 스터디를 조회합니다.
-func (ctrl *Controller) GetStudy(c *gin.Context) {
+func (ctrl *StudyController) GetStudy(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
@@ -71,7 +64,7 @@ func (ctrl *Controller) GetStudy(c *gin.Context) {
 }
 
 // GetAllStudies는 모든 스터디 목록을 조회합니다.
-func (ctrl *Controller) GetAllStudies(c *gin.Context) {
+func (ctrl *StudyController) GetAllStudies(c *gin.Context) {
 	studies, err := ctrl.service.GetAllStudies()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})

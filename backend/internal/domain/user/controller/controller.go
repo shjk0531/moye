@@ -7,23 +7,18 @@ import (
 )
 
 type RootController struct {
-	userService service.Service
-	authService service.AuthService
 	userCtrl    *UserController
 	authCtrl    *AuthController
 }
 
 // Init는 인증 서비스를 사용하는 컨트롤러 초기화
 func Init(userRepo repository.Repository) *RootController {
-	userService := service.NewService(userRepo)
-	authService := service.NewAuthService(userRepo)
+	svcs := service.NewService(userRepo)
 	
-	userCtrl := NewUserController(userService)
-	authCtrl := NewAuthController(authService)
+	userCtrl := NewUserController(svcs.User)
+	authCtrl := NewAuthController(svcs.Auth)
 	
 	return &RootController{
-		userService: userService,
-		authService: authService,
 		userCtrl:    userCtrl,
 		authCtrl:    authCtrl,
 	}

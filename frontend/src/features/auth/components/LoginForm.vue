@@ -7,9 +7,12 @@
             <div class="flex flex-col gap-1">
                 <label class="text-gray-50 text-sm">이메일</label>
                 <input
+                    id="email"
+                    name="email"
                     v-model="email"
                     type="email"
                     required
+                    autocomplete="username"
                     class="bg-gray-950 text-white border border-gray-700 rounded-md px-2 py-1 text-sm w-(--custom-auth-input-width)"
                     placeholder="이메일"
                 />

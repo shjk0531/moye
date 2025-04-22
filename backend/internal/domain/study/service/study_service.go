@@ -6,28 +6,28 @@ import (
 	"github.com/shjk0531/moye/backend/internal/domain/study/repository"
 )
 
-type Service interface {
+type StudyService interface {
 	CreateStudy(study *model.Study) error
 	GetStudy(id uuid.UUID) (*model.Study, error)
 	GetAllStudies() ([]*model.Study, error)
 }
 
-type service struct {
+type sutdyService struct {
 	repo repository.Repository
 }
 
-func NewService(repo repository.Repository) Service {
-	return &service{repo: repo}
+func NewStudyService(repo repository.Repository) StudyService {
+	return &sutdyService{repo: repo}
 }
 
-func (s *service) CreateStudy(study *model.Study) error {
+func (s *sutdyService) CreateStudy(study *model.Study) error {
 	return s.repo.Create(study)
 }
 
-func (s *service) GetStudy(id uuid.UUID) (*model.Study, error) {
+func (s *sutdyService) GetStudy(id uuid.UUID) (*model.Study, error) {
 	return s.repo.FindByID(id)
 }
 
-func (s *service) GetAllStudies() ([]*model.Study, error) {
+func (s *sutdyService) GetAllStudies() ([]*model.Study, error) {
 	return s.repo.FindAll()
 }

@@ -8,7 +8,6 @@ export function useSignup(
     const password = ref('');
     const confirmPassword = ref('');
     const nickname = ref('');
-    const profile = ref('');
     const loading = ref(false);
     const error = ref('');
 
@@ -51,12 +50,11 @@ export function useSignup(
             loading.value = true;
             error.value = '';
 
-            const result = await signupApi(
-                email.value,
-                password.value,
-                nickname.value,
-                profile.value,
-            );
+            const result = await signupApi({
+                email: email.value,
+                password: password.value,
+                nickname: nickname.value,
+            });
 
             emit('success', '회원가입이 완료되었습니다. 로그인해주세요.');
         } catch (e: any) {
@@ -74,7 +72,6 @@ export function useSignup(
         password,
         confirmPassword,
         nickname,
-        profile,
         signup,
         loading,
         error,

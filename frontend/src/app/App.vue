@@ -1,6 +1,7 @@
 <!-- src/app/App.vue -->
 
 <template>
+    <Toast />
     <router-view />
 </template>
 

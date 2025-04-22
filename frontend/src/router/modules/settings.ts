@@ -5,12 +5,15 @@ import { SettingPage } from '@/pages';
 const settingsRoutes: RouteRecordRaw[] = [
     {
         path: '/settings',
-        name: 'Settings',
         component: SettingLayout,
         meta: { requiresAuth: true },
         props: (route) => ({ section: route.params.section }),
         children: [
-            { path: '', component: SettingPage },
+            {
+                path: '',
+                name: 'Settings',
+                component: SettingPage,
+            },
             { path: 'account', component: SettingPage },
             { path: 'profile', component: SettingPage },
             { path: 'display', component: SettingPage },

@@ -15,7 +15,6 @@ import (
 	// PostgreSQL: Study 도메인
 	studyController "github.com/shjk0531/moye/backend/internal/domain/study/controller"
 	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/repository"
-	studyService "github.com/shjk0531/moye/backend/internal/domain/study/service"
 
 	// MongoDB: chat 도메인
 	chatContainer "github.com/shjk0531/moye/backend/internal/domain/chat/message/controller"
@@ -52,8 +51,7 @@ func RegisterRoutes(router *gin.Engine) {
 
 	// Study 도메인 라우트 등록 (PostgreSQL 사용)
 	studyRepo := studyRepository.NewRepository(pgDB)
-	studyServ := studyService.NewService(studyRepo)
-	studyCtrl := studyController.NewController(studyServ)
+	studyCtrl := studyController.Init(studyRepo)
 	studyCtrl.RegisterRoutes(api)
 
 	// MongoDB 연결 (메시지 데이터: 채팅, 로그 등)

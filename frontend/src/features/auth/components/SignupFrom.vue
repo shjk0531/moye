@@ -3,7 +3,7 @@
 <template>
     <div class="flex justify-center flex-col gap-4">
         <form
-            @submit.prevent="signUp"
+            @submit.prevent="signup"
             class="flex flex-col gap-4 bg-gray-850 rounded-lg p-4 border border-gray-700"
         >
             <div class="flex flex-col gap-1">
@@ -18,6 +18,7 @@
             <div class="flex flex-col gap-1">
                 <p class="text-gray-50 text-sm">비밀번호</p>
                 <Password
+                    v-model="password"
                     v-tooltip="'비밀번호'"
                     class="!bg-gray-950 !text-white !border-gray-700 !border !rounded-md !px-2 !py-1 !text-sm !w-(--custom-auth-input-width)"
                     required
@@ -26,6 +27,7 @@
             <div class="flex flex-col gap-1">
                 <p class="text-gray-50 text-sm">비밀번호 확인</p>
                 <Password
+                    v-model="confirmPassword"
                     v-tooltip="'비밀번호 확인'"
                     class="!bg-gray-950 !text-white !border-gray-700 !border !rounded-md !px-2 !py-1 !text-sm !w-(--custom-auth-input-width)"
                     required
@@ -34,6 +36,7 @@
             <div class="flex flex-col gap-1">
                 <p class="text-gray-50 text-sm">닉네임</p>
                 <InputText
+                    v-model="nickname"
                     v-tooltip="'이름'"
                     class="!bg-gray-950 !text-white !border-gray-700 !border !rounded-md !px-2 !py-1 !text-sm !w-(--custom-auth-input-width)"
                     required
@@ -43,10 +46,14 @@
                 <button
                     type="submit"
                     class="bg-green-700 text-white border border-gray-700 rounded-md py-1 hover:bg-green-600 cursor-pointer"
+                    :disabled="loading"
                 >
                     회원가입
                 </button>
             </div>
+            <p v-if="error" class="text-red-600 text-center text-sm">
+                {{ error }}
+            </p>
         </form>
         <div
             class="flex flex-col gap-1 items-center border border-gray-700 p-4 rounded-lg"
@@ -64,13 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useSignup } from '../composables/useSignup';
 
-const email = ref('');
+const emit = defineEmits(['success', 'error']);
 
-const signUp = () => {
-    console.log(email.value);
-};
+const { email, password, confirmPassword, nickname, signup, loading, error } =
+    useSignup((event: 'success' | 'error', message: string) => {
+        emit(event, message);
+    });
 </script>
 
 <style scoped>
