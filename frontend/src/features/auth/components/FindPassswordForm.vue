@@ -14,12 +14,12 @@
                     required
                 />
             </div>
-            <Button
+            <button
                 type="submit"
-                class="!bg-green-700 !text-white !border-gray-700 !border !rounded-md !py-1 !hover:bg-green-700"
+                class="bg-green-700 text-white border border-gray-700 rounded-md py-1 hover:bg-green-600 cursor-pointer"
             >
                 비밀번호 찾기
-            </Button>
+            </button>
         </form>
         <div
             class="flex flex-col gap-1 items-center border border-gray-700 p-4 rounded-lg"

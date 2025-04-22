@@ -2,48 +2,35 @@
     <span :class="iconClasses" @click="handleClick" :title="title"></span>
 </template>
 
-<script>
-import {
-    navigateToItem,
-    isItemActive,
-} from '@/widgets/notice/services/navigationService';
+<script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
 
-export default {
-    name: 'CalendarButton',
-    setup() {
-        const router = useRouter();
-        const route = useRoute();
-        const isActive = route.path.includes('/calendar');
+const router = useRouter();
+const route = useRoute();
 
-        return { router, route, isActive };
-    },
-    computed: {
-        iconClasses() {
-            const baseClasses = `mdi mdi-calendar-blank hover:text-gray-200 cursor-pointer`;
-            return `${baseClasses} ${
-                this.isActive ? 'text-gray-150' : 'text-gray-400'
-            }`;
-        },
-        title() {
-            return '캘린더';
-        },
-    },
-    methods: {
-        async handleClick() {
-            const studyId = this.route.params.studyId;
+// active 여부는 로컬에서만 계산
+const isActive = computed(() => route.path.includes('/calendar'));
 
-            if (!studyId) {
-                console.error('유효한 studyId가 없습니다.');
-                return;
-            }
+const iconClasses = computed(
+    () =>
+        `mdi mdi-calendar-blank hover:text-gray-200 cursor-pointer ${
+            isActive.value ? 'text-gray-150' : 'text-gray-400'
+        }`,
+);
 
-            await navigateToItem('calendar', studyId, this.router);
-        },
-    },
-};
+const title = '캘린더';
+
+async function handleClick() {
+    const studyId = route.params.studyId as string;
+    if (!studyId) {
+        console.error('유효한 studyId가 없습니다.');
+        return;
+    }
+    await router.push(`/study/${studyId}/calendar`);
+}
 </script>
 
 <style scoped>
-/* 필요한 스타일 추가 */
+/* 필요하면 스타일 추가 */
 </style>

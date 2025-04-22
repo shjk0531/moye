@@ -2,45 +2,36 @@
     <span :class="iconClasses" @click="handleClick" :title="title"></span>
 </template>
 
-<script>
+<script setup lang="ts">
 import {
     navigateToItem,
     isItemActive,
 } from '@/widgets/notice/services/navigationService';
 import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
 
-export default {
-    name: 'NoteButton',
-    setup() {
-        const router = useRouter();
-        const route = useRoute();
-        const isActive = route.path.includes('/note');
+const router = useRouter();
+const route = useRoute();
+const isActive = route.path.includes('/note');
 
-        return { router, route, isActive };
-    },
-    computed: {
-        iconClasses() {
-            const baseClasses = `mdi mdi-note-outline hover:text-gray-200 cursor-pointer`;
-            return `${baseClasses} ${
-                this.isActive ? 'text-gray-150' : 'text-gray-400'
-            }`;
-        },
-        title() {
-            return '노트';
-        },
-    },
-    methods: {
-        async handleClick() {
-            const studyId = this.route.params.studyId;
+const iconClasses = computed(() => {
+    const baseClasses = `mdi mdi-note-outline hover:text-gray-200 cursor-pointer`;
+    return `${baseClasses} ${isActive ? 'text-gray-150' : 'text-gray-400'}`;
+});
 
-            if (!studyId) {
-                console.error('유효한 studyId가 없습니다.');
-                return;
-            }
+const title = computed(() => {
+    return '노트';
+});
 
-            await navigateToItem('note', studyId, this.router);
-        },
-    },
+const handleClick = async () => {
+    const studyId = route.params.studyId as string;
+
+    if (!studyId) {
+        console.error('유효한 studyId가 없습니다.');
+        return;
+    }
+
+    await navigateToItem('note', studyId, router);
 };
 </script>
 

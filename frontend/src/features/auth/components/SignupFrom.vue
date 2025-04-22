@@ -40,12 +40,12 @@
                 />
             </div>
             <div class="flex flex-col gap-1">
-                <Button
+                <button
                     type="submit"
-                    class="!bg-green-700 !text-white !border-gray-700 !border !rounded-md !py-1 !hover:bg-green-800"
+                    class="bg-green-700 text-white border border-gray-700 rounded-md py-1 hover:bg-green-600 cursor-pointer"
                 >
                     회원가입
-                </Button>
+                </button>
             </div>
         </form>
         <div

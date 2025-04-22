@@ -42,6 +42,7 @@ import {
 } from '@/features/channel';
 import ScrollPanel from 'primevue/scrollpanel';
 import { useStudyStore } from '@/store';
+import { PATHS } from '@/router/paths'; // PATHS import
 
 const router = useRouter();
 const route = useRoute();
@@ -50,8 +51,17 @@ const studyStore = useStudyStore();
 
 // URL의 studyId는 문자열입니다.
 const currentStudyId = computed(() => {
-    return route.params.studyId;
+    const raw = route.params[PATHS.STUDY_PARAM];
+    return Array.isArray(raw) ? raw[0] : raw ?? '';
 });
+
+// Helpers to build paths
+function studyBasePath(studyId: string) {
+    return `${PATHS.STUDY_BASE}/${studyId}`;
+}
+function channelPath(studyId: string, channelId: string) {
+    return `${studyBasePath(studyId)}/${PATHS.STUDY_CHANNEL}/${channelId}`;
+}
 
 // 스터디 데이터 로드
 async function loadStudyData() {
@@ -73,7 +83,7 @@ function navigateToExistingChannel(
     studyId: number | string,
     channelId: string,
 ) {
-    router.push(`/study/${studyId}/channel/${channelId}`);
+    router.push(channelPath(String(studyId), channelId));
 }
 
 // 활성 채널 ID 저장
@@ -91,27 +101,19 @@ async function navigateToFirstChannel(
     studyKey: string,
 ) {
     try {
-        // 채널 및 그룹 데이터 로드
         const groups = await fetchChannelsGrouped();
         const channels = await fetchChannelsUngrouped();
-
-        // 첫 번째 채널 ID 가져오기
         const firstChannelId = findFirstChannel(groups, channels);
 
         if (firstChannelId !== null) {
-            // 첫 번째 채널 ID로 이동
-            router.push(`/study/${studyId}/channel/${firstChannelId}`);
-
-            // 첫 번째 채널 ID를 activeItemId로 저장
+            router.push(channelPath(String(studyId), String(firstChannelId)));
             saveActiveChannel(studyKey, String(firstChannelId));
         } else {
-            // 채널이 없는 경우 기본 스터디 URL로 이동
-            router.push(`/study/${studyId}`);
+            router.push(studyBasePath(String(studyId)));
         }
     } catch (error) {
         console.error('첫 번째 채널을 찾는 중 오류 발생:', error);
-        // 오류 발생시 기본 스터디 URL로 이동
-        router.push(`/study/${studyId}`);
+        router.push(studyBasePath(String(studyId)));
     }
 }
 
@@ -124,28 +126,18 @@ function updateStudyInfoInStore(study: any) {
 // 스터디 클릭 이벤트 핸들러
 async function handleStudyClick(study: any) {
     updateStudyInfoInStore(study);
-
     const studyId = String(study.id);
     const activeChannelId = getActiveChannelId(studyId);
 
-    if (activeChannelId !== null && activeChannelId !== undefined) {
+    if (activeChannelId) {
         navigateToExistingChannel(study.id, activeChannelId);
     } else {
         await navigateToFirstChannel(study.id, studyId);
     }
 }
 
-// 타이틀 아이콘 클릭 이벤트 처리
-function handleTitleIconClick() {
-    router.push('/me');
-    studyStore.setStudyName('Moye');
-    studyStore.setStudyIcon('https://picsum.photos/200/300?random=1');
-}
-
 // 컴포넌트 생성 시 데이터 로드
-onMounted(async () => {
-    await loadStudyData();
-});
+onMounted(loadStudyData);
 </script>
 
 <style scoped>

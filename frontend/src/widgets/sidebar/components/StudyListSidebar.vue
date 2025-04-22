@@ -1,5 +1,4 @@
-src/widgets/sidebar/components/StudyListSidebar.vue
-
+<!-- src/widgets/sidebar/components/StudyListSidebar.vue -->
 <template>
     <!-- Title Icon: '/me'로 이동 -->
     <div class="w-(--custom-study-list-width) flex flex-col">
@@ -36,25 +35,19 @@ src/widgets/sidebar/components/StudyListSidebar.vue
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { useRouter, useRoute } from 'vue-router';
 import { StudyIconList } from '@/entities/study';
+import { PATHS } from '@/router/paths';
 
-export default {
-    name: 'StudyListSidebar',
-    components: {
-        StudyIconList,
-    },
-    methods: {
-        handleTitleIconClick() {
-            // '/me'로 이동
-            this.$router.push({ path: '/me' });
-        },
-        isTitleActive() {
-            // 현재 경로가 '/me'인지 확인
-            return this.$route.path === '/me';
-        },
-    },
-};
+const router = useRouter();
+const route = useRoute();
+
+function handleTitleIconClick() {
+    router.push({ path: PATHS.ROOT });
+}
+
+const isTitleActive = () => route.path === `/${PATHS.ME}`;
 </script>
 
 <style scoped lang="scss"></style>

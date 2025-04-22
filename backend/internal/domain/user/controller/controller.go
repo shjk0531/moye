@@ -43,5 +43,6 @@ func (c *RootController) RegisterRoutes(router *gin.RouterGroup) {
 		authAPI.POST("/login", c.authCtrl.Login)
 		authAPI.POST("/register", c.authCtrl.Register)
 		authAPI.POST("/refresh", c.authCtrl.RefreshToken)
+		authAPI.POST("/logout", c.authCtrl.Logout)
 	}
 }

@@ -25,3 +25,7 @@ export async function fetchUserProfile(): Promise<User> {
     const response = await apiClient.get('/users/profile');
     return response.data;
 }
+
+export async function logoutApi() {
+    await apiClient.post('/auth/logout');
+}

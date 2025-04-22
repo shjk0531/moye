@@ -8,9 +8,8 @@ import PanelMenu from 'primevue/panelmenu';
 import ScrollPanel from 'primevue/scrollpanel';
 import Tooltip from 'primevue/tooltip';
 import Password from 'primevue/password';
-
-// 공유 UI 컴포넌트
-import { Button, InputText } from '@/shared/ui';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
 
 // 스타일
 import '@mdi/font/css/materialdesignicons.css';
@@ -24,9 +23,9 @@ import pinia from '@/store';
 const app = createApp(App);
 
 // 플러그인 등록
+app.use(pinia);
 app.use(PrimeVue);
 app.use(router);
-app.use(pinia);
 
 app.directive('tooltip', Tooltip);
 

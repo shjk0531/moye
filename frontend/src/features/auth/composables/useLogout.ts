@@ -1,6 +1,7 @@
 import { useUserStore } from '@/store/user';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { logoutApi } from '@/entities';
 
 export function useLogout(emit: (event: 'success') => void) {
     const loading = ref(false);
@@ -13,6 +14,7 @@ export function useLogout(emit: (event: 'success') => void) {
             loading.value = true;
 
             userStore.logout();
+            logoutApi();
 
             emit('success');
             router.push('/');

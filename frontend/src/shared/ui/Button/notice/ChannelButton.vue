@@ -9,7 +9,7 @@ import { computed } from 'vue';
 
 const router = useRouter();
 const route = useRoute();
-const isActive = route.path.includes('/channel');
+const isActive = computed(() => route.path.includes('/channel'));
 
 const iconClasses = computed(() => {
     const baseClasses = `mdi mdi-message hover:text-gray-200 cursor-pointer`;
