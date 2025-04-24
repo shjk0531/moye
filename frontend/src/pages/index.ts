@@ -11,3 +11,5 @@ export { default as CalendarPage } from './calendar/CalendarPage.vue';
 
 // Setting
 export { default as SettingPage } from './setting/SettingPage.vue';
+
+export { default as CreateStudyPage } from './study/CreateStudyPage.vue';

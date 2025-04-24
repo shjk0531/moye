@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { AppLayout } from '@/shared/layout';
-import { ChatPage, CalendarPage } from '@/pages';
+import { ChatPage, CalendarPage, CreateStudyPage } from '@/pages';
 import { ChannelListSidebar, CalendarListSidebar } from '@/widgets/sidebar';
 import { PATHS } from '@/router/paths';
 
@@ -22,6 +22,11 @@ const studyRoutes: RouteRecordRaw[] = [
                 },
             },
         ],
+    },
+    {
+        path: `/${PATHS.CREATE}`,
+        component: CreateStudyPage,
+        meta: { requiresAuth: true },
     },
 ];
 

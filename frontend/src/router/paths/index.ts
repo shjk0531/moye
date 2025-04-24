@@ -4,6 +4,7 @@ export const PATHS = {
     ROOT: '/',
     STUDIES: 'studies',
     ME: 'me',
+    CREATE: 'create',
 
     STUDY_BASE: '/study',
     STUDY_PARAM: 'studyId',

@@ -17,6 +17,8 @@ import Toast from 'primevue/toast';
 import '@mdi/font/css/materialdesignicons.css';
 import 'es6-promise/auto';
 import './assets/style.css';
+import 'katex/dist/katex.min.css';
+import 'highlight.js/styles/github.css';
 
 // 스토어
 import pinia from '@/store';

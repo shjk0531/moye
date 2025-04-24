@@ -1,33 +1,23 @@
 <!-- src/entities/study/components/StudyIconList.vue -->
 <template>
-    <div class="study-list">
-        <ScrollPanel style="height: 100%">
-            <div class="flex flex-col items-center justify-start w-full gap-2">
-                <div
-                    v-for="study in studies"
-                    :key="study.id"
-                    class="relative flex items-center justify-center w-full group cursor-pointer"
-                    @click="handleStudyClick(study)"
-                >
-                    <!-- indicator: 현재 선택된 스터디면 왼쪽에 표시 -->
-                    <div
-                        :class="[
-                            'absolute left-0 top-1/2 -translate-y-1/2 rounded transition-all duration-300',
-                            String(study.id) === currentStudyId
-                                ? 'w-1 h-[70%] bg-gray-50'
-                                : 'w-0 group-hover:w-1 h-[50%] bg-gray-150',
-                        ]"
-                    ></div>
-                    <div class="w-10 h-10 overflow-hidden border-2 rounded-lg">
-                        <img
-                            :src="study.icon"
-                            alt="study icon"
-                            class="w-full h-full"
-                        />
-                    </div>
-                </div>
-            </div>
-        </ScrollPanel>
+    <div
+        v-for="study in studies"
+        :key="study.id"
+        class="relative flex items-center justify-center w-full group cursor-pointer"
+        @click="handleStudyClick(study)"
+    >
+        <!-- indicator: 현재 선택된 스터디면 왼쪽에 표시 -->
+        <div
+            :class="[
+                'absolute left-0 top-1/2 -translate-y-1/2 rounded transition-all duration-300',
+                String(study.id) === currentStudyId
+                    ? 'w-1 h-[70%] bg-gray-50'
+                    : 'w-0 group-hover:w-1 h-[50%] bg-gray-150',
+            ]"
+        ></div>
+        <div class="w-10 h-10 overflow-hidden border-2 rounded-lg">
+            <img :src="study.icon" alt="study icon" class="w-full h-full" />
+        </div>
     </div>
 </template>
 
@@ -40,7 +30,6 @@ import {
     fetchChannelsUngrouped,
     findFirstChannel,
 } from '@/features/channel';
-import ScrollPanel from 'primevue/scrollpanel';
 import { useStudyStore } from '@/store';
 import { PATHS } from '@/router/paths'; // PATHS import
 
@@ -140,32 +129,4 @@ async function handleStudyClick(study: any) {
 onMounted(loadStudyData);
 </script>
 
-<style scoped>
-.study-list {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.study-list :deep(.p-scrollpanel-content) {
-    height: 100%;
-}
-
-.study-list :deep(.p-scrollpanel-bar) {
-    background-color: var(--custom-scrollbar-color);
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-.study-list :deep(.p-scrollpanel-bar:hover) {
-    background-color: var(--custom-scrollbar-color-hover);
-}
-
-.study-list :deep(.p-scrollpanel-bar:active) {
-    background-color: var(--custom-scrollbar-color-active);
-}
-
-.study-list :deep(.p-scrollpanel-bar-y) {
-    width: calc(var(--spacing)) !important;
-}
-</style>
+<style scoped></style>
