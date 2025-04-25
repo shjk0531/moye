@@ -58,3 +58,24 @@
     width: 100vw;
     height: 100vh;
 }
+
+/* 커스텀 스크롤바 스타일 */
+/* WebKit 기반 브라우저 */
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-button {
+    display: none;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-400);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-gray-500);
+}
+/* Firefox */

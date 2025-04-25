@@ -1,11 +1,10 @@
 <template>
-    <div class="markdown-body" v-html="parsedHtml"></div>
+    <div class="markdown-body p-1" v-html="parsedHtml"></div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import MarkdownIt from 'markdown-it';
-import type { Options } from 'markdown-it';
 import markdownItKatex from 'markdown-it-katex';
 import hljs from 'highlight.js';
 
@@ -13,6 +12,7 @@ const md: MarkdownIt = new MarkdownIt({
     html: true,
     linkify: true,
     typographer: true,
+    breaks: true,
     highlight: function (this: MarkdownIt, str: string, lang: string): string {
         if (lang && hljs.getLanguage(lang)) {
             try {
@@ -160,5 +160,80 @@ const parsedHtml = computed(() => md.render(props.content));
     display: block;
     text-align: center;
     margin: 1em 0;
+}
+</style>
+
+<!-- 다크모드 스타일 추가 -->
+<style lang="scss">
+@media (prefers-color-scheme: dark) {
+    .markdown-body {
+        color: #e5e7eb;
+        background-color: transparent;
+    }
+    .markdown-body a {
+        color: #3b82f6;
+    }
+    .markdown-body code {
+        background-color: #1f2937;
+        color: #e5e7eb;
+    }
+    .markdown-body pre {
+        background-color: #1f2937;
+        color: #e5e7eb;
+    }
+    .markdown-body blockquote {
+        border-left-color: #4b5563;
+        color: #9ca3af;
+    }
+    .markdown-body hr {
+        border-color: #4b5563;
+    }
+    .markdown-body th,
+    .markdown-body td {
+        border-color: #4b5563;
+    }
+    .markdown-body thead {
+        background-color: #1f2937;
+    }
+}
+
+/* 애플리케이션 테마 클래스 기반 다크모드 */
+:root.dark .markdown-body,
+.dark .markdown-body {
+    color: #e5e7eb;
+    background-color: transparent;
+}
+:root.dark .markdown-body a,
+.dark .markdown-body a {
+    color: #3b82f6;
+}
+:root.dark .markdown-body code,
+.dark .markdown-body code {
+    background-color: #1f2937;
+    color: #e5e7eb;
+}
+:root.dark .markdown-body pre,
+.dark .markdown-body pre {
+    background-color: #1f2937;
+    color: #e5e7eb;
+}
+:root.dark .markdown-body blockquote,
+.dark .markdown-body blockquote {
+    border-left-color: #4b5563;
+    color: #9ca3af;
+}
+:root.dark .markdown-body hr,
+.dark .markdown-body hr {
+    border-color: #4b5563;
+}
+:root.dark .markdown-body th,
+:root.dark .markdown-body td,
+.dark .markdown-body th,
+.dark .markdown-body td {
+    border-color: #4b5563;
+}
+:root.dark .markdown-body thead,
+.dark .markdown-body thead {
+    background-color: #1f2937;
 }
 </style>

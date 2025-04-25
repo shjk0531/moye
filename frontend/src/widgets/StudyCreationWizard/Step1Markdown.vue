@@ -1,15 +1,27 @@
 <template>
     <div class="flex flex-col h-full">
-        <label class="block mb-2 font-semibold">본문 작성</label>
+        <label class="block mb-2 font-semibold text-gray-800 dark:text-gray-50"
+            >본문 작성</label
+        >
         <div class="flex-1 overflow-auto">
-            <MarkdownEditor v-model="localValue" />
+            <div
+                class="markdown-editor flex h-full border dark:border-gray-800 rounded"
+            >
+                <div class="w-1/2 overflow-auto">
+                    <MarkdownEditor v-model="localValue" />
+                </div>
+                <div class="h-full border border-gray-250"></div>
+                <div class="w-1/2 overflow-auto bg-gray-100 dark:bg-gray-800">
+                    <MarkdownPreview :content="localValue" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, defineEmits, computed } from 'vue';
-import { MarkdownEditor } from '@/shared/ui';
+import { MarkdownEditor, MarkdownPreview } from '@/shared/ui';
 
 const props = defineProps<{ modelValue: string }>();
 const emit = defineEmits<{
@@ -23,6 +35,4 @@ const localValue = computed<string>({
 });
 </script>
 
-<style lang="scss">
-/* 추가적인 스타일이 필요하면 작성 */
-</style>
+<style lang="scss"></style>

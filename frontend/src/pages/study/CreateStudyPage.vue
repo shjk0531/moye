@@ -1,6 +1,6 @@
 <template>
     <div
-        class="create-study-page flex justify-center bg-gray-100 h-screen w-screen overflow-hidden"
+        class="create-study-page flex justify-center bg-gray-100 dark:bg-gray-950 h-screen w-screen overflow-hidden"
     >
         <StudyCreationWizard />
     </div>

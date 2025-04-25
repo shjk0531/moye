@@ -1,25 +1,17 @@
 <template>
-    <div class="markdown-editor flex h-full">
-        <div class="markdown-editor-input w-1/2 p-4 bg-gray-50">
-            <textarea
-                v-model="value"
-                @input="onInput"
-                @keydown="onKeydown"
-                class="w-full h-full resize-none p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Markdown 입력..."
-            ></textarea>
-        </div>
-        <div
-            class="markdown-editor-preview w-1/2 p-4 bg-white overflow-auto markdown-body"
-        >
-            <MarkdownPreview :content="value" />
-        </div>
+    <div class="flex h-full">
+        <textarea
+            v-model="value"
+            @input="onInput"
+            @keydown="onKeydown"
+            class="w-full h-full resize-none p-2 focus:outline-none bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent"
+            placeholder="소개글 입력..."
+        ></textarea>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import MarkdownPreview from './MarkdownPreview.vue';
 
 const props = defineProps({
     modelValue: {
@@ -54,7 +46,12 @@ function onKeydown(event: KeyboardEvent) {
 </script>
 
 <style lang="scss">
-.markdown-editor {
-    height: 100%;
+textarea {
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
 }
 </style>

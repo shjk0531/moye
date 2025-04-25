@@ -1,7 +1,5 @@
 <template>
-    <div
-        class="study-creation-wizard p-6 bg-white rounded shadow h-full w-full flex flex-col"
-    >
+    <div class="study-creation-wizard p-6 h-full w-full flex flex-col">
         <div class="flex justify-between items-center mb-6">
             <!-- 스텝 표시 -->
             <Stepper
@@ -110,63 +108,4 @@ function nextStep() {
 }
 </script>
 
-<style scoped lang="scss">
-.stepper {
-    display: flex;
-    align-items: center;
-}
-.step {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
-.step-circle {
-    width: 32px;
-    height: 32px;
-    border: 2px solid #d1d5db;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    background-color: #ffffff;
-    transition: background-color 0.3s ease 0.3s, border-color 0.3s ease 0.3s,
-        color 0.3s ease 0.3s;
-}
-.step-circle.active {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-    color: #ffffff;
-    transition-delay: 0.3s;
-}
-.step-line {
-    position: relative;
-    flex: 1;
-    height: 2px;
-    background-color: #d1d5db;
-    overflow: hidden;
-}
-.step-line-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #3b82f6;
-    width: 0;
-    transition: width 0.3s ease;
-}
-.step-line-fill.active {
-    width: 100%;
-}
-.step-label {
-    font-size: 0.875rem;
-}
-.stepper.backward .step-circle {
-    /* backward 시 원은 delay 없이 바로 색상이 꺼지도록 설정 */
-    transition-delay: 0s !important;
-}
-.stepper.backward .step-line-fill {
-    /* backward 시 원 애니메이션(0.3s) 완료 후, 선이 뒤로 지워지도록 delay 0.3s 설정 */
-    transition: width 0.3s ease 0.3s;
-}
-</style>
+<style scoped lang="scss"></style>
