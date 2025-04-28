@@ -1,5 +1,5 @@
 <template>
-    <div class="study-creation-wizard p-6 h-full w-full flex flex-col">
+    <div class="study-creation-wizard flex flex-col p-6 h-screen w-full">
         <div class="flex items-center mb-6">
             <div class="flex-1 flex items-center space-x-2 gap-x-2">
                 <button

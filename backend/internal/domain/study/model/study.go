@@ -16,7 +16,7 @@ type Study struct {
     // 본문
     Content     string    `gorm:"not null" json:"content"`
     // 태그
-    Tags        []string  `gorm:"type:jsonb" json:"tags"`
+    Tags        []string  `gorm:"type:jsonb;serializer:json" json:"tags"`
     // 리더 ID
     LeaderID    uuid.UUID `gorm:"type:uuid;not null;index" json:"leader_id"`
 }

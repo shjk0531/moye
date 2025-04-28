@@ -10,6 +10,8 @@
                 <div class="w-1/2 overflow-hidden bg-gray-100 dark:bg-gray-800">
                     <MarkdownEditor v-model="localValue" />
                 </div>
+                <!-- 구분선  -->
+                <div class="border-1 dark:border-gray-700"></div>
                 <div class="w-1/2 overflow-auto bg-gray-100 dark:bg-gray-800">
                     <MarkdownPreview :content="localValue" />
                 </div>

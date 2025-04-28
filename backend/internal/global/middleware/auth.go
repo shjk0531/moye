@@ -2,6 +2,7 @@
 package middleware
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
@@ -42,15 +43,18 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 
-		// JWT 토큰에서 사용자 ID 가져오기
-		userID, err := jwtService.GetUserID(token, jwt.AccessToken)
+		// JWT 토큰 유효성 검사
+		claims, err := jwtService.ValidateToken(token, jwt.AccessToken)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			if errors.Is(err, jwt.ErrExpiredToken) {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
+			} else {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+			}
 			return
 		}
-
 		// context에 userID 저장
-		ctx := WithUserID(c.Request.Context(), userID)
+		ctx := WithUserID(c.Request.Context(), claims.UserID)
 		c.Request = c.Request.WithContext(ctx)
 
 		c.Next()

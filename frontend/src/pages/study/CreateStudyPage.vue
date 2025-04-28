@@ -2,12 +2,7 @@
     <div
         class="create-study-page flex justify-center bg-gray-100 dark:bg-gray-950 min-h-screen w-full overflow-hidden"
     >
-        <div v-if="useWizard">
-            <CreateStudyProcess />
-        </div>
-        <div v-else class="w-full max-w-4xl py-8">
-            <CreateStudyForm @cancel="onCancel" @submit="onSubmit" />
-        </div>
+        <CreateStudyProcess />
     </div>
 </template>
 
@@ -18,7 +13,6 @@ import { useAppStore } from '@/store';
 import { useToast } from 'primevue/usetoast';
 import { createStudy } from '@/entities/study/api/studyApi';
 import CreateStudyProcess from '@/processes/study/CreateStudyProcess.vue';
-import { CreateStudyForm } from '@/features/study';
 import type { StudyCreatePayload } from '@/entities/study/models/types';
 
 // 위자드 또는 기본 폼 중 선택 (라우터 쿼리 파라미터로 제어 가능)
