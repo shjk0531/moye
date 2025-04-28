@@ -1,27 +1,42 @@
 <template>
     <div class="study-creation-wizard p-6 h-full w-full flex flex-col">
-        <div class="flex justify-between items-center mb-6">
-            <!-- 스텝 표시 -->
-            <Stepper
-                :steps="stepLabels"
-                :modelValue="currentStep"
-                :backward="isBackward"
-                @update:modelValue="goToStep"
-                class="flex-1"
-            />
-            <!-- 이전/다음 버튼 -->
-            <div class="space-x-2">
+        <div class="flex items-center mb-6">
+            <div class="flex-1 flex items-center space-x-2 gap-x-2">
                 <button
-                    @click="prevStep"
+                    @click="handleCancel"
+                    class="px-4 py-1 bg-gray-200 rounded hover:bg-gray-300 dark:bg-red-500 dark:hover:bg-red-600 dark:text-gray-50 cursor-pointer"
+                >
+                    나가기
+                </button>
+                <Stepper
+                    :steps="stepLabels"
+                    :modelValue="currentStep"
+                    :backward="isBackward"
+                    @update:modelValue="goToStep"
+                    class="flex-1"
+                />
+            </div>
+            <div class="flex space-x-2">
+                <button
                     :disabled="currentStep === 0"
-                    class="px-4 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                    @click="prevStep"
+                    class="px-4 py-1 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-500 dark:hover:bg-gray-700 dark:text-gray-50 cursor-pointer disabled:opacity-100 disabled:cursor-not-allowed"
                 >
                     이전
                 </button>
                 <button
+                    v-if="currentStep === stepLabels.length - 1"
+                    @click="handleCreate"
+                    :disabled="!isCreateButtonEnabled"
+                    class="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    생성
+                </button>
+                <button
+                    v-else
                     @click="nextStep"
-                    :disabled="currentStep === stepLabels.length - 1"
-                    class="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+                    :disabled="!canGoToNextStep"
+                    class="px-4 py-1 bg-gray-200 text-white rounded hover:bg-gray-300 dark:bg-gray-50 dark:hover:bg-gray-150 dark:text-gray-950 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     다음
                 </button>
@@ -41,15 +56,33 @@
                 v-model:thumbnailUrl="form.thumbnailUrl"
             />
         </div>
+        <!-- 유효성 검사 오류 메시지 -->
+        <div v-if="validationError" class="mt-4 text-red-500 text-sm">
+            {{ validationError }}
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { Stepper } from '@/shared/ui';
 import Step1Markdown from './Step1Markdown.vue';
 import Step2Tags from './Step2Tags.vue';
 import Step3ThumbnailTitle from './Step3ThumbnailTitle.vue';
+
+const emit = defineEmits<{
+    (e: 'cancel'): void;
+    (
+        e: 'create',
+        payload: {
+            content: string;
+            tags: string[];
+            intro: string;
+            title: string;
+            thumbnailUrl: string;
+        },
+    ): void;
+}>();
 
 const stepLabels = ['본문 작성', '해시태그・소개', '제목・썸네일'];
 const currentStep = ref(0);
@@ -62,9 +95,79 @@ const form = reactive({
 });
 const isAnimating = ref(false);
 const isBackward = ref(false);
+const validationError = ref('');
+
+// 유효성 검사 함수
+function validateCurrentStep(): boolean {
+    validationError.value = '';
+
+    switch (currentStep.value) {
+        case 0: // 본문 작성
+            if (!form.content.trim()) {
+                validationError.value = '본문 내용을 입력해주세요.';
+                return false;
+            }
+            return true;
+        case 1: // 해시태그, 소개
+            if (!form.intro.trim()) {
+                validationError.value = '소개글을 입력해주세요.';
+                return false;
+            }
+            return true;
+        case 2: // 제목, 썸네일
+            if (!form.title.trim()) {
+                validationError.value = '제목을 입력해주세요.';
+                return false;
+            }
+            if (!form.thumbnailUrl.trim()) {
+                validationError.value = '썸네일 URL을 입력해주세요.';
+                return false;
+            }
+            return true;
+        default:
+            return true;
+    }
+}
+
+// 다음 단계로 이동할 수 있는지 확인
+const canGoToNextStep = computed(() => {
+    return validateCurrentStep();
+});
+
+// 생성 버튼 활성화 여부
+const isCreateButtonEnabled = computed(() => {
+    return (
+        form.content.trim() !== '' &&
+        form.intro.trim() !== '' &&
+        form.title.trim() !== '' &&
+        form.thumbnailUrl.trim() !== ''
+    );
+});
+
+function handleCancel() {
+    emit('cancel');
+}
+
+function handleCreate() {
+    if (!validateCurrentStep()) return;
+
+    emit('create', {
+        content: form.content,
+        tags: form.hashes,
+        intro: form.intro,
+        title: form.title,
+        thumbnailUrl: form.thumbnailUrl,
+    });
+}
 
 function goToStep(idx: number) {
     if (isAnimating.value || idx === currentStep.value) return;
+
+    // 다음 스텝으로 이동할 때만 유효성 검사
+    if (idx > currentStep.value && !validateCurrentStep()) {
+        return;
+    }
+
     const start = currentStep.value;
     const stepCount = Math.abs(idx - start);
     const direction = idx > start ? 1 : -1;
@@ -96,13 +199,15 @@ function goToStep(idx: number) {
         }
     }
 }
+
 function prevStep() {
     if (currentStep.value > 0) {
         goToStep(currentStep.value - 1);
     }
 }
+
 function nextStep() {
-    if (currentStep.value < stepLabels.length - 1) {
+    if (currentStep.value < stepLabels.length - 1 && validateCurrentStep()) {
         goToStep(currentStep.value + 1);
     }
 }

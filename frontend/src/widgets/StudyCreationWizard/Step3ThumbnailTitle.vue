@@ -1,20 +1,24 @@
 <template>
     <div class="space-y-4">
         <div>
-            <label class="block mb-1 font-medium">제목</label>
+            <label class="block mb-1 font-medium dark:text-gray-200"
+                >제목</label
+            >
             <input
                 type="text"
                 v-model="title"
-                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full p-2 border border-gray-300 rounded focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 dark:focus:ring-blue-500"
                 placeholder="제목을 입력하세요"
             />
         </div>
         <div>
-            <label class="block mb-1 font-medium">썸네일 URL</label>
+            <label class="block mb-1 font-medium dark:text-gray-200"
+                >썸네일 URL</label
+            >
             <input
                 type="text"
                 v-model="thumbnailUrl"
-                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full p-2 border border-gray-300 rounded focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 dark:focus:ring-blue-500"
                 placeholder="이미지 URL을 입력하세요"
             />
             <div v-if="thumbnailUrl" class="mt-2">

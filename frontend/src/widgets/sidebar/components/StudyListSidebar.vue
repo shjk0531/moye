@@ -58,9 +58,11 @@ import { useRouter, useRoute } from 'vue-router';
 import { StudyIconList } from '@/entities/study';
 import ScrollPanel from 'primevue/scrollpanel';
 import { PATHS } from '@/router/paths';
+import { useAppStore } from '@/store';
 
 const router = useRouter();
 const route = useRoute();
+const appStore = useAppStore();
 
 function handleTitleIconClick() {
     router.push({ path: PATHS.ROOT });
@@ -69,6 +71,7 @@ function handleTitleIconClick() {
 const isTitleActive = () => route.path === `/${PATHS.ME}`;
 
 function handleNewStudyClick() {
+    appStore.saveLastRoute(route.path);
     router.push(`/${PATHS.CREATE}`);
 }
 </script>

@@ -1,13 +1,11 @@
 <template>
-    <div class="flex h-full">
-        <textarea
-            v-model="value"
-            @input="onInput"
-            @keydown="onKeydown"
-            class="w-full h-full resize-none p-2 focus:outline-none bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent"
-            placeholder="소개글 입력..."
-        ></textarea>
-    </div>
+    <textarea
+        v-model="value"
+        @input="onInput"
+        @keydown="onKeydown"
+        class="w-full h-full p-3 resize-none focus:outline-none text-gray-800 dark:text-gray-200"
+        placeholder="소개글 입력..."
+    ></textarea>
 </template>
 
 <script setup lang="ts">
@@ -45,13 +43,4 @@ function onKeydown(event: KeyboardEvent) {
 }
 </script>
 
-<style lang="scss">
-textarea {
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    &::-webkit-scrollbar-button {
-        display: none;
-    }
-}
-</style>
+<style lang="scss"></style>

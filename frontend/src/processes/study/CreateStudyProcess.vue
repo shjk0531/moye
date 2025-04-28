@@ -1,28 +1,15 @@
 <template>
-    <div
-        class="create-study-page flex justify-center bg-gray-100 dark:bg-gray-950 min-h-screen w-full overflow-hidden"
-    >
-        <div v-if="useWizard">
-            <CreateStudyProcess />
-        </div>
-        <div v-else class="w-full max-w-4xl py-8">
-            <CreateStudyForm @cancel="onCancel" @submit="onSubmit" />
-        </div>
-    </div>
+    <!-- StudyCreationWizard 위젯을 래핑하고 이벤트 핸들러를 바인딩 -->
+    <StudyCreationWizard @cancel="onCancel" @create="onCreate" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { StudyCreationWizard } from '@/widgets/StudyCreationWizard';
 import { useRouter } from 'vue-router';
 import { useAppStore } from '@/store';
-import { useToast } from 'primevue/usetoast';
 import { createStudy } from '@/entities/study/api/studyApi';
-import CreateStudyProcess from '@/processes/study/CreateStudyProcess.vue';
-import { CreateStudyForm } from '@/features/study';
+import { useToast } from 'primevue/usetoast';
 import type { StudyCreatePayload } from '@/entities/study/models/types';
-
-// 위자드 또는 기본 폼 중 선택 (라우터 쿼리 파라미터로 제어 가능)
-const useWizard = ref(true);
 
 const router = useRouter();
 const appStore = useAppStore();
@@ -31,13 +18,29 @@ const toast = useToast();
 // 취소 시 마지막으로 저장된 라우트로 이동
 function onCancel() {
     const lastRoute = appStore.getLastRoute || '/';
+    console.log('lastRoute', lastRoute);
     router.push(lastRoute);
 }
 
-// 폼 제출 시 API 호출
-async function onSubmit(payload: StudyCreatePayload) {
+// 생성 시 API 호출 후 성공/실패 토스트 출력 및 라우팅
+async function onCreate(payload: {
+    content: string;
+    tags: string[];
+    intro: string;
+    title: string;
+    thumbnailUrl: string;
+}) {
     try {
-        await createStudy(payload);
+        // 폼 데이터를 백엔드 API에 맞게 변환
+        const studyPayload: StudyCreatePayload = {
+            name: payload.title,
+            profile_url: payload.thumbnailUrl,
+            description: payload.intro,
+            content: payload.content,
+            tags: payload.tags,
+        };
+
+        await createStudy(studyPayload);
 
         toast.add({
             severity: 'success',
@@ -59,7 +62,3 @@ async function onSubmit(payload: StudyCreatePayload) {
     }
 }
 </script>
-
-<style lang="scss">
-/* 필요 시 추가 스타일을 작성하세요 */
-</style>

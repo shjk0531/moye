@@ -7,10 +7,9 @@
             <div
                 class="markdown-editor flex h-full border dark:border-gray-800 rounded"
             >
-                <div class="w-1/2 overflow-auto">
+                <div class="w-1/2 overflow-hidden bg-gray-100 dark:bg-gray-800">
                     <MarkdownEditor v-model="localValue" />
                 </div>
-                <div class="h-full border border-gray-250"></div>
                 <div class="w-1/2 overflow-auto bg-gray-100 dark:bg-gray-800">
                     <MarkdownPreview :content="localValue" />
                 </div>
@@ -20,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed } from 'vue';
+import { computed } from 'vue';
 import { MarkdownEditor, MarkdownPreview } from '@/shared/ui';
 
 const props = defineProps<{ modelValue: string }>();

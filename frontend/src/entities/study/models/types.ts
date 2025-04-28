@@ -1,8 +1,19 @@
 export interface Study {
-    id: number;
+    id?: string;
     name: string;
-    icon: string;
-    description?: string;
+    profileUrl: string;
+    description: string;
+    leaderId?: string;
     createdAt?: string;
     updatedAt?: string;
+    content?: string;
+    tags?: string[];
+}
+
+export interface StudyCreatePayload {
+    name: string;
+    profile_url: string;
+    description: string;
+    content: string;
+    tags: string[];
 }

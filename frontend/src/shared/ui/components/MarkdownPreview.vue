@@ -1,11 +1,10 @@
 <template>
-    <div class="markdown-body p-1" v-html="parsedHtml"></div>
+    <div class="markdown-body p-3" v-html="parsedHtml"></div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import MarkdownIt from 'markdown-it';
-import markdownItKatex from 'markdown-it-katex';
 import hljs from 'highlight.js';
 
 const md: MarkdownIt = new MarkdownIt({
@@ -28,7 +27,7 @@ const md: MarkdownIt = new MarkdownIt({
             str,
         )}</code></pre>`;
     },
-}).use(markdownItKatex);
+});
 
 const props = defineProps<{ content: string }>();
 const parsedHtml = computed(() => md.render(props.content));

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,7 @@ func NewStudyController(s service.StudyService) *StudyController {
 
 // CreateStudy는 새로운 스터디를 생성합니다.
 func (ctrl *StudyController) CreateStudy(c *gin.Context) {
+	fmt.Println("CreateStudy 호출")
 	var study model.Study
 	if err := c.ShouldBindJSON(&study); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
