@@ -60,7 +60,7 @@ func RegisterRoutes(router *gin.Engine) {
 
 	// Study 도메인 라우트 등록 (인증 필요)
 	studyRepo := studyRepository.NewRepository(pgDB)
-	studyCtrl := studyController.Init(studyRepo)
+	studyCtrl := studyController.Init(studyRepo, pgDB)
 	studyCtrl.RegisterRoutes(protected)
 
 	// MongoDB 연결 (메시지 데이터: 채팅, 로그 등)

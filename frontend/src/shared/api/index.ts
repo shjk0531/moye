@@ -1,6 +1,7 @@
 import apiClient from './axios';
 
-export { apiClient };
+export { default as apiClient } from './axios';
+export * from './authError';
 
 // 기본 API 요청 함수
 export const api = {

@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/shjk0531/moye/backend/internal/domain/study/model"
 	"github.com/shjk0531/moye/backend/internal/domain/study/service"
+	"github.com/shjk0531/moye/backend/internal/global/middleware"
 )
 
 
@@ -28,18 +29,18 @@ func (ctrl *StudyController) CreateStudy(c *gin.Context) {
 		return
 	}
 
-	// 리더 ID 설정 (실제 구현에서는 인증된 사용자 ID를 사용)
-	// userIDStr := c.GetHeader("X-User-ID")
-	userIDStr := "123e4567-e89b-12d3-a456-426614174000"
-
-	if userIDStr != "" {
-		userID, err := uuid.Parse(userIDStr)
-		if err == nil {
-			study.LeaderID = userID
-		}
+	// 컨텍스트에서 인증된 사용자 ID 가져오기
+	userID, exists := middleware.GetUserID(c.Request.Context())
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "인증된 사용자를 찾을 수 없습니다"})
+		return
 	}
 
-	if err := ctrl.service.CreateStudy(&study); err != nil {
+	// 스터디의 리더 ID 설정
+	study.LeaderID = userID
+
+	// 트랜잭션으로 스터디 및 관련 구성요소 생성
+	if err := ctrl.service.CreateStudy(&study, userID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 생성 실패"})
 		return
 	}

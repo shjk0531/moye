@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shjk0531/moye/backend/internal/domain/study/repository"
 	"github.com/shjk0531/moye/backend/internal/domain/study/service"
+	"gorm.io/gorm"
 )
 
 
@@ -12,8 +13,8 @@ type RootController struct {
 	studyCtrl		*StudyController
 }
 
-func Init(studyRepo repository.Repository) *RootController {
-	studyService := service.NewStudyService(studyRepo)
+func Init(studyRepo repository.Repository, db *gorm.DB) *RootController {
+	studyService := service.NewStudyService(studyRepo, db)
 
 	studyCtrl := NewStudyController(studyService)
 

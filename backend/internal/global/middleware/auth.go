@@ -37,7 +37,10 @@ func AuthMiddleware() gin.HandlerFunc {
 		// 예시: Authorization 헤더에서 Bearer 토큰 추출
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header missing or invalid"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "인증 토큰이 없거나 유효하지 않습니다",
+				"code": "token_missing",
+			})
 			return
 		}
 
@@ -47,9 +50,15 @@ func AuthMiddleware() gin.HandlerFunc {
 		claims, err := jwtService.ValidateToken(token, jwt.AccessToken)
 		if err != nil {
 			if errors.Is(err, jwt.ErrExpiredToken) {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+					"error": "인증 토큰이 만료되었습니다",
+					"code": "token_expired",
+				})
 			} else {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+					"error": "유효하지 않은 인증 토큰입니다",
+					"code": "token_invalid",
+				})
 			}
 			return
 		}
