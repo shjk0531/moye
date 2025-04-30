@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -90,6 +91,7 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 
 	c.SetRefreshToken(ctx, newRefreshToken)
 
+	fmt.Println("tokenResponse", tokenResponse)
 	// 액세스 토큰만 응답 본문에 포함
 	ctx.JSON(http.StatusOK, tokenResponse)
 }

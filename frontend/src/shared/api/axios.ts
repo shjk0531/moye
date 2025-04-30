@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../config';
 import router from '@/router';
 import { useUserStore } from '@/store';
 import { handleAuthError } from './authError';
+import { refreshAccessToken } from './tokenService';
 
 // API 클라이언트 인스턴스 생성
 const apiClient = axios.create({
@@ -29,17 +30,33 @@ apiClient.interceptors.request.use(
 
 // 응답 인터셉터 설정
 apiClient.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    (error) => {
+    (response) => response,
+    async (error) => {
+        const originalRequest: any = error.config;
         if (error.response) {
-            // 인증 관련 오류 (401: 권한 없음, 403: 금지됨)
+            const { status, data } = error.response;
+            // 토큰 만료 시 재발급 시도
             if (
-                error.response.status === 401 ||
-                error.response.status === 403
+                status === 401 &&
+                data.code === 'token_expired' &&
+                !originalRequest._retry
             ) {
-                handleAuthError(error.response.data);
+                originalRequest._retry = true;
+                try {
+                    const newToken = await refreshAccessToken();
+                    originalRequest.headers[
+                        'Authorization'
+                    ] = `Bearer ${newToken}`;
+                    return apiClient(originalRequest);
+                } catch (refreshError) {
+                    // 재발급 실패 시 인증 오류 처리
+                    handleAuthError(data);
+                    return Promise.reject(refreshError);
+                }
+            }
+            // 그 외 인증 오류 처리
+            if (status === 401 || status === 403) {
+                handleAuthError(data);
             }
         }
         return Promise.reject(error);

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -31,6 +32,7 @@ func (b *BaseModel) BeforeCreate(tx *gorm.DB) error {
 	if b.ID == uuid.Nil {
 		b.ID = uuid.New()
 	}
+	fmt.Println("context", tx.Statement.Context)
 
 	// 컨텍스트에서 사용자 ID 가져오기
 	if userID, ok := middleware.GetUserID(tx.Statement.Context); ok {
@@ -61,13 +63,13 @@ func (b *BaseModel) BeforeUpdate(tx *gorm.DB) error {
 // AfterCreate is a hook for post-create processing (e.g., event publishing, cache update).
 func (b *BaseModel) AfterCreate(tx *gorm.DB) error {
 	log.Printf("Model created with ID: %s", b.ID)
-	// 추가 후처리 작업을 이곳에 구현할 수 있습니다.
+	// TODO: 추가 후처리 작업을 이곳에 구현할 수 있습니다.
 	return nil
 }
 
 // AfterUpdate is a hook for post-update processing (e.g., event publishing, cache update).
 func (b *BaseModel) AfterUpdate(tx *gorm.DB) error {
 	log.Printf("Model updated with ID: %s, new version: %d", b.ID, b.Version)
-	// 추가 후처리 작업을 이곳에 구현할 수 있습니다.
+	// TODO: 추가 후처리 작업을 이곳에 구현할 수 있습니다.
 	return nil
 }

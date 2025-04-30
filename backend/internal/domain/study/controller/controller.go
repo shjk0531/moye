@@ -29,6 +29,7 @@ func (c *RootController) RegisterRoutes(router *gin.RouterGroup) {
 	{
 		studyAPI.POST("", c.studyCtrl.CreateStudy)
 		studyAPI.GET("/:id", c.studyCtrl.GetStudy)
-		studyAPI.GET("",c.studyCtrl.GetAllStudies)
+		studyAPI.GET("", c.studyCtrl.GetAllStudies)
+		studyAPI.GET("/my", c.studyCtrl.GetMyStudies)
 	}
 }

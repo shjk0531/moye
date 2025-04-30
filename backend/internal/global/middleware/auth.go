@@ -3,6 +3,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -49,7 +50,10 @@ func AuthMiddleware() gin.HandlerFunc {
 		// JWT 토큰 유효성 검사
 		claims, err := jwtService.ValidateToken(token, jwt.AccessToken)
 		if err != nil {
+			fmt.Println("인증 토큰 유효성 검사 오류:", err)
 			if errors.Is(err, jwt.ErrExpiredToken) {
+				// 로그 출력
+				fmt.Println("인증 토큰이 만료되었습니다:", err)
 				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 					"error": "인증 토큰이 만료되었습니다",
 					"code": "token_expired",

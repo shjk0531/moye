@@ -39,8 +39,8 @@ func (ctrl *StudyController) CreateStudy(c *gin.Context) {
 	// 스터디의 리더 ID 설정
 	study.LeaderID = userID
 
-	// 트랜잭션으로 스터디 및 관련 구성요소 생성
-	if err := ctrl.service.CreateStudy(&study, userID); err != nil {
+	// 트랜잭션으로 스터디 및 관련 구성요소 생성 (컨텍스트 전달)
+	if err := ctrl.service.CreateStudy(c.Request.Context(), &study, userID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 생성 실패"})
 		return
 	}
@@ -75,4 +75,23 @@ func (ctrl *StudyController) GetAllStudies(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, studies)
+}
+
+// GetMyStudies는 현재 로그인한 사용자가 속한 스터디 목록을 조회합니다.
+func (ctrl *StudyController) GetMyStudies(c *gin.Context) {
+	// 컨텍스트에서 인증된 사용자 ID 가져오기
+	userID, exists := middleware.GetUserID(c.Request.Context())
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "인증된 사용자를 찾을 수 없습니다"})
+		return
+	}
+
+	// 사용자의 스터디 목록과 역할 정보 조회
+	response, err := ctrl.service.GetUserStudiesWithRoles(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -144,12 +145,14 @@ func (s *authService) RefreshToken(refreshToken string) (*dto.TokenResponse, str
 	// 리프레시 토큰 검증
 	claims, err := s.jwtService.ValidateToken(refreshToken, jwt.RefreshToken)
 	if err != nil {
+		fmt.Println("리프레시 토큰 검증 오류:", err)
 		return nil, "", ErrInvalidToken
 	}
 
 	// 사용자 정보 조회
 	userWithRoles, err := s.repo.FindUserWithRolesAndPermissions(claims.UserID)
 	if err != nil {
+		fmt.Println("사용자 정보 조회 실패:", err)
 		return nil, "", errors.New("사용자 정보 조회 실패")
 	}
 
