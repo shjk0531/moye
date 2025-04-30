@@ -24,12 +24,18 @@ func Init(studyRepo repository.Repository, db *gorm.DB) *RootController {
 	}
 }
 
-func (c *RootController) RegisterRoutes(router *gin.RouterGroup) {
+func (c *RootController) RegisterPublicRoutes(router *gin.RouterGroup) {
+	studyAPI := router.Group("/studies")
+	{
+		studyAPI.GET("", c.studyCtrl.GetAllStudies)
+	}
+}
+
+func (c *RootController) RegisterPrivateRoutes(router *gin.RouterGroup) {
 	studyAPI := router.Group("/studies")
 	{
 		studyAPI.POST("", c.studyCtrl.CreateStudy)
 		studyAPI.GET("/:id", c.studyCtrl.GetStudy)
-		studyAPI.GET("", c.studyCtrl.GetAllStudies)
 		studyAPI.GET("/my", c.studyCtrl.GetMyStudies)
 	}
 }

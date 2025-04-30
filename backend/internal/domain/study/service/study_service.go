@@ -4,7 +4,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/shjk0531/moye/backend/internal/domain/chat/channel/model"
+	channelRepository "github.com/shjk0531/moye/backend/internal/domain/chat/channel/repository"
+	channelService "github.com/shjk0531/moye/backend/internal/domain/chat/channel/service"
 	"github.com/shjk0531/moye/backend/internal/domain/study/dto"
 	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/model"
 	"github.com/shjk0531/moye/backend/internal/domain/study/repository"
@@ -33,105 +34,86 @@ func NewStudyService(repo repository.Repository, db *gorm.DB) StudyService {
 }
 
 func (s *studyService) CreateStudy(ctx context.Context, study *studyModel.Study, userID uuid.UUID) error {
-	// 트랜잭션 시작 (Gin context를 전달)
-	err := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		// 1. 스터디 생성
-		if err := tx.Create(study).Error; err != nil {
-			return err
-		}
+    return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+        // 1) Transaction 전용 StudyRepository
+        studyRepo := repository.NewRepository(tx)
 
-		// 2. 기본 역할 생성 - 리더 역할
-		leaderRole := &studyModel.StudyRole{
-			Name:     "리더",
-			ColorHex: "#FF5733", // 기본 리더 색상
-		}
+        // 2) Transaction 전용 ChannelRepository / Service
+        chRepo := channelRepository.NewChannelRepository(tx)
+        chSvc := channelService.NewChannelService(chRepo)
 
-		// 3. 스터디 멤버 생성
-		member := &studyModel.StudyMember{
-			StudyID:    study.ID,
-			UserID:     userID,
-			Nickname:   "리더", // 기본 닉네임, 나중에 사용자 이름으로 변경 가능
-			ProfileURL: "",    // 기본 프로필 URL
-			RoleFlags:  1,     // 리더 권한 부여
-		}
+        // —————————————————————————————————————————————
+        // 3) 스터디 생성
+        studyID, err := studyRepo.CreateStudy(study)
+        if err != nil {
+            return err
+        }
 
-		if err := tx.Create(member).Error; err != nil {
-			return err
-		}
+        // 4) “관리자” 롤 생성
+        adminRoleID, err := studyRepo.CreateRole(&studyModel.StudyRole{
+            Name:     "관리자",
+            ColorHex: "#000000",
+        })
+        if err != nil {
+            return err
+        }
 
-		// 생성된 멤버 ID를 역할에 설정
-		leaderRole.StudyMemberID = member.ID
-		if err := tx.Create(leaderRole).Error; err != nil {
-			return err
-		}
+        // 5) 스터디 멤버(관리자) 등록
+        if err := studyRepo.CreateStudyMember(&studyModel.StudyMember{
+            StudyID: studyID,
+            UserID:  userID,
+            RoleID:  adminRoleID,
+        }); err != nil {
+            return err
+        }
 
-		// 멤버의 역할 ID 업데이트
-		member.RoleID = leaderRole.ID
-		if err := tx.Save(member).Error; err != nil {
-			return err
-		}
+        // —————————————————————————————————————————————
+        // 6) 기본 채널 생성 (“일반”, “공지사항”)
+        generalCh, err := chSvc.CreateChannel(studyID, "일반", 0)
+        if err != nil {
+            return err
+        }
+        announcementCh, err := chSvc.CreateChannel(studyID, "공지사항", 1)
+        if err != nil {
+            return err
+        }
 
-		// 4. 기본 채널 그룹 생성
-		channelGroup := &model.ChannelGroup{
-			StudyID: study.ID,
-			Name:    "일반",
-		}
-		if err := tx.Create(channelGroup).Error; err != nil {
-			return err
-		}
+        // 7) 기본 채널 그룹 생성 (position 0)
+        defaultGroup, err := chSvc.CreateChannelGroup(studyID, "기본", 0)
+        if err != nil {
+            return err
+        }
 
-		// 5. 기본 채널 생성 - 일반 채널
-		generalChannel := &model.Channel{
-			StudyID: study.ID,
-			Name:    "일반",
-		}
-		if err := tx.Create(generalChannel).Error; err != nil {
-			return err
-		}
+        // 8) 그룹에 채널 순서대로 추가
+        if err := chSvc.AddChannelToGroup(ctx, defaultGroup.ID, generalCh.ID, 0); err != nil {
+            return err
+        }
+        if err := chSvc.AddChannelToGroup(ctx, defaultGroup.ID, announcementCh.ID, 1); err != nil {
+            return err
+        }
 
-		// 공지사항 채널
-		announcementChannel := &model.Channel{
-			StudyID: study.ID,
-			Name:    "공지사항",
-		}
-		if err := tx.Create(announcementChannel).Error; err != nil {
-			return err
-		}
+        // 트랜잭션 커밋
+        return nil
+    })
+}
 
-		// 6. 채널 그룹 내 채널 순서 설정
-		generalChannelOrder := &model.ChannelGroupOrder{
-			GroupID:   channelGroup.ID,
-			Position:  0,
-			ChannelID: generalChannel.ID,
-		}
-		if err := tx.Create(generalChannelOrder).Error; err != nil {
-			return err
-		}
-
-		announcementChannelOrder := &model.ChannelGroupOrder{
-			GroupID:   channelGroup.ID,
-			Position:  1,
-			ChannelID: announcementChannel.ID,
-		}
-		if err := tx.Create(announcementChannelOrder).Error; err != nil {
-			return err
-		}
-
-		// 7. 채널 그룹 순서 설정
-		channelGroupOrder := &model.ChannelOrder{
-			StudyID:  study.ID,
-			Position: 0,
-			ItemType: "group",
-			ItemID:   channelGroup.ID,
-		}
-		if err := tx.Create(channelGroupOrder).Error; err != nil {
-			return err
-		}
-
-		return nil
+// 역할 생성
+func (s *studyService) CreateRole(name string, colorHex string) (uuid.UUID, error) {
+	return s.repo.CreateRole(&studyModel.StudyRole{
+		Name:     name,
+		ColorHex: colorHex,
 	})
+}
 
-	return err
+// 스터디 멤버 생성
+func (s *studyService) CreateStudyMember(studyID uuid.UUID, userID uuid.UUID, nickname string, profileURL string, roleID uuid.UUID) error {
+	return s.repo.CreateStudyMember(&studyModel.StudyMember{
+		StudyID:    studyID,
+		UserID:     userID,
+		Nickname:   nickname,
+		ProfileURL: profileURL,
+		RoleID:     roleID,
+	})
 }
 
 func (s *studyService) GetStudy(id uuid.UUID) (*studyModel.Study, error) {
@@ -215,17 +197,23 @@ func (s *studyService) GetUserStudiesWithRoles(userID uuid.UUID) (*dto.UserStudi
 
 	// 2. 응답 DTO 초기화
 	response := &dto.UserStudiesResponse{
-		Studies: make([]dto.UserStudyDTO, 0, len(studies)),
+		Studies: make([]dto.StudyListDTO, 0, len(studies)),
 	}
 
-	// 3. 각 스터디별로 역할 정보 조회 및 DTO 구성
+	// 3. 각 스터디별로 study_member의 updated_at 조회 및 DTO 구성
 	for _, study := range studies {
-		studyDTO, err := s.GetUserStudyWithRole(study.ID, userID)
-		if err != nil {
-			// 오류 발생 시 해당 스터디는 건너뛰기
-			continue
+		// 해당 사용자의 study_member 레코드 조회
+		var member studyModel.StudyMember
+		if err := s.db.Where("study_id = ? AND user_id = ?", study.ID, userID).First(&member).Error; err != nil {
+			// 조회 실패 시 스터디의 updatedAt을 대체값으로 사용
+			member.UpdatedAt = study.UpdatedAt
 		}
-		response.Studies = append(response.Studies, *studyDTO)
+		response.Studies = append(response.Studies, dto.StudyListDTO{
+			ID:          study.ID,
+			Name:        study.Name,
+			ProfileURL:  study.ProfileURL,
+			UpdatedAt:   member.UpdatedAt,
+		})
 	}
 
 	return response, nil

@@ -8,7 +8,15 @@ import (
 
 // UserStudiesResponse는 사용자가 속한 스터디 목록을 반환하는 응답 DTO입니다.
 type UserStudiesResponse struct {
-	Studies []UserStudyDTO `json:"studies"`
+	Studies []StudyListDTO `json:"studies"`
+}
+
+// study 목록 조회 시 사용되는 DTO
+type StudyListDTO struct {
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	ProfileURL  string    `json:"profile_url"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // UserStudyDTO는 사용자의 스터디 정보를 표현하는 DTO입니다.
@@ -31,4 +39,6 @@ type UserRoleDTO struct {
 	Name      string    `json:"name"`
 	ColorHex  string    `json:"color_hex"`
 	RoleFlags int64     `json:"role_flags"`
-} 
+}
+
+// 
