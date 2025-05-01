@@ -9,19 +9,26 @@ import (
 
 
 type RootController struct {
-	studyService 	service.StudyService
-	studyCtrl		*StudyController
+	services      service.Service
+	studyCtrl     *StudyController
 }
 
 func Init(studyRepo repository.Repository, db *gorm.DB) *RootController {
-	studyService := service.NewStudyService(studyRepo, db)
+	// 서비스 초기화
+	services := service.Init(studyRepo, db)
 
-	studyCtrl := NewStudyController(studyService)
+	// 각 컨트롤러 초기화
+	studyCtrl := NewStudyController(services.GetStudyService())
 
 	return &RootController{
-		studyService: studyService,
+		services: services,
 		studyCtrl: studyCtrl,
 	}
+}
+
+// 서비스 객체 반환
+func (c *RootController) GetServices() service.Service {
+	return c.services
 }
 
 func (c *RootController) RegisterPublicRoutes(router *gin.RouterGroup) {
@@ -36,6 +43,5 @@ func (c *RootController) RegisterPrivateRoutes(router *gin.RouterGroup) {
 	{
 		studyAPI.POST("", c.studyCtrl.CreateStudy)
 		studyAPI.GET("/:id", c.studyCtrl.GetStudy)
-		studyAPI.GET("/my", c.studyCtrl.GetMyStudies)
 	}
 }

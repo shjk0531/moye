@@ -47,7 +47,7 @@ func main() {
 		&userModel.User{},
 		&studyModel.Study{},
 		&studyModel.StudyMember{},
-		&studyModel.StudyRole{},
+		&studyModel.StudyMemberRole{},
 		&recruitmentModel.Recruitment{},
 		&channelModel.Channel{},
 		&channelModel.ChannelOrder{},

@@ -10,9 +10,9 @@ type Repository interface {
 	FindByID(id uuid.UUID) (*model.Study, error)
 	FindAll() ([]*model.Study, error)
 	FindStudiesByUserID(userID uuid.UUID) ([]*model.Study, error)
-	CreateRole(role *model.StudyRole) (uuid.UUID, error)
-	FindRoleByID(id uuid.UUID) (*model.StudyRole, error)
-	UpdateRole(role *model.StudyRole) error
+	CreateRole(role *model.StudyMemberRole) (uuid.UUID, error)
+	FindRoleByID(id uuid.UUID) (*model.StudyMemberRole, error)
+	UpdateRole(role *model.StudyMemberRole) error
 	CreateStudyMember(member *model.StudyMember) error
 	CreateStudy(study *model.Study) (uuid.UUID, error)
 }
@@ -61,7 +61,7 @@ func (r *repository) FindStudiesByUserID(userID uuid.UUID) ([]*model.Study, erro
 }
 
 // 역할 생성
-func (r *repository) CreateRole(role *model.StudyRole) (uuid.UUID, error) {
+func (r *repository) CreateRole(role *model.StudyMemberRole) (uuid.UUID, error) {
 	err := r.db.Create(role).Error
 	if err != nil {
 		return uuid.Nil, err
@@ -70,8 +70,8 @@ func (r *repository) CreateRole(role *model.StudyRole) (uuid.UUID, error) {
 }
 
 // 역할 조회
-func (r *repository) FindRoleByID(id uuid.UUID) (*model.StudyRole, error) {
-	var role model.StudyRole
+func (r *repository) FindRoleByID(id uuid.UUID) (*model.StudyMemberRole, error) {
+	var role model.StudyMemberRole
 	if err := r.db.First(&role, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (r *repository) FindRoleByID(id uuid.UUID) (*model.StudyRole, error) {
 }
 
 // 역할 업데이트
-func (r *repository) UpdateRole(role *model.StudyRole) error {
+func (r *repository) UpdateRole(role *model.StudyMemberRole) error {
 	return r.db.Save(role).Error
 }
 

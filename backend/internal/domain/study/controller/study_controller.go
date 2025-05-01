@@ -13,9 +13,11 @@ import (
 
 
 type StudyController struct {
+	// 스터디 서비스만 사용 (중앙 서비스에서 가져옴)
 	service service.StudyService
 }
 
+// 중앙 서비스에서 StudyService를 가져와 컨트롤러를 초기화합니다
 func NewStudyController(s service.StudyService) *StudyController {
 	return &StudyController{service: s}
 }
@@ -75,23 +77,4 @@ func (ctrl *StudyController) GetAllStudies(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, studies)
-}
-
-// GetMyStudies는 현재 로그인한 사용자가 속한 스터디 목록을 조회합니다.
-func (ctrl *StudyController) GetMyStudies(c *gin.Context) {
-	// 컨텍스트에서 인증된 사용자 ID 가져오기
-	userID, exists := middleware.GetUserID(c.Request.Context())
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "인증된 사용자를 찾을 수 없습니다"})
-		return
-	}
-
-	// 사용자의 스터디 목록과 역할 정보 조회
-	response, err := ctrl.service.GetUserStudiesWithRoles(userID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
-		return
-	}
-
-	c.JSON(http.StatusOK, response)
 }

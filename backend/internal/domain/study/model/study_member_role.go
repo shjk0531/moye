@@ -5,7 +5,7 @@ import (
 	"github.com/shjk0531/moye/backend/internal/global/model"
 )
 
-type StudyRole struct {
+type StudyMemberRole struct {
 	model.BaseModel
     StudyMemberID uuid.UUID `gorm:"type:uuid;not null;index" json:"study_member_id"`
     Name      string    `gorm:"not null" json:"name"`           // 예: "리더", "부리더"
