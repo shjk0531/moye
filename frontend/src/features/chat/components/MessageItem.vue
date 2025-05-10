@@ -1,9 +1,9 @@
 <!-- MessageItem.vue -->
 <template>
-    <div class="flex mb-3 pl-4">
+    <div class="flex mb-5 pl-4">
         <img
             :src="message.avatar"
-            class="w-10 h-10 rounded-full"
+            class="w-10 h-10 rounded-full mr-2"
             alt="avatar"
         />
         <div class="message-content max-w-[80%]">

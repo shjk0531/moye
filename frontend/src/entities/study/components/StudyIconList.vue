@@ -16,7 +16,11 @@
             ]"
         ></div>
         <div class="w-10 h-10 overflow-hidden border-2 rounded-lg">
-            <img :src="study.icon" alt="study icon" class="w-full h-full" />
+            <img
+                :src="study.profileUrl"
+                alt="study icon"
+                class="w-full h-full"
+            />
         </div>
     </div>
 </template>
