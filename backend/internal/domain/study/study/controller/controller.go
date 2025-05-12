@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shjk0531/moye/backend/internal/domain/study/repository"
-	"github.com/shjk0531/moye/backend/internal/domain/study/service"
+	"github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
+	"github.com/shjk0531/moye/backend/internal/domain/study/study/service"
 	"gorm.io/gorm"
 )
 

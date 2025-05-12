@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/google/uuid"
-	"github.com/shjk0531/moye/backend/internal/domain/study/model"
-	"github.com/shjk0531/moye/backend/internal/domain/study/repository"
+	"github.com/shjk0531/moye/backend/internal/domain/study/study/model"
+	"github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
 )
 
 type StudyMemberService interface {

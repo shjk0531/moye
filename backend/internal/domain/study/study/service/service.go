@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/shjk0531/moye/backend/internal/domain/study/repository"
+	"github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
 	"gorm.io/gorm"
 )
 

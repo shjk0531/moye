@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/kamva/mgm/v3"
-	channelModel "github.com/shjk0531/moye/backend/internal/domain/chat/channel/model"
 	notificationModel "github.com/shjk0531/moye/backend/internal/domain/notification/model"
 	recruitmentModel "github.com/shjk0531/moye/backend/internal/domain/recruitment/model"
-	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/model"
+	channelModel "github.com/shjk0531/moye/backend/internal/domain/study/channel/model"
+	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/study/model"
 	userModel "github.com/shjk0531/moye/backend/internal/domain/user/model"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -22,7 +22,7 @@ import (
 func main() {
 	// 설정 로드
 	config.Init()
-
+	
 	// DSN 생성 (SSL 모드는 개발환경에 맞게 disable)
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Seoul",

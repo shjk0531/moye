@@ -14,8 +14,8 @@ import (
 	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/repository"
 
 	// PostgreSQL: Study 도메인
-	studyController "github.com/shjk0531/moye/backend/internal/domain/study/controller"
-	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/repository"
+	studyController "github.com/shjk0531/moye/backend/internal/domain/study/study/controller"
+	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
 
 	// MongoDB: chat 도메인
 	chatContainer "github.com/shjk0531/moye/backend/internal/domain/chat/message/controller"

@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	channelRepository "github.com/shjk0531/moye/backend/internal/domain/chat/channel/repository"
-	channelService "github.com/shjk0531/moye/backend/internal/domain/chat/channel/service"
+	channelRepository "github.com/shjk0531/moye/backend/internal/domain/study/channel/repository"
+	channelService "github.com/shjk0531/moye/backend/internal/domain/study/channel/service"
 
-	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/model"
-	"github.com/shjk0531/moye/backend/internal/domain/study/repository"
+	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/study/model"
+	"github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
 	"gorm.io/gorm"
 )
 

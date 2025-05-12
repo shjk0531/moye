@@ -20,14 +20,6 @@ type StudyChannelItem struct {
     Group    *ChannelGroupDTO `json:"group,omitempty"`     // ItemType=="group"일 때
 }
 
-// ──────────────────────────────────────────
-// 3) 단독 채널 DTO
-// ──────────────────────────────────────────
-type ChannelDTO struct {
-    ID   uuid.UUID `json:"id"`
-    Name string    `json:"name"`
-    // 필요 시 추가 메타(ex. unread_count, last_message 등)도 여기에 넣을 수 있습니다.
-}
 
 // ──────────────────────────────────────────
 // 4) 채널 그룹 DTO
