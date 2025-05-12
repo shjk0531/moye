@@ -22,7 +22,15 @@ func NewStudyController(s service.StudyService) *StudyController {
 	return &StudyController{service: s}
 }
 
-// CreateStudy는 새로운 스터디를 생성
+// CreateStudy godoc
+// @Summary 스터디 생성
+// @Description 새로운 스터디를 생성
+// @Tags studies
+// @Accept json
+// @Produce json
+// @Param study_name body dto.CreateStudyRequest true "스터디 이름"
+// @Success 200 {object} dto.StudyResponse
+// @Router /api/v1/studies [post]
 func (ctrl *StudyController) CreateStudy(c *gin.Context) {
 	var req dto.CreateStudyRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -55,7 +63,15 @@ func (ctrl *StudyController) CreateStudy(c *gin.Context) {
 	c.JSON(http.StatusCreated, study)
 }
 
-// GetStudy는 ID로 스터디를 조회
+// GetStudy godoc
+// @Summary 스터디 조회
+// @Description ID로 스터디를 조회
+// @Tags studies
+// @Accept json
+// @Produce json
+// @Param id path string true "스터디 ID"
+// @Success 200 {object} dto.StudyResponse
+// @Router /api/v1/studies/{id} [get]
 func (ctrl *StudyController) GetStudy(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -73,7 +89,13 @@ func (ctrl *StudyController) GetStudy(c *gin.Context) {
 	c.JSON(http.StatusOK, study)
 }
 
-// GetAllStudies는 모든 스터디 목록을 조회
+// GetAllStudies godoc
+// @Summary 모든 스터디 목록 조회
+// @Description 모든 스터디 목록을 조회
+// @Tags studies
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.StudyResponse
 func (ctrl *StudyController) GetAllStudies(c *gin.Context) {
 	studies, err := ctrl.service.GetAllStudies()
 	if err != nil {
@@ -83,3 +105,23 @@ func (ctrl *StudyController) GetAllStudies(c *gin.Context) {
 
 	c.JSON(http.StatusOK, studies)
 }
+
+// GetSipleStudyList godoc
+// @Summary 스터디 목록 조회
+// @Description 스터디 목록을 조회
+// @Tags studies
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.SimpleStudyListResponse
+// @Router /api/v1/studies/simple [get]
+func (ctrl *StudyController) GetSimpleStudyList(c *gin.Context) {
+	studies, err := ctrl.service.GetSimpleStudyList()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
+		return
+	}
+
+	c.JSON(http.StatusOK, studies)
+}
+
+// GetUserStudies godoc

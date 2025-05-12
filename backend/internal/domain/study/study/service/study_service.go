@@ -7,6 +7,7 @@ import (
 	channelRepository "github.com/shjk0531/moye/backend/internal/domain/study/channel/repository"
 	channelService "github.com/shjk0531/moye/backend/internal/domain/study/channel/service"
 
+	"github.com/shjk0531/moye/backend/internal/domain/study/study/dto"
 	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/study/model"
 	"github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
 	"gorm.io/gorm"
@@ -17,6 +18,7 @@ type StudyService interface {
 	GetStudy(id uuid.UUID) (*studyModel.Study, error)
 	GetAllStudies() ([]*studyModel.Study, error)
 	GetUserStudies(userID uuid.UUID) ([]*studyModel.Study, error)
+	GetSimpleStudyList() (dto.SimpleStudyListResponse, error)
 }
 
 type studyService struct {
@@ -100,4 +102,17 @@ func (s *studyService) GetAllStudies() ([]*studyModel.Study, error) {
 // GetUserStudies는 특정 사용자가 속한 모든 스터디 목록을 반환합니다.
 func (s *studyService) GetUserStudies(userID uuid.UUID) ([]*studyModel.Study, error) {
 	return s.repo.FindStudiesByUserID(userID)
+}
+
+
+// GetSimpleStudyList는 스터디 목록을 조회하는 메서드
+func (s *studyService) GetSimpleStudyList() (dto.SimpleStudyListResponse, error) {
+    simpleStudies, err := s.repo.GetSimpleStudyList()
+    if err != nil {
+        return dto.SimpleStudyListResponse{}, err
+    }
+
+    return dto.SimpleStudyListResponse{
+        Studies: simpleStudies,
+    }, nil
 }

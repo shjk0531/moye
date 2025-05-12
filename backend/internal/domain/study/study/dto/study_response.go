@@ -41,4 +41,7 @@ type UserRoleDTO struct {
 	RoleFlags int64     `json:"role_flags"`
 }
 
-// 
+// SimpleStudyListResponse는 스터디 목록을 조회하는 응답 DTO
+type SimpleStudyListResponse struct {
+	Studies []SimpleStudyDTO `json:"studies"`
+}
