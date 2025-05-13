@@ -18,7 +18,7 @@ type StudyService interface {
 	GetStudy(id uuid.UUID) (*studyModel.Study, error)
 	GetAllStudies() ([]*studyModel.Study, error)
 	GetUserStudies(userID uuid.UUID) ([]*studyModel.Study, error)
-	GetSimpleStudyList() (dto.SimpleStudyListResponse, error)
+	GetSimpleStudyList(page, size int) (dto.SimpleStudyListResponse, error)
 }
 
 type studyService struct {
@@ -64,17 +64,28 @@ func (s *studyService) CreateStudy(ctx context.Context, study *studyModel.Study,
 
         // —————————————————————————————————————————————
         // 5) 기본 채널 생성 ("일반", "공지사항")
-        generalCh, err := channelSvc.CreateChannel(studyID, "일반", 0)
+
+        orders, err := channelSvc.GetChannelOrders(studyID)
         if err != nil {
             return err
         }
-        announcementCh, err := channelSvc.CreateChannel(studyID, "공지사항", 1)
+
+        nextPosition := 0
+        if len(orders) > 0 {
+            nextPosition = orders[len(orders)-1].Position + 1
+        }
+        
+        generalCh, err := channelSvc.CreateChannel(studyID, "일반", nextPosition +1)
+        if err != nil {
+            return err
+        }
+        announcementCh, err := channelSvc.CreateChannel(studyID, "공지사항", nextPosition + 2)
         if err != nil {
             return err
         }
 
         // 6) 기본 채널 그룹 생성 (position 0)
-        defaultGroup, err := channelSvc.CreateChannelGroup(studyID, "기본", 0)
+        defaultGroup, err := channelSvc.CreateChannelGroup(studyID, "기본", nextPosition)
         if err != nil {
             return err
         }
@@ -105,9 +116,17 @@ func (s *studyService) GetUserStudies(userID uuid.UUID) ([]*studyModel.Study, er
 }
 
 
-// GetSimpleStudyList는 스터디 목록을 조회하는 메서드
-func (s *studyService) GetSimpleStudyList() (dto.SimpleStudyListResponse, error) {
-    simpleStudies, err := s.repo.GetSimpleStudyList()
+// GetSimpleStudyList godoc
+// @Summary 스터디 목록 조회
+// @Description 스터디 목록을 조회
+// @Tags studies
+// @Accept json
+// @Produce json
+// @Param page query int false "페이지 번호"
+// @Param size query int false "페이지 크기"
+func (s *studyService) GetSimpleStudyList(page, size int) (dto.SimpleStudyListResponse, error) {
+    offset := (page - 1) * size 
+    simpleStudies, err := s.repo.GetSimpleStudyList(offset, size)
     if err != nil {
         return dto.SimpleStudyListResponse{}, err
     }

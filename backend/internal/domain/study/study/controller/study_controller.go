@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -115,7 +116,24 @@ func (ctrl *StudyController) GetAllStudies(c *gin.Context) {
 // @Success 200 {object} dto.SimpleStudyListResponse
 // @Router /api/v1/studies/simple [get]
 func (ctrl *StudyController) GetSimpleStudyList(c *gin.Context) {
-	studies, err := ctrl.service.GetSimpleStudyList()
+	pageStr, isPage := c.GetQuery("page")
+	sizeStr, isSize := c.GetQuery("size")
+	
+	page := 1
+	size := 10
+	
+	if isPage {
+		if p, err := strconv.Atoi(pageStr); err == nil {
+			page = p
+		}
+	}
+	if isSize {
+		if s, err := strconv.Atoi(sizeStr); err == nil {
+			size = s
+		}
+	}
+	
+	studies, err := ctrl.service.GetSimpleStudyList(page, size)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
 		return
@@ -125,3 +143,11 @@ func (ctrl *StudyController) GetSimpleStudyList(c *gin.Context) {
 }
 
 // GetUserStudies godoc
+// @Summary 사용자의 스터디 목록 조회
+// @Description 사용자의 스터디 목록을 조회
+// @Tags studies
+// @Accept json
+// @Produce json
+// @Param user_id path string true "사용자 ID"
+// @Success 200 {object} dto.StudyResponse
+// @Router /api/v1/studies/user/{user_id} [get]

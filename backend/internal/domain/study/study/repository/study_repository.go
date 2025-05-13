@@ -16,7 +16,7 @@ type Repository interface {
 	UpdateRole(role *model.StudyMemberRole) error
 	CreateStudyMember(member *model.StudyMember) error
 	CreateStudy(study *model.Study) (uuid.UUID, error)
-	GetSimpleStudyList() ([]dto.SimpleStudyDTO, error)
+	GetSimpleStudyList(offset, limit int) ([]dto.SimpleStudyDTO, error)
 }
 
 type repository struct {
@@ -99,11 +99,27 @@ func (r *repository) CreateStudy(study *model.Study) (uuid.UUID, error) {
 	return study.ID, nil
 }
 
-// 스터디 목록 조회
-func (r *repository) GetSimpleStudyList() ([]dto.SimpleStudyDTO, error) {
-	var simpleStudies []dto.SimpleStudyDTO
-	if err := r.db.Model(&model.Study{}).Select("id", "name", "profile_url", "description", "tags").Find(&simpleStudies).Error; err != nil {
+// GetSimpleStudyList godoc
+// @Summary 스터디 목록 조회
+// @Description 스터디 목록을 조회
+// @Tags studies
+// @Accept json
+// @Produce json
+// @Param offset query int false "페이지 번호"
+// @Param limit query int false "페이지 크기"
+// @Success 200 {object} dto.SimpleStudyListResponse
+// @Router /api/v1/studies/simple [get]
+func (r *repository) GetSimpleStudyList(offset, limit int) ([]dto.SimpleStudyDTO, error) {
+	var dtos [] dto.SimpleStudyDTO		
+	// Select only the necessary columns including tags (JSONB)
+	if err := r.db.
+		Model(&model.Study{}).
+		Select("id", "name", "profile_url", "description", "tags").
+		Offset(offset).
+		Limit(limit).
+		Scan(&dtos).Error; err != nil {
 		return nil, err
 	}
-	return simpleStudies, nil
+
+	return dtos, nil
 }

@@ -35,6 +35,7 @@ func (c *RootController) RegisterPublicRoutes(router *gin.RouterGroup) {
 	studyAPI := router.Group("/studies")
 	{
 		studyAPI.GET("", c.studyCtrl.GetAllStudies)
+		studyAPI.GET("/simple", c.studyCtrl.GetSimpleStudyList)
 	}
 }
 

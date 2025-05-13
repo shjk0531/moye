@@ -9,5 +9,5 @@ type SimpleStudyDTO struct {
 	Name        string    `json:"name"`
 	ProfileURL  string    `json:"profile_url"`
 	Description string    `json:"description"`
-	Tags        []string  `json:"tags"`
+	Tags        []string  `gorm:"type:jsonb;serializer:json" json:"tags"`
 }

@@ -15,6 +15,7 @@ type ChannelService interface {
 	AddChannelToGroup(ctx context.Context, groupID uuid.UUID, channelID uuid.UUID, position int) error
 	RemoveChannelFromGroup(groupID uuid.UUID, channelID uuid.UUID) error
 	GetStudyChannels(studyID uuid.UUID) (*dto.StudyChannelsResponse, error)
+	GetChannelOrders(studyID uuid.UUID) ([]model.ChannelOrder, error)
 }
 
 type channelService struct {
@@ -164,4 +165,17 @@ func (s *channelService) GetStudyChannels(studyID uuid.UUID) (*dto.StudyChannels
 	return &dto.StudyChannelsResponse{
 		Items: items,
 	}, nil
+}
+
+// GetChannelOrders godoc
+// @Summary 채널 순서 조회
+// @Description 채널 순서를 조회
+// @Tags channels
+// @Accept json
+// @Produce json
+// @Param study_id path string true "스터디 ID"
+// @Success 200 {object} dto.StudyChannelsResponse
+// @Router /api/v1/channels/orders/{study_id} [get]
+func (s *channelService) GetChannelOrders(studyID uuid.UUID) ([]model.ChannelOrder, error) {
+	return s.repo.GetChannelOrders(studyID)
 }
