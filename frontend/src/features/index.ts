@@ -2,5 +2,3 @@
 export * from './auth';
 export * from './chat';
 export * from './study';
-export * from './channel';
-export * from './calender';

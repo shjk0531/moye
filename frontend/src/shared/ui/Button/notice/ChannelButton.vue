@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { navigateToItem } from '@/widgets/notice';
 import { useRouter, useRoute } from 'vue-router';
 import { computed } from 'vue';
 
@@ -28,7 +27,7 @@ const handleClick = async () => {
         return;
     }
 
-    await navigateToItem('channel', studyId, router);
+    // await navigateToItem('channel', studyId, router);
 };
 </script>
 

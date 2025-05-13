@@ -43,6 +43,6 @@ func (c *RootController) RegisterPrivateRoutes(router *gin.RouterGroup) {
 	studyAPI := router.Group("/studies")
 	{
 		studyAPI.POST("", c.studyCtrl.CreateStudy)
-		studyAPI.GET("/:id", c.studyCtrl.GetStudy)
+		studyAPI.GET("/:study_id", c.studyCtrl.GetStudy)
 	}
 }

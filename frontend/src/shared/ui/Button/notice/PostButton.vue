@@ -3,10 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-    navigateToItem,
-    isItemActive,
-} from '@/widgets/notice/services/navigationService';
 import { useRouter, useRoute } from 'vue-router';
 import { computed } from 'vue';
 
@@ -31,7 +27,7 @@ const handleClick = async () => {
         return;
     }
 
-    await navigateToItem('post', studyId, router);
+    // await navigateToItem('post', studyId, router);
 };
 </script>
 

@@ -17,7 +17,7 @@ src/widgets/sidebar/components/ChannelListSidebar.vue
 </template>
 
 <script setup lang="ts">
-import { ChannelList } from '@/features/channel';
+import { ChannelList } from '@/entities/channel';
 </script>
 
 <style scoped lang="scss"></style>

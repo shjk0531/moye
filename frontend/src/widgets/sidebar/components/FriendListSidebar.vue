@@ -11,7 +11,19 @@
         </div>
         <div class="w-(--custom-item-list-width) flex flex-col">
             <div
-                class="panel-item p-1 cursor-pointer flex items-center hover:bg-gray-750 text-sm p-2 rounded-lg mx-2 my-0.5"
+                class="panel-item p-1 cursor-pointer flex items-center hover:bg-gray-750 text-sm p-2 rounded-lg mx-2 my-0.5 text-gray-100"
+            >
+                테스트
+            </div>
+        </div>
+        <!-- 구분선 -->
+        <div class="w-(--custom-item-list-width) flex flex-col">
+            <div class="h-px bg-gray-750 w-full"></div>
+        </div>
+        <!-- 친구 목록 -->
+        <div class="w-(--custom-item-list-width) flex flex-col">
+            <div
+                class="panel-item p-1 cursor-pointer flex items-center hover:bg-gray-750 text-sm p-2 rounded-lg mx-2 my-0.5 text-gray-100"
             >
                 테스트
             </div>

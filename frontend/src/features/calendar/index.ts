@@ -1,13 +1,7 @@
 // src/features/calendar/index.ts
 
 // API Functions (Re-export from entities)
-export {
-    fetchCalendarsGrouped,
-    fetchCalendarsUngrouped,
-    findFirstCalendar,
-    type Calendar,
-    type CalendarGroup,
-} from '@/entities/calendar';
+export { fetchCalendars } from '@/entities/calendar';
 
 // Composables
 export * from './composables/useCalendar';

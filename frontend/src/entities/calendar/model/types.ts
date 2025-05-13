@@ -1,17 +1,20 @@
-export interface CalendarEvent {
-    id: string;
-    title: string;
-    content: string;
-    startDate: Date;
-    endDate: Date;
-    color: string;
+export interface StudyCalendarResponse {
+    items: StudyCalendarItem[];
 }
 
-export interface CalendarDay {
-    date: Date;
-    isCurrentMonth: boolean;
-    isToday: boolean;
-    isWeekend: boolean;
-    isHoliday: boolean;
-    events: CalendarEvent[];
+export interface StudyCalendarItem {
+    itemType: 'calendar' | 'group';
+    calendar?: CalendarDTO;
+    group?: CalendarGroupDTO;
+}
+
+export interface CalendarDTO {
+    id: string;
+    name: string;
+}
+
+export interface CalendarGroupDTO {
+    id: string;
+    name: string;
+    calendars: CalendarDTO[];
 }

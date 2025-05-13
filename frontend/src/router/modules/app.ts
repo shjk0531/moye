@@ -1,11 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { AppLayout } from '@/shared/layout';
-import { ChatPage, CalendarPage } from '@/pages';
-import {
-    FriendListSidebar,
-    ChannelListSidebar,
-    CalendarListSidebar,
-} from '@/widgets/sidebar';
+import { ChatPage } from '@/pages';
+import { FriendListSidebar } from '@/widgets/sidebar';
 import { useUserStore } from '@/store/user';
 import { PATHS } from '@/router/paths';
 

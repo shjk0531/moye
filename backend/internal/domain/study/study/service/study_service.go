@@ -75,17 +75,17 @@ func (s *studyService) CreateStudy(ctx context.Context, study *studyModel.Study,
             nextPosition = orders[len(orders)-1].Position + 1
         }
         
-        generalCh, err := channelSvc.CreateChannel(studyID, "일반", nextPosition +1)
+        generalCh, err := channelSvc.CreateChannel(studyID, "일반", nextPosition +2)
         if err != nil {
             return err
         }
-        announcementCh, err := channelSvc.CreateChannel(studyID, "공지사항", nextPosition + 2)
+        announcementCh, err := channelSvc.CreateChannel(studyID, "공지사항", nextPosition)
         if err != nil {
             return err
         }
 
-        // 6) 기본 채널 그룹 생성 (position 0)
-        defaultGroup, err := channelSvc.CreateChannelGroup(studyID, "기본", nextPosition)
+        // 6) 기본 채널 그룹 생성
+        defaultGroup, err := channelSvc.CreateChannelGroup(studyID, "기본", nextPosition + 1)
         if err != nil {
             return err
         }

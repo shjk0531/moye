@@ -1,17 +1,20 @@
-import type { PanelGroup, PanelItem } from '@/shared/lib/panelUtils';
-
-// 채널 그룹 타입 정의
-export interface ChannelGroup extends PanelGroup {
-    id: number;
-    label: string;
-    order: number;
+export interface StudyChannelResponse {
+    items: StudyChannelItem[];
 }
 
-// 채널 타입 정의
-export interface Channel extends PanelItem {
-    id: number;
-    label: string;
-    order: number;
-    icon: string;
-    groupId: number | null;
+export interface StudyChannelItem {
+    itemType: 'channel' | 'group';
+    channel?: ChannelDTO;
+    group?: ChannelGroupDTO;
+}
+
+export interface ChannelDTO {
+    id: string;
+    name: string;
+}
+
+export interface ChannelGroupDTO {
+    id: string;
+    name: string;
+    channels: ChannelDTO[];
 }

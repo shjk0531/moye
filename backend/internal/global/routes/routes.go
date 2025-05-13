@@ -17,6 +17,10 @@ import (
 	studyController "github.com/shjk0531/moye/backend/internal/domain/study/study/controller"
 	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
 
+	// PostgreSQL: Channel 도메인
+	channelController "github.com/shjk0531/moye/backend/internal/domain/study/channel/controller"
+	channelRepository "github.com/shjk0531/moye/backend/internal/domain/study/channel/repository"
+
 	// MongoDB: chat 도메인
 	chatContainer "github.com/shjk0531/moye/backend/internal/domain/chat/message/controller"
 	chatRepository "github.com/shjk0531/moye/backend/internal/domain/chat/message/repository"
@@ -50,19 +54,23 @@ func RegisterRoutes(router *gin.Engine) {
 	protected := api.Group("")
 	protected.Use(middleware.AuthMiddleware())
 
-	// User 도메인 라우트 등록 (Public)
+	// User 도메인 라우트 등록
 	userRepo := userRepository.NewRepository(pgDB)
 	userRootCtrl := userController.Init(userRepo)
 	userRootCtrl.RegisterPublicRoutes(public)
-
-	// User 프로필 조회 (Protected)
 	userRootCtrl.RegisterProtectedRoutes(protected)
 
-	// Study 도메인 라우트 등록 (인증 필요)
+	// Study 도메인 라우트 등록 
 	studyRepo := studyRepository.NewRepository(pgDB)
 	studyCtrl := studyController.Init(studyRepo, pgDB)
 	studyCtrl.RegisterPublicRoutes(public)
 	studyCtrl.RegisterPrivateRoutes(protected)
+
+	// Channel 도메인 라우트 등록
+	channelRepo := channelRepository.NewChannelRepository(pgDB)
+	channelCtrl := channelController.Init(channelRepo)
+	channelCtrl.RegisterPublicRoutes(public)
+	channelCtrl.RegisterPrivateRoutes(protected)
 
 	// MongoDB 연결 (메시지 데이터: 채팅, 로그 등)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

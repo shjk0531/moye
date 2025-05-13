@@ -29,13 +29,9 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { fetchStudies, type Study } from '@/entities/study';
-import {
-    fetchChannelsGrouped,
-    fetchChannelsUngrouped,
-    findFirstChannel,
-} from '@/features/channel';
 import { useStudyStore } from '@/store';
 import { PATHS } from '@/router/paths'; // PATHS import
+import { fetchChannels } from '@/entities/channel';
 
 const router = useRouter();
 const route = useRoute();
@@ -88,27 +84,26 @@ function saveActiveChannel(studyId: string, channelId: string) {
     });
 }
 
-// 첫 번째 채널 찾아서 이동
-async function navigateToFirstChannel(
-    studyId: number | string,
-    studyKey: string,
-) {
-    try {
-        const groups = await fetchChannelsGrouped();
-        const channels = await fetchChannelsUngrouped();
-        const firstChannelId = findFirstChannel(groups, channels);
+// // 첫 번째 채널 찾아서 이동
+// async function navigateToFirstChannel(
+//     studyId: number | string,
+//     studyKey: string,
+// ) {
+//     try {
+//         const channels = await fetchChannels(studyId);
+//         const firstChannelId = channels.items[0].channel?.id;
 
-        if (firstChannelId !== null) {
-            router.push(channelPath(String(studyId), String(firstChannelId)));
-            saveActiveChannel(studyKey, String(firstChannelId));
-        } else {
-            router.push(studyBasePath(String(studyId)));
-        }
-    } catch (error) {
-        console.error('첫 번째 채널을 찾는 중 오류 발생:', error);
-        router.push(studyBasePath(String(studyId)));
-    }
-}
+//         if (firstChannelId !== null) {
+//             router.push(channelPath(String(studyId), String(firstChannelId)));
+//             saveActiveChannel(studyKey, String(firstChannelId));
+//         } else {
+//             router.push(studyBasePath(String(studyId)));
+//         }
+//     } catch (error) {
+//         console.error('첫 번째 채널을 찾는 중 오류 발생:', error);
+//         router.push(studyBasePath(String(studyId)));
+//     }
+// }
 
 // Pinia 스토어에 스터디 정보 업데이트
 function updateStudyInfoInStore(study: any) {
@@ -125,7 +120,7 @@ async function handleStudyClick(study: any) {
     if (activeChannelId) {
         navigateToExistingChannel(study.id, activeChannelId);
     } else {
-        await navigateToFirstChannel(study.id, studyId);
+        // await navigateToFirstChannel(study.id, studyId);
     }
 }
 
