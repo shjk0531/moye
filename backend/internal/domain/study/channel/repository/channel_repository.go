@@ -21,6 +21,7 @@ type ChannelRepository interface {
 	GetChannelOrders(studyID uuid.UUID) ([]model.ChannelOrder, error)
 	GetChannelGroups(studyID uuid.UUID) ([]model.ChannelGroup, error)
 	GetChannels(studyID uuid.UUID) ([]model.Channel, error)
+	BulkUpdateChannelOrders(orders []model.ChannelOrder) error
 }
 
 type channelRepository struct {
@@ -126,4 +127,18 @@ func (r *channelRepository) GetChannels(studyID uuid.UUID) ([]model.Channel, err
 		return nil, err
 	}
 	return channels, nil
+}
+
+func (r *channelRepository) BulkUpdateChannelOrders(orders []model.ChannelOrder) error {
+    for _, ord := range orders {
+        // study_id, item_type, item_id로 레코드 찾아 position만 갱신
+        if err := r.db.
+            Model(&model.ChannelOrder{}).
+            Where("study_id = ? AND item_type = ? AND item_id = ?", ord.StudyID, ord.ItemType, ord.ItemID).
+            Update("position", ord.Position).
+            Error; err != nil {
+            return err
+        }
+    }
+    return nil
 }

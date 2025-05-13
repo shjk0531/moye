@@ -75,3 +75,37 @@ func (c *ChannelController) CreateChannel(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, channel)
 }
+
+// ReorderChannels godoc
+// @Summary    스터디 내 채널/그룹 순서 재정렬
+// @Description 클라이언트가 보낸 배열 순서대로 position을 1부터 다시 설정합니다.
+// @Tags       channels
+// @Accept     json
+// @Produce    json
+// @Param      study_id path      string                   true "스터디 ID"
+// @Param      request  body      dto.ReorderChannelsRequest true "재정렬할 순서 리스트"
+// @Success    204
+// @Failure    400      {object} gin.H{"error": "string"}
+// @Failure    404      {object} gin.H{"error": "string"}
+// @Failure    500      {object} gin.H{"error": "string"}
+// @Router     /api/v1/studies/{study_id}/channels/order [patch]
+func (c *ChannelController) ReorderChannels(ctx *gin.Context) {
+    var req dto.ReorderChannelsRequest
+    if err := ctx.ShouldBindJSON(&req); err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    studyID, err := uuid.Parse(ctx.Param("study_id"))
+    if err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid study ID"})
+        return
+    }
+
+    if err := c.channelService.ReorderChannels(ctx, studyID, req.Items); err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    ctx.Status(http.StatusNoContent)
+}

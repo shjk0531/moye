@@ -16,6 +16,7 @@ type ChannelService interface {
 	RemoveChannelFromGroup(groupID uuid.UUID, channelID uuid.UUID) error
 	GetStudyChannels(studyID uuid.UUID) (*dto.StudyChannelsResponse, error)
 	GetChannelOrders(studyID uuid.UUID) ([]model.ChannelOrder, error)
+	ReorderChannels(ctx context.Context, studyID uuid.UUID, items []dto.ReorderChannelItem) error
 }
 
 type channelService struct {
@@ -170,12 +171,38 @@ func (s *channelService) GetStudyChannels(studyID uuid.UUID) (*dto.StudyChannels
 // GetChannelOrders godoc
 // @Summary 채널 순서 조회
 // @Description 채널 순서를 조회
-// @Tags channels
-// @Accept json
-// @Produce json
-// @Param study_id path string true "스터디 ID"
-// @Success 200 {object} dto.StudyChannelsResponse
-// @Router /api/v1/channels/orders/{study_id} [get]
+// @Param studyID uuid.UUID true "스터디 ID"
 func (s *channelService) GetChannelOrders(studyID uuid.UUID) ([]model.ChannelOrder, error) {
 	return s.repo.GetChannelOrders(studyID)
+}
+
+// ReorderChannels godoc
+// @Summary 채널 순서 재정렬
+// @Description 채널 순서를 재정렬
+// @Param ctx context.Context true "context"
+// @Param studyID uuid.UUID true "스터디 ID"
+// @Param items []dto.ReorderChannelItem true "재정렬할 순서 리스트"
+func (s *channelService) ReorderChannels(
+    ctx context.Context,
+    studyID uuid.UUID,
+    items []dto.ReorderChannelItem,
+) error {
+    // (선택) study 존재 여부 검증 로직 추가
+    // if !s.studyRepo.Exists(studyID) { return ErrStudyNotFound }
+
+    // 모델로 변환; position은 배열 인덱스+1
+    orders := make([]model.ChannelOrder, len(items))
+    for i, it := range items {
+        orders[i] = model.ChannelOrder{
+            StudyID:  studyID,
+            ItemType: it.ItemType,
+            ItemID:   it.ItemID,
+            Position: i + 1,
+        }
+    }
+
+    // 트랜잭션으로 일괄 업데이트
+    return s.repo.WithTx(ctx, func(tx repository.ChannelRepository) error {
+        return tx.BulkUpdateChannelOrders(orders)
+    })
 }
