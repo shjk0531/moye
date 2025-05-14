@@ -17,7 +17,7 @@ type StudyService interface {
 	CreateStudy(ctx context.Context, study *studyModel.Study, userID uuid.UUID) error
 	GetStudy(id uuid.UUID) (*studyModel.Study, error)
 	GetAllStudies() ([]*studyModel.Study, error)
-	GetUserStudies(userID uuid.UUID) ([]*studyModel.Study, error)
+	GetUserStudies(userID uuid.UUID) (dto.StudyIconResponse, error)
 	GetSimpleStudyList(page, size int) (dto.SimpleStudyListResponse, error)
 }
 
@@ -110,9 +110,15 @@ func (s *studyService) GetAllStudies() ([]*studyModel.Study, error) {
 	return s.repo.FindAll()
 }
 
-// GetUserStudies는 특정 사용자가 속한 모든 스터디 목록을 반환합니다.
-func (s *studyService) GetUserStudies(userID uuid.UUID) ([]*studyModel.Study, error) {
-	return s.repo.FindStudiesByUserID(userID)
+// 특정 사용자가 속한 모든 스터디 목록을 반환
+func (s *studyService) GetUserStudies(userID uuid.UUID) (dto.StudyIconResponse, error) {
+	icons, err := s.repo.FindStudiesByUserID(userID)
+	if err != nil {
+		return dto.StudyIconResponse{}, err
+	}
+	return dto.StudyIconResponse{
+		Icons: icons,
+	}, nil
 }
 
 

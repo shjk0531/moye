@@ -45,3 +45,8 @@ type UserRoleDTO struct {
 type SimpleStudyListResponse struct {
 	Studies []SimpleStudyDTO `json:"studies"`
 }
+
+// StudyIconResponse는 스터디 아이콘 목록을 조회하는 응답 DTO
+type StudyIconResponse struct {
+	Icons []StudyIconDTO `json:"icons"`
+}

@@ -32,7 +32,7 @@ func (c *RootController) GetServices() service.Service {
 }
 
 func (c *RootController) RegisterPublicRoutes(router *gin.RouterGroup) {
-	studyAPI := router.Group("/studies")
+	studyAPI := router.Group("/v1/studies")
 	{
 		studyAPI.GET("", c.studyCtrl.GetAllStudies)
 		studyAPI.GET("/simple", c.studyCtrl.GetSimpleStudyList)
@@ -40,9 +40,10 @@ func (c *RootController) RegisterPublicRoutes(router *gin.RouterGroup) {
 }
 
 func (c *RootController) RegisterPrivateRoutes(router *gin.RouterGroup) {
-	studyAPI := router.Group("/studies")
+	studyAPI := router.Group("/v1/studies")
 	{
 		studyAPI.POST("", c.studyCtrl.CreateStudy)
 		studyAPI.GET("/:study_id", c.studyCtrl.GetStudy)
+		studyAPI.GET("/user", c.studyCtrl.GetUserStudies)
 	}
 }

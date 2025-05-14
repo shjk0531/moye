@@ -55,10 +55,10 @@
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
-import { StudyIconList } from '@/entities/study';
 import ScrollPanel from 'primevue/scrollpanel';
 import { PATHS } from '@/router/paths';
 import { useAppStore } from '@/store';
+import { StudyIconList } from '@/entities';
 
 const router = useRouter();
 const route = useRoute();

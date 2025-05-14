@@ -17,7 +17,7 @@
         ></div>
         <div class="w-10 h-10 overflow-hidden border-2 rounded-lg">
             <img
-                :src="study.profileUrl"
+                :src="study.profile_url"
                 alt="study icon"
                 class="w-full h-full"
             />
@@ -28,14 +28,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { fetchStudies, type Study } from '@/entities/study';
+import { type StudyIcon } from '@/entities/study';
 import { useStudyStore } from '@/store';
 import { PATHS } from '@/router/paths'; // PATHS import
-import { fetchChannels } from '@/entities/channel';
+import { fetchStudyIcons } from '@/entities';
 
 const router = useRouter();
 const route = useRoute();
-const studies = ref<Study[]>([]);
+const studies = ref<StudyIcon[]>([]);
 const studyStore = useStudyStore();
 
 // URL의 studyId는 문자열입니다.
@@ -55,7 +55,8 @@ function channelPath(studyId: string, channelId: string) {
 // 스터디 데이터 로드
 async function loadStudyData() {
     try {
-        studies.value = await fetchStudies();
+        const response = await fetchStudyIcons();
+        studies.value = response.icons;
     } catch (error) {
         console.error('스터디 데이터를 불러오는 중 오류 발생:', error);
         studies.value = [];
@@ -68,11 +69,8 @@ function getActiveChannelId(studyId: string) {
 }
 
 // 기존 활성 채널로 이동
-function navigateToExistingChannel(
-    studyId: number | string,
-    channelId: string,
-) {
-    router.push(channelPath(String(studyId), channelId));
+function navigateToExistingChannel(studyId: string, channelId: string) {
+    router.push(channelPath(studyId, channelId));
 }
 
 // 활성 채널 ID 저장
@@ -84,43 +82,22 @@ function saveActiveChannel(studyId: string, channelId: string) {
     });
 }
 
-// // 첫 번째 채널 찾아서 이동
-// async function navigateToFirstChannel(
-//     studyId: number | string,
-//     studyKey: string,
-// ) {
-//     try {
-//         const channels = await fetchChannels(studyId);
-//         const firstChannelId = channels.items[0].channel?.id;
-
-//         if (firstChannelId !== null) {
-//             router.push(channelPath(String(studyId), String(firstChannelId)));
-//             saveActiveChannel(studyKey, String(firstChannelId));
-//         } else {
-//             router.push(studyBasePath(String(studyId)));
-//         }
-//     } catch (error) {
-//         console.error('첫 번째 채널을 찾는 중 오류 발생:', error);
-//         router.push(studyBasePath(String(studyId)));
-//     }
-// }
-
 // Pinia 스토어에 스터디 정보 업데이트
-function updateStudyInfoInStore(study: any) {
+function updateStudyInfoInStore(study: StudyIcon) {
     studyStore.setStudyName(study.name);
-    studyStore.setStudyIcon(study.icon);
+    studyStore.setStudyIcon(study.profile_url);
 }
 
 // 스터디 클릭 이벤트 핸들러
-async function handleStudyClick(study: any) {
+async function handleStudyClick(study: StudyIcon) {
     updateStudyInfoInStore(study);
     const studyId = String(study.id);
     const activeChannelId = getActiveChannelId(studyId);
 
     if (activeChannelId) {
-        navigateToExistingChannel(study.id, activeChannelId);
+        navigateToExistingChannel(studyId, activeChannelId);
     } else {
-        // await navigateToFirstChannel(study.id, studyId);
+        router.push(studyBasePath(studyId));
     }
 }
 

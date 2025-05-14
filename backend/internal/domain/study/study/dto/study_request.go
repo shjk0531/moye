@@ -7,4 +7,3 @@ type CreateStudyRequest struct {
 	Content string `json:"content" binding:"required"`
 	Tags []string `json:"tags" binding:"required"`
 }
-

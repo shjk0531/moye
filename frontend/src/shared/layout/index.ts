@@ -7,3 +7,5 @@ export { default as AuthLayout } from './auth/AuthLayout.vue';
 export { default as PageLayout } from './page/PageLayout.vue';
 
 export { default as SettingLayout } from './setting/SettingLayout.vue';
+
+export { default as StudyLayout } from './study/StudyLayout.vue';

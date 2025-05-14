@@ -11,3 +11,9 @@ type SimpleStudyDTO struct {
 	Description string    `json:"description"`
 	Tags        []string  `gorm:"type:jsonb;serializer:json" json:"tags"`
 }
+
+type StudyIconDTO struct {
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	ProfileURL  string    `json:"profile_url"`
+}

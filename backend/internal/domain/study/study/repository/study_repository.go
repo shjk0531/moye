@@ -10,7 +10,7 @@ import (
 type Repository interface {
 	FindByID(id uuid.UUID) (*model.Study, error)
 	FindAll() ([]*model.Study, error)
-	FindStudiesByUserID(userID uuid.UUID) ([]*model.Study, error)
+	FindStudiesByUserID(userID uuid.UUID) ([]dto.StudyIconDTO, error)
 	CreateRole(role *model.StudyMemberRole) (uuid.UUID, error)
 	FindRoleByID(id uuid.UUID) (*model.StudyMemberRole, error)
 	UpdateRole(role *model.StudyMemberRole) error
@@ -45,21 +45,22 @@ func (r *repository) FindAll() ([]*model.Study, error) {
 }
 
 // FindStudiesByUserID는 특정 사용자가 속한 모든 스터디 목록을 조회합니다.
-func (r *repository) FindStudiesByUserID(userID uuid.UUID) ([]*model.Study, error) {
-	var studies []*model.Study
+func (r *repository) FindStudiesByUserID(userID uuid.UUID) ([]dto.StudyIconDTO, error) {
+	var dtos []dto.StudyIconDTO
 	
 	// study_members 테이블을 통해 사용자가 속한 스터디 ID를 조회하고,
 	// 해당 ID로 스터디 정보를 가져옵니다.
 	err := r.db.Table("studies").
 		Joins("INNER JOIN study_members ON studies.id = study_members.study_id").
 		Where("study_members.user_id = ?", userID).
-		Find(&studies).Error
+		Select("studies.id", "studies.name", "studies.profile_url").
+		Find(&dtos).Error
 	
 	if err != nil {
 		return nil, err
 	}
 	
-	return studies, nil
+	return dtos, nil
 }
 
 // 역할 생성

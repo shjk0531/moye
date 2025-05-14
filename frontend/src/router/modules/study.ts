@@ -6,7 +6,7 @@ import { PATHS } from '@/router/paths';
 
 const studyRoutes: RouteRecordRaw[] = [
     {
-        path: PATHS.STUDY_BASE,
+        path: PATHS.STUDY_BASE + '/:study_id',
         component: AppLayout,
         meta: { requiresAuth: true },
         children: [

@@ -150,4 +150,19 @@ func (ctrl *StudyController) GetSimpleStudyList(c *gin.Context) {
 // @Produce json
 // @Param user_id path string true "사용자 ID"
 // @Success 200 {object} dto.StudyResponse
-// @Router /api/v1/studies/user/{user_id} [get]
+// @Router /api/v1/studies/user [get]
+func (ctrl *StudyController) GetUserStudies(c *gin.Context) {
+	userID, exists := middleware.GetUserID(c.Request.Context())
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "인증된 사용자를 찾을 수 없습니다"})
+		return
+	}
+
+	studies, err := ctrl.service.GetUserStudies(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
+		return
+	}
+
+	c.JSON(http.StatusOK, studies)
+}

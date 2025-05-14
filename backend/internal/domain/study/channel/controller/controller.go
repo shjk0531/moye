@@ -33,7 +33,7 @@ func (c *RootController) RegisterPublicRoutes(router *gin.RouterGroup) {
 }
 
 func (c *RootController) RegisterPrivateRoutes(router *gin.RouterGroup) {
-	channelAPI := router.Group("v1/studies/:study_id/channels")
+	channelAPI := router.Group("/v1/studies/:study_id/channels")
 	{
 		channelAPI.GET("", c.channelCtrl.GetStudyChannels)
 		channelAPI.PATCH("/order", c.channelCtrl.ReorderChannels)
