@@ -1,17 +1,17 @@
 <template>
-    <!-- 타이틀바 -->
-    <!-- <TitleBar /> -->
-    <div class="relative flex flex-row h-screen w-screen">
-        <div class="left-sidebar flex flex-col dark:bg-gray-950">
-            <div class="flex flex-row flex-grow-1">
+    <div class="flex h-screen w-screen">
+        <!-- 사이드바 -->
+        <div class="left-sidebar flex flex-col h-full dark:bg-gray-950">
+            <!-- 상단: 스터디 리스트 + 서브 사이드바 -->
+            <div class="flex flex-1 overflow-hidden min-h-0">
                 <StudyListSidebar />
                 <router-view name="sidebar" />
             </div>
-            <div class="flex flex-col">
-                <UserPanel />
-            </div>
+            <!-- 하단: 유저 패널 -->
+            <UserPanel />
         </div>
-        <div class="page flex-grow-1">
+        <!-- 메인 페이지 영역 -->
+        <div class="page flex-1 overflow-auto">
             <router-view name="page" />
         </div>
     </div>
@@ -20,5 +20,3 @@
 <script setup lang="ts">
 import { StudyListSidebar, UserPanel } from '@/widgets';
 </script>
-
-<style scoped lang="scss"></style>
