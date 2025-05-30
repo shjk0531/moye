@@ -6,7 +6,7 @@
         class="relative flex items-center justify-center w-full group cursor-pointer"
         @click="handleStudyClick(study)"
     >
-        <!-- indicator: 현재 선택된 스터디면 왼쪽에 표시 -->
+        <!-- indicator -->
         <div
             :class="[
                 'absolute left-0 top-1/2 -translate-y-1/2 rounded transition-all duration-300',
@@ -28,23 +28,36 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { type StudyIcon } from '@/entities/study';
-import { useStudyStore } from '@/store';
-import { PATHS } from '@/router/paths'; // PATHS import
+import type { StudyIcon } from '@/entities/study';
+import { useStudyStore } from '@/store/study'; // <-- 경로 주의!
+import { PATHS } from '@/router/paths';
 import { fetchStudyIcons } from '@/entities';
 
+// router, store 세팅
 const router = useRouter();
 const route = useRoute();
-const studies = ref<StudyIcon[]>([]);
 const studyStore = useStudyStore();
 
-// URL의 studyId는 문자열입니다.
+// 스터디 리스트
+const studies = ref<StudyIcon[]>([]);
+
+// 현재 선택된 studyId (URL 파라미터)
 const currentStudyId = computed(() => {
     const raw = route.params[PATHS.STUDY_PARAM];
     return Array.isArray(raw) ? raw[0] : raw ?? '';
 });
 
-// Helpers to build paths
+// 스터디 아이콘 로드
+async function loadStudyData() {
+    try {
+        const { icons } = await fetchStudyIcons();
+        studies.value = icons;
+    } catch {
+        studies.value = [];
+    }
+}
+
+// Helpers: 경로 빌더
 function studyBasePath(studyId: string) {
     return `${PATHS.STUDY_BASE}/${studyId}`;
 }
@@ -52,56 +65,38 @@ function channelPath(studyId: string, channelId: string) {
     return `${studyBasePath(studyId)}/${PATHS.STUDY_CHANNEL}/${channelId}`;
 }
 
-// 스터디 데이터 로드
-async function loadStudyData() {
-    try {
-        const response = await fetchStudyIcons();
-        studies.value = response.icons;
-    } catch (error) {
-        console.error('스터디 데이터를 불러오는 중 오류 발생:', error);
-        studies.value = [];
-    }
-}
+// 클릭 핸들러
+async function handleStudyClick(study: StudyIcon) {
+    const studyId = String(study.id);
 
-// 저장된 활성 채널 ID 가져오기
-function getActiveChannelId(studyId: string) {
-    return studyStore.activeItems[studyId]?.channel;
-}
+    // 1) 스토어에 스터디 정보 저장
+    studyStore.setStudyName(study.name);
+    studyStore.setStudyIcon(study.profile_url);
 
-// 기존 활성 채널로 이동
-function navigateToExistingChannel(studyId: string, channelId: string) {
-    router.push(channelPath(studyId, channelId));
-}
+    // 2) 이미 활성화된 채널이 있으면 그걸 쓰고, 없으면 첫 번째 채널을 API 호출로 가져와서
+    const activeChannel = studyStore.getActiveItemByStudyAndType(
+        studyId,
+        'channel',
+    );
+    const channelId =
+        activeChannel || (await studyStore.getFirstChannelId(studyId)) || ''; // 채널이 하나도 없으면 빈문자열
 
-// 활성 채널 ID 저장
-function saveActiveChannel(studyId: string, channelId: string) {
+    console.log('channelId:', channelId);
+    // 3) 스토어에도 저장하고, 라우팅
     studyStore.setActiveItem({
         studyId,
         listType: 'channel',
         itemId: channelId,
     });
-}
-
-// Pinia 스토어에 스터디 정보 업데이트
-function updateStudyInfoInStore(study: StudyIcon) {
-    studyStore.setStudyName(study.name);
-    studyStore.setStudyIcon(study.profile_url);
-}
-
-// 스터디 클릭 이벤트 핸들러
-async function handleStudyClick(study: StudyIcon) {
-    updateStudyInfoInStore(study);
-    const studyId = String(study.id);
-    const activeChannelId = getActiveChannelId(studyId);
-
-    if (activeChannelId) {
-        navigateToExistingChannel(studyId, activeChannelId);
+    if (channelId) {
+        router.push(channelPath(studyId, channelId));
     } else {
+        // 혹시 채널이 하나도 없는 스터디라면 기본 페이지로
         router.push(studyBasePath(studyId));
     }
 }
 
-// 컴포넌트 생성 시 데이터 로드
+// 마운트 시 아이콘 로드
 onMounted(loadStudyData);
 </script>
 

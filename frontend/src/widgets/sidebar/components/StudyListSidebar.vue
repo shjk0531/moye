@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
     width: 4px;
     background-color: transparent;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
 }
 
 /* 커스텀 썸 */
@@ -159,6 +159,6 @@ onBeforeUnmount(() => {
     background-color: var(--custom-scrollbar-color, rgba(255, 255, 255, 0.4));
     border-radius: 4px;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
 }
 </style>
