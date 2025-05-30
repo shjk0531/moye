@@ -5,12 +5,20 @@ export const getters = {
     getActiveItemByStudyAndType:
         (state: StudyState) =>
         (studyId: string, listType: string): string | null => {
-            return state.activeItems[studyId]?.[listType] ?? null;
+            const activeItem = state.activeItems[studyId];
+            if (!activeItem) return null;
+            if (activeItem.listType === listType) {
+                return activeItem.itemId;
+            }
+            return null;
         },
 
     // 현재 스터디 이름/아이콘
-    currentStudyInfo: (state: StudyState) => ({
-        name: state.studyName,
-        icon: state.studyIcon,
+    getCurrentStudyInfo: (state: StudyState) => ({
+        id: state.currentStudyInfo.id,
+        name: state.currentStudyInfo.name,
+        icon: state.currentStudyInfo.icon,
+        type: state.currentStudyInfo.type,
+        channels: state.currentStudyInfo.channels,
     }),
 };

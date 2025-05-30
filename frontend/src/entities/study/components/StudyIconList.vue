@@ -70,8 +70,15 @@ async function handleStudyClick(study: StudyIcon) {
     const studyId = String(study.id);
 
     // 1) 스토어에 스터디 정보 저장
-    studyStore.setStudyName(study.name);
-    studyStore.setStudyIcon(study.profile_url);
+    studyStore.setCurrentStudyInfo({
+        id: study.id,
+        name: study.name,
+        icon: study.profile_url,
+        type: 'channel',
+        channels: {
+            items: [],
+        },
+    });
 
     // 2) 이미 활성화된 채널이 있으면 그걸 쓰고, 없으면 첫 번째 채널을 API 호출로 가져와서
     const activeChannel = studyStore.getActiveItemByStudyAndType(

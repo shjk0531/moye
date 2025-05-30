@@ -78,7 +78,7 @@ function handleTitleIconClick() {
 }
 const isTitleActive = () => route.path === `/${PATHS.ME}`;
 function handleNewStudyClick() {
-    appStore.saveLastRoute(route.path as string);
+    appStore.setLastRoute(route.path as string);
     router.push(`/${PATHS.CREATE}`);
 }
 

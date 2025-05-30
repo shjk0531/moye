@@ -3,21 +3,21 @@
 import type { AppState } from './state';
 
 export const actions = {
-    toggleMemberList(this: AppState) {
+    toggleMemberList(this: AppState): void {
         this.isMemberListVisible = !this.isMemberListVisible;
     },
 
-    toggleMic(this: AppState) {
+    toggleMic(this: AppState): void {
         const micOn = this.micOn;
         this.micOn = !micOn;
     },
 
-    toggleHeadset(this: AppState) {
+    toggleHeadset(this: AppState): void {
         const headsetOn = this.headsetOn;
         this.headsetOn = !headsetOn;
     },
 
-    saveLastRoute(this: AppState, route: string) {
+    setLastRoute(this: AppState, route: string): void {
         this.lastRoute = route;
     },
 };

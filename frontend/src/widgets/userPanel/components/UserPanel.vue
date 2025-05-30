@@ -80,7 +80,7 @@ function toggleHeadset() {
 }
 
 function openSettings() {
-    appStore.saveLastRoute(route.fullPath);
+    appStore.setLastRoute(route.fullPath);
     router.push('/settings');
 }
 </script>

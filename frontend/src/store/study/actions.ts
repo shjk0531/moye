@@ -1,6 +1,7 @@
 // src/store/study/actions.ts
 import type { StudyChannelResponse } from '@/entities/channel/models/types';
 import { fetchStudyChannels } from '@/entities';
+import type { CurrentStudyInfo } from './state';
 
 export interface SetActiveItemPayload {
     studyId: string;
@@ -17,11 +18,23 @@ export const actions = {
         if (!this.channelsCache[studyId]) {
             const response = await fetchStudyChannels(studyId);
             this.channelsCache[studyId] = response;
+            console.log('response:', response);
         }
         return this.channelsCache[studyId];
     },
 
-    /** 로드된(또는 캐시된) 채널 목록에서 “첫 번째” 채널 ID 추출 */
+    /** 활성 항목 저장 */
+    setActiveItem(
+        this: any,
+        { studyId, listType, itemId }: SetActiveItemPayload,
+    ) {
+        if (!this.activeItems[studyId]) {
+            this.activeItems[studyId] = {};
+        }
+        this.activeItems[studyId][listType] = itemId;
+    },
+
+    /** 로드된(또는 캐시된) 채널 목록에서 "첫 번째" 채널 ID 추출 */
     async getFirstChannelId(
         this: any,
         studyId: string,
@@ -41,24 +54,16 @@ export const actions = {
         return channelItem?.channel?.id ?? null;
     },
 
-    /** 활성 항목 저장 */
-    setActiveItem(
-        this: any,
-        { studyId, listType, itemId }: SetActiveItemPayload,
-    ) {
-        if (!this.activeItems[studyId]) {
-            this.activeItems[studyId] = {};
-        }
-        this.activeItems[studyId][listType] = itemId;
-    },
-
-    /** 스터디 이름 설정 */
-    setStudyName(this: any, name: string) {
-        this.studyName = name;
-    },
-
-    /** 스터디 아이콘 설정 */
-    setStudyIcon(this: any, icon: string) {
-        this.studyIcon = icon;
+    /**
+     * 현재 스터디 정보 설정
+     */
+    setCurrentStudyInfo(this: any, studyInfo: CurrentStudyInfo) {
+        this.currentStudyInfo = {
+            id: studyInfo.id,
+            name: studyInfo.name,
+            icon: studyInfo.icon,
+            type: studyInfo.type,
+            channels: studyInfo.channels,
+        };
     },
 };
