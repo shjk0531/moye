@@ -6,16 +6,16 @@ import { PATHS } from '@/router/paths';
 
 const studyRoutes: RouteRecordRaw[] = [
     {
-        path: PATHS.STUDY_BASE + '/:study_id',
+        path: PATHS.STUDY_BASE + `/:${PATHS.STUDY_PARAM}`,
         component: AppLayout,
         meta: { requiresAuth: true },
         children: [
             {
-                path: `:${PATHS.STUDY_PARAM}/${PATHS.STUDY_CHANNEL}/:${PATHS.STUDY_CHANNEL_PARAM}`,
+                path: `:${PATHS.STUDY_CHANNEL}/:${PATHS.STUDY_CHANNEL_PARAM}`,
                 components: { page: ChatPage, sidebar: ChannelListSidebar },
             },
             {
-                path: `:${PATHS.STUDY_PARAM}/${PATHS.STUDY_CALENDAR}/:${PATHS.STUDY_CALENDAR_PARAM}`,
+                path: `:${PATHS.STUDY_CALENDAR}/:${PATHS.STUDY_CALENDAR_PARAM}`,
                 components: {
                     page: CalendarPage,
                     sidebar: CalendarListSidebar,

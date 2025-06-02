@@ -1,7 +1,7 @@
 src/widgets/sidebar/components/ChannelListSidebar.vue
 
 <template>
-    <div class="flex flex-col">
+    <div class="flex flex-1 flex-col">
         <div
             class="flex channel-notice text-white p-2 h-(--custom-notice-bar-height) items-center justify-center"
         >

@@ -8,8 +8,8 @@ export const PATHS = {
 
     STUDY_BASE: '/study',
     STUDY_PARAM: 'studyId',
-    STUDY_CHANNEL: 'channel',
-    STUDY_CALENDAR: 'calendar',
+    STUDY_CHANNEL: 'channels',
+    STUDY_CALENDAR: 'calendars',
     STUDY_CHANNEL_PARAM: 'channelId',
     STUDY_CALENDAR_PARAM: 'calendarId',
 

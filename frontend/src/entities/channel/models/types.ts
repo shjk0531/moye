@@ -3,7 +3,7 @@ export interface StudyChannelResponse {
 }
 
 export interface StudyChannelItem {
-    itemType: 'channel' | 'group';
+    item_type: 'channel' | 'group';
     channel?: ChannelDTO;
     group?: ChannelGroupDTO;
 }

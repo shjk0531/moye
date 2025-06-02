@@ -18,7 +18,7 @@ export const actions = {
         if (!this.channelsCache[studyId]) {
             const response = await fetchStudyChannels(studyId);
             this.channelsCache[studyId] = response;
-            console.log('response:', response);
+            console.log('study store loadChannels response:', response);
         }
         return this.channelsCache[studyId];
     },
