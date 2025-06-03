@@ -67,7 +67,7 @@ func (c *ChannelController) CreateChannel(ctx *gin.Context) {
 		return
 	}
 
-	channel, err := c.channelService.CreateChannel(studyID, req.Name, req.Position)
+	channel, _, err := c.channelService.CreateChannel(ctx, studyID, req.Name, req.GroupID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

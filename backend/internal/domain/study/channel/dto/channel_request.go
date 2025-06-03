@@ -4,7 +4,7 @@ import "github.com/google/uuid"
 
 type CreateChannelRequest struct {
 	Name string `json:"name" binding:"required"`
-	Position int `json:"position" binding:"required"`
+    GroupID *uuid.UUID `json:"group_id,omitempty"`
 }
 
 // 채널 순서 재배치 요청

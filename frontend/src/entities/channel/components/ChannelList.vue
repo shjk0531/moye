@@ -1,7 +1,9 @@
-<!-- src/entities/channel/components/ChannelList.vue -->
 <template>
     <div
-        class="flex flex-1 flex-col w-[var(--custom-item-list-width)] text-gray-50"
+        ref="container"
+        class="flex flex-1 flex-col w-[var(--custom-item-list-width)] text-gray-50 relative"
+        @contextmenu.prevent="onContextMenu"
+        @click="closeContextMenu"
     >
         <!-- response.items를 순회하면서, 그룹/채널 구분하여 렌더링 -->
         <div
@@ -12,6 +14,7 @@
             <div
                 v-if="item.item_type === 'group'"
                 @click="toggleGroup(item.group!.id)"
+                @contextmenu.stop
                 class="panel-item cursor-pointer flex items-center text-sm p-2 rounded-lg mx-2 my-0.5 justify-between text-gray-300 hover:text-gray-100"
             >
                 <span>
@@ -34,9 +37,7 @@
                 </span>
             </div>
 
-            <!-- 2) 그룹 내부 채널 렌더링: 
-           • expandedGroups[그룹ID] === true 이면 모든 채널 노출
-           • 아니면서, 현재 채널이 이 그룹 안에 있으면 해당 채널만 노출 -->
+            <!-- 2) 그룹 내부 채널 렌더링 -->
             <div v-if="item.item_type === 'group'">
                 <!-- 그룹이 펼쳐진 상태 -->
                 <div v-if="expandedGroups[item.group!.id]">
@@ -53,6 +54,7 @@
                         @click="
                             router.push(`/study/${studyId}/channel/${ch.id}`)
                         "
+                        @contextmenu.stop
                     >
                         {{ ch.name }}
                     </div>
@@ -77,13 +79,14 @@
                         @click="
                             router.push(`/study/${studyId}/channel/${ch.id}`)
                         "
+                        @contextmenu.stop
                     >
                         {{ ch.name }}
                     </div>
                 </div>
             </div>
 
-            <!-- 3) item_type==='channel'이면서, groupedChannelIds에 포함되지 않은 채널만 렌더링 -->
+            <!-- 3) item_type==='channel' -->
             <div
                 v-else-if="item.item_type === 'channel'"
                 class="panel-item cursor-pointer flex items-center text-sm p-2 rounded-lg mx-2 my-0.5"
@@ -95,17 +98,41 @@
                 @click="
                     router.push(`/study/${studyId}/channel/${item.channel!.id}`)
                 "
+                @contextmenu.stop
             >
                 {{ item.channel!.name }}
             </div>
         </div>
 
-        <!-- 4) items 자체가 비어 있을 때 (그룹도 채널도 하나도 없을 경우) -->
+        <!-- 4) items 자체가 비어 있을 때 -->
         <div
             v-if="response?.items.length === 0"
-            class="mt-6 text-center text-gray-400"
+            class="mt-6 text-center text-gray-400 flex-1"
         >
             아직 생성된 채널이 없습니다.
+        </div>
+
+        <!-- Context Menu -->
+        <div
+            v-if="contextMenuVisible"
+            class="absolute bg-gray-950 shadow-lg rounded-md z-500 border border-gray-750 text-sm p-2"
+            :style="{ top: `${contextMenuY}px`, left: `${contextMenuX}px` }"
+            @click.stop
+        >
+            <ul>
+                <li
+                    class="px-4 py-2 hover:bg-gray-800 cursor-pointer text-gray-300 bg-gray-950 border border-gray-950 rounded-md hover:text-gray-100"
+                    @click="createChannel"
+                >
+                    채널 만들기
+                </li>
+                <li
+                    class="px-4 py-2 hover:bg-gray-800 cursor-pointer text-gray-300 bg-gray-950 border border-gray-950 rounded-md hover:text-gray-100"
+                    @click="createGroup"
+                >
+                    그룹 만들기
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -127,23 +154,20 @@ const studyStore = useStudyStore();
 const response = ref<StudyChannelResponse>({ items: [] });
 
 // 3) “그룹 내부 채널” ID들을 모아둘 Set
-//    그룹에 속하지 않은 채널만 별도로 렌더링하기 위해 사용
 const groupedChannelIds = ref<Set<string>>(new Set());
 
 // 4) 어떤 그룹이 펼쳐진 상태인지 boolean으로 관리
-//    { [groupId]: true/false }
 const expandedGroups = reactive<Record<string, boolean>>({});
 
-/**
- * response.value가 채워지면,
- * - expandedGroups에 모든 그룹 ID를 등록하고 기본값을 false로 세팅
- * - groupedChannelIds에 “모든 그룹 내부 채널 ID”를 모아둔다
- */
+// Context menu 상태
+const contextMenuVisible = ref(false);
+const contextMenuX = ref(0);
+const contextMenuY = ref(0);
+
 function processResponse() {
     groupedChannelIds.value.clear();
     response.value.items.forEach((item) => {
         if (item.item_type === 'group' && item.group) {
-            // 초기에는 모든 그룹을 접힌 상태로 세팅
             expandedGroups[item.group.id] = false;
             item.group.channels.forEach((ch) => {
                 groupedChannelIds.value.add(ch.id);
@@ -157,7 +181,6 @@ async function fetchChannels(studyId: string) {
     processResponse();
 }
 
-/** 그룹 헤더를 클릭했을 때, 해당 그룹의 boolean을 토글 */
 function toggleGroup(groupId: string) {
     expandedGroups[groupId] = !expandedGroups[groupId];
 }
@@ -166,7 +189,33 @@ function addChannelToGroup(groupId: string) {
     console.log('addChannelToGroup', groupId);
 }
 
-// 5) 컴포넌트 마운트 시 한 번만 호출
+/** Context menu 핸들러 */
+function onContextMenu(event: MouseEvent) {
+    // 패널 아이템 위가 아니면 메뉴 열기
+    const target = event.target as HTMLElement;
+    if (!target.closest('.panel-item')) {
+        contextMenuX.value = event.offsetX;
+        contextMenuY.value = event.offsetY;
+        contextMenuVisible.value = true;
+    }
+}
+
+function closeContextMenu() {
+    contextMenuVisible.value = false;
+}
+
+function createChannel() {
+    // 채널 생성 로직 호출
+    console.log('채널 만들기 클릭');
+    contextMenuVisible.value = false;
+}
+
+function createGroup() {
+    // 그룹 생성 로직 호출
+    console.log('그룹 만들기 클릭');
+    contextMenuVisible.value = false;
+}
+
 onMounted(async () => {
     await fetchChannels(studyId.value);
 });
@@ -179,8 +228,13 @@ watch(studyId, (newStudyId, oldStudyId) => {
 </script>
 
 <style scoped>
-/* 
-  • flex 항목 간격이나 색상은 필요에 따라 조정하세요.
-  • Tailwind 클래스(hover:bg-gray-750 등)도 프로젝트 컬러 팔레트에 맞게 바꾸셔도 됩니다. 
-*/
+/* Context menu 기본 스타일 (필요에 따라 수정) */
+.absolute ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.absolute li {
+    white-space: nowrap;
+}
 </style>

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -57,6 +58,7 @@ func (ctrl *StudyController) CreateStudy(c *gin.Context) {
 
 	// 트랜잭션으로 스터디 및 관련 구성요소 생성 (컨텍스트 전달)
 	if err := ctrl.service.CreateStudy(c.Request.Context(), study, userID); err != nil {
+		fmt.Println("CreateStudy error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 생성 실패"})
 		return
 	}

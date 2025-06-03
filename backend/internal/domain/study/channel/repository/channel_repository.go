@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"fmt"
+	"database/sql"
 
 	"github.com/google/uuid"
 	"github.com/shjk0531/moye/backend/internal/domain/study/channel/model"
@@ -23,6 +23,8 @@ type ChannelRepository interface {
 	GetChannelGroups(studyID uuid.UUID) ([]model.ChannelGroup, error)
 	GetChannels(studyID uuid.UUID) ([]model.Channel, error)
 	BulkUpdateChannelOrders(orders []model.ChannelOrder) error
+	GetChannelOrderMaxPosition(studyID uuid.UUID) (int, error)
+	GetChannelGroupMaxPosition(groupID uuid.UUID) (int, error)
 }
 
 type channelRepository struct {
@@ -144,36 +146,41 @@ func (r *channelRepository) BulkUpdateChannelOrders(orders []model.ChannelOrder)
     return nil
 }
 
-// GetFirstChannelID 스터디 내 ‘가장 첫 번째 채널 ID’를 반환
-// 그룹이 맨 앞이면, 그 그룹 안의 첫 채널 ID를 반환
-func (r *channelRepository) GetFirstChannelID(studyID uuid.UUID) (uuid.UUID, error) {
-    // 1) 스터디 전체 순서에서 첫 번째 Item 조회
-    var firstOrder model.ChannelOrder
-    if err := r.db.
+
+// GetChannelOrderMaxPosition: 주어진 studyID에 속한 ChannelOrder 중
+// position의 최댓값을 int로 반환
+// 레코드가 하나도 없으면 0을 반환
+func (r *channelRepository) GetChannelOrderMaxPosition(studyID uuid.UUID) (int, error) {
+    var maxPos sql.NullInt64
+    err := r.db.Model(&model.ChannelOrder{}).
         Where("study_id = ?", studyID).
-        Order("position ASC").
-        First(&firstOrder).Error; err != nil {
-        return uuid.Nil, err
+        Select("MAX(position)").Scan(&maxPos).Error
+    if err != nil {
+        return 0, err
     }
-
-    // 2) ItemType 에 따라 분기
-    switch firstOrder.ItemType {
-    case "channel":
-        // 독립 채널이면 그대로 반환
-        return firstOrder.ItemID, nil
-
-    case "group":
-        // 그룹이면, 그룹 안 순서 테이블에서 첫 채널 꺼내기
-        var grpOrder model.ChannelGroupOrder
-        if err := r.db.
-            Where("group_id = ?", firstOrder.ItemID).
-            Order("position ASC").
-            First(&grpOrder).Error; err != nil {
-            return uuid.Nil, err
-        }
-        return grpOrder.ChannelID, nil
-
-    default:
-        return uuid.Nil, fmt.Errorf("unknown item_type %q in ChannelOrder", firstOrder.ItemType)
+    if maxPos.Valid {
+        return int(maxPos.Int64), nil
     }
+    return 0, nil // 아직 하나도 없을 때
+}
+
+// GetChannelGroupMaxPosition: 주어진 groupID에 속한 ChannelGroupOrder 중
+// position의 최댓값을 int로 반환
+// 레코드가 하나도 없으면 0을 반환
+func (r *channelRepository) GetChannelGroupMaxPosition(groupID uuid.UUID) (int, error) {
+    var maxPos sql.NullInt64
+
+    err := r.db.
+        Model(&model.ChannelGroupOrder{}).
+        Where("group_id = ?", groupID).
+        Select("MAX(position)").
+        Scan(&maxPos).Error
+    if err != nil {
+        return 0, err
+    }
+    if maxPos.Valid {
+        return int(maxPos.Int64), nil
+    }
+    // 아직 레코드가 없으면 0 반환
+    return 0, nil
 }

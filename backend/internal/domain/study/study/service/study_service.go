@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	channelRepository "github.com/shjk0531/moye/backend/internal/domain/study/channel/repository"
@@ -47,54 +48,48 @@ func (s *studyService) CreateStudy(ctx context.Context, study *studyModel.Study,
         // 2) 스터디 생성
         studyID, err := s.repo.CreateStudy(study)
         if err != nil {
+            fmt.Println("CreateStudy error", err)
             return err
         }
 
 		// 3) "관리자" 롤 생성
 		roleID, err := s.roleService.CreateStudyRole(userID, "관리자", "#000000")
 		if err != nil {
+            fmt.Println("CreateStudyRole error", err)
 			return err
 		}
 
 
         // 4) 스터디 멤버(관리자) 등록
         if err := s.memberService.AddStudyMember(studyID, userID, roleID); err != nil {
+            fmt.Println("AddStudyMember error", err)
             return err
         }
 
-        // —————————————————————————————————————————————
-        // 5) 기본 채널 생성 ("일반", "공지사항")
-
-        orders, err := channelSvc.GetChannelOrders(studyID)
+        // 그룹 없이 채널 생성
+        _, _, err = channelSvc.CreateChannel(ctx, studyID, "일반 채널", nil)
         if err != nil {
+            fmt.Println("CreateChannel error", err)
+            return err
+        }
+        _, _, err = channelSvc.CreateChannel(ctx, studyID, "공지사항 채널", nil)
+        if err != nil {
+            fmt.Println("CreateChannel error", err)
             return err
         }
 
-        nextPosition := 0
-        if len(orders) > 0 {
-            nextPosition = orders[len(orders)-1].Position + 1
-        }
-        
-        generalCh, err := channelSvc.CreateChannel(studyID, "일반", nextPosition +2)
-        if err != nil {
-            return err
-        }
-        announcementCh, err := channelSvc.CreateChannel(studyID, "공지사항", nextPosition)
-        if err != nil {
-            return err
-        }
 
         // 6) 기본 채널 그룹 생성
-        defaultGroup, err := channelSvc.CreateChannelGroup(studyID, "기본", nextPosition + 1)
+        group, err := channelSvc.CreateChannelGroup(ctx, studyID, "기본")
         if err != nil {
+            fmt.Println("CreateChannelGroup error", err)
             return err
         }
 
-        // 7) 그룹에 채널 순서대로 추가
-        if err := channelSvc.AddChannelToGroup(ctx, defaultGroup.ID, generalCh.ID, 0); err != nil {
-            return err
-        }
-        if err := channelSvc.AddChannelToGroup(ctx, defaultGroup.ID, announcementCh.ID, 1); err != nil {
+
+        _, _, err = channelSvc.CreateChannel(ctx, studyID, "그룹 채널", &group.ID)
+        if err != nil {
+            fmt.Println("CreateChannel error", err)
             return err
         }
 

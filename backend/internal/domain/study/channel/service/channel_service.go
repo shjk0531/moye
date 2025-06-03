@@ -10,9 +10,8 @@ import (
 )
 
 type ChannelService interface {
-	CreateChannel(studyID uuid.UUID, name string, position int) (*model.Channel, error)
-	CreateChannelGroup(studyID uuid.UUID, name string, position int) (*model.ChannelGroup, error)
-	AddChannelToGroup(ctx context.Context, groupID uuid.UUID, channelID uuid.UUID, position int) error
+	CreateChannel(ctx context.Context, studyID uuid.UUID, name string, groupID *uuid.UUID) (*model.Channel, *bool /*isGroup*/, error)
+	CreateChannelGroup(ctx context.Context, studyID uuid.UUID, name string) (*model.ChannelGroup, error)
 	RemoveChannelFromGroup(groupID uuid.UUID, channelID uuid.UUID) error
 	GetStudyChannels(studyID uuid.UUID) (*dto.StudyChannelsResponse, error)
 	GetChannelOrders(studyID uuid.UUID) ([]model.ChannelOrder, error)
@@ -27,23 +26,6 @@ func NewChannelService(repo repository.ChannelRepository) ChannelService {
 	return &channelService{repo: repo}
 }
 
-// 새 채널 생성
-func (s *channelService) CreateChannel(studyID uuid.UUID, name string, position int) (*model.Channel, error) {
-	channel, err := s.repo.CreateChannel(&model.Channel{
-		StudyID: studyID,
-		Name:    name,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	err = s.CreateChannelOrder(studyID, position, "channel", channel.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return channel, nil
-}
 
 // 채널 순서 생성
 func (s *channelService) CreateChannelOrder(studyID uuid.UUID, position int, itemType string, itemID uuid.UUID) error {
@@ -55,51 +37,54 @@ func (s *channelService) CreateChannelOrder(studyID uuid.UUID, position int, ite
 	})
 }
 
-
-func (s *channelService) CreateChannelGroup(studyID uuid.UUID, name string, position int) (*model.ChannelGroup, error) {
-	channelGroup, err := s.repo.CreateChannelGroup(&model.ChannelGroup{
-		StudyID: studyID,
-		Name:    name,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	err = s.CreateChannelOrder(studyID, position, "group", channelGroup.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return channelGroup, nil
-}
-
-// 그룹에 채널 추가
-func (s *channelService) AddChannelToGroup(
+// 채널 그룹 생성
+func (s *channelService) CreateChannelGroup(
     ctx context.Context,
-    groupID, channelID uuid.UUID,
-    position int,
-) error {
-    // 보통 "한 트랜잭션" 안에서 순서 조정(shift) + 새 레코드 삽입을 함께 처리
-    return s.repo.WithTx(ctx, func(txRepo repository.ChannelRepository) error {
-        // 2-1) 같은 그룹에서 position ≥ req.Position 인 기존 항목들의 position을 +1 밀어냄
-        if err := txRepo.ShiftGroupOrders(groupID, position); err != nil {
+    studyID uuid.UUID, 
+    name string, 
+    ) (*model.ChannelGroup, error) {
+    channelGroup := &model.ChannelGroup{
+        StudyID: studyID,
+        Name:    name,
+    }
+
+    err := s.repo.WithTx(ctx, func(tx repository.ChannelRepository) error {
+        maxPos, err := tx.GetChannelOrderMaxPosition(studyID)
+        if err != nil {
             return err
         }
 
-        // 2-2) 새 ChannelGroupOrder 생성
-        return txRepo.CreateChannelGroupOrder(&model.ChannelGroupOrder{
-            GroupID:   groupID,
-            ChannelID: channelID,
-            Position:  position,
+        channelGroup, err := tx.CreateChannelGroup(channelGroup)
+        if err != nil {
+            return err
+        }
+
+        return tx.CreateChannelOrder(&model.ChannelOrder{
+            StudyID: studyID,
+            Position: maxPos + 1,
+            ItemType: "group",
+            ItemID:   channelGroup.ID,
         })
     })
+    if err != nil {
+        return nil, err
+    }
+
+    return channelGroup, nil
 }
+
 
 // 그룹에서 채널 제거
 func (s *channelService) RemoveChannelFromGroup(groupID uuid.UUID, channelID uuid.UUID) error {
 	return s.repo.RemoveChannelFromGroup(groupID, channelID)
 }
 
+// GetStudyChannels godoc
+// @Summary 스터디 내 채널 조회
+// @Description 스터디 내 채널 조회
+// @Param studyID uuid.UUID true "스터디 ID"
+// @Success 200 {object} dto.StudyChannelsResponse
+// @Router /api/v1/studies/{study_id}/channels [get]
 func (s *channelService) GetStudyChannels(studyID uuid.UUID) (*dto.StudyChannelsResponse, error) {
 	// 1. 채널 순서 정보 조회
 	orders, err := s.repo.GetChannelOrders(studyID)
@@ -205,4 +190,86 @@ func (s *channelService) ReorderChannels(
     return s.repo.WithTx(ctx, func(tx repository.ChannelRepository) error {
         return tx.BulkUpdateChannelOrders(orders)
     })
+}
+
+func (s *channelService) CreateChannel(
+    ctx context.Context,
+    studyID uuid.UUID,
+    name string,
+    groupID *uuid.UUID,
+) (*model.Channel, *bool, error) {
+    // 반환값: (생성된 채널, isGroupChannel, error)
+    // isGroupChannel: 그룹 내에 생성했으면 true, 탑레벨이면 false
+
+    // 1) 새 Channel 레코드 생성
+    channel := &model.Channel{
+        StudyID: studyID,
+        Name:    name,
+    }
+
+    // 2) 트랜잭션 시작
+    var isGroup bool = false
+    err := s.repo.WithTx(ctx, func(tx repository.ChannelRepository) error {
+        if groupID != nil {
+            // 2-1) 그룹 내 채널 생성 로직
+            isGroup = true
+
+            // a) Channel 테이블에 채널 생성
+            channel, err := tx.CreateChannel(channel)
+            if err != nil {
+                return err
+            }
+            // b) 해당 그룹(groupID) 안에서 position 최댓값 + 1 구하기
+            //    → 사실 repository에 helper 메서드를 둬도 되지만, 우리는 ShiftGroupOrders 후 바로 CreateChannelGroupOrder 할 것
+            //    먼저 그룹 안의 기존 채널 순서를 밀지 않고, “마지막에 추가” 하니 순서가 비어있는 케이스를 가정.
+            //    안전하게 하려면 아래처럼 “position = (max position)+1” 로 직접 계산해도 됩니다.
+            //    예시: GetGroupMaxPosition(...) 같은 repo 메서드를 추가해도 되고, 간단히 ShiftGroupOrders 로 정수 overflow 안 나도록 처리.
+
+            //    ▶ 여기에서는, ShiftGroupOrders(position=INF) 처럼 “마지막 바로 뒤”에 위치시키는 로직을 쓰겠습니다.
+            //    실제 구현에선 “GetMaxPosition+1”을 구하거나, pos 값 대신 “position= len+1” 로 직접 넣어도 무방합니다.
+
+            // 아래 repo.ShiftGroupOrders 호출 시 `fromPosition`을 아주 큰 값(예: 1e9)으로 주면,
+            // “position >= 1e9”인 건 없으므로 아무것도 밀리지 않고, 마지막에 Insert하게 할 수 있습니다.
+            // (물론 실전에서는 “max position”을 조회해서 +1 로 처리하는 편이 안전)
+            // 간단히 예제 코드에서는 “max position 조회”를 repository에 새로 추가했다고 가정하고 쓰겠습니다.
+
+            // 예제: repo.GetChannelGroupMaxPosition(groupID) → int
+            maxPos, err := tx.GetChannelGroupMaxPosition(*groupID)
+            if err != nil {
+                return err
+            }
+
+            // c) ChannelGroupOrder 생성(마지막 뒤에 붙이기)
+            return tx.CreateChannelGroupOrder(&model.ChannelGroupOrder{
+                GroupID:   *groupID,
+                ChannelID: channel.ID,
+                Position:  maxPos + 1,
+            })
+        } else {
+            // 2-2) 탑레벨(그룹 없이) 채널 생성 로직
+            isGroup = false
+
+            // a) study 내에서 position을 구하기 위해 “max position”을 조회
+            maxPos, err := tx.GetChannelOrderMaxPosition(studyID)
+            if err != nil {
+                return err
+            }
+            // b) Channel 테이블에 채널 생성
+            channel, err := tx.CreateChannel(channel)
+            if err != nil {
+                return err
+            }
+            // c) ChannelOrder 생성
+            return tx.CreateChannelOrder(&model.ChannelOrder{
+                StudyID:  studyID,
+                Position: maxPos + 1,
+                ItemType: "channel",
+                ItemID:   channel.ID,
+            })
+        }
+    })
+    if err != nil {
+        return nil, nil, err
+    }
+    return channel, &isGroup, nil
 }

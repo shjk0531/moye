@@ -21,7 +21,7 @@ export async function fetchStudyIcons(): Promise<StudyIconResponse> {
  */
 export async function createStudy(payload: StudyCreatePayload): Promise<Study> {
     try {
-        const response = await apiClient.post('/studies', payload);
+        const response = await apiClient.post('/api/v1/studies', payload);
         return response.data;
     } catch (error) {
         console.error('스터디 생성 중 오류 발생:', error);
