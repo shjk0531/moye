@@ -13,13 +13,13 @@ import (
 	userController "github.com/shjk0531/moye/backend/internal/domain/user/controller"
 	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/repository"
 
-	// PostgreSQL: Study 도메인
-	studyController "github.com/shjk0531/moye/backend/internal/domain/study/study/controller"
-	studyRepository "github.com/shjk0531/moye/backend/internal/domain/study/study/repository"
+	// PostgreSQL: Lounge 도메인
+	loungeController "github.com/shjk0531/moye/backend/internal/domain/lounge/lounge/controller"
+	loungeRepository "github.com/shjk0531/moye/backend/internal/domain/lounge/lounge/repository"
 
 	// PostgreSQL: Channel 도메인
-	channelController "github.com/shjk0531/moye/backend/internal/domain/study/channel/controller"
-	channelRepository "github.com/shjk0531/moye/backend/internal/domain/study/channel/repository"
+	channelController "github.com/shjk0531/moye/backend/internal/domain/lounge/channel/controller"
+	channelRepository "github.com/shjk0531/moye/backend/internal/domain/lounge/channel/repository"
 
 	// MongoDB: chat 도메인
 	chatContainer "github.com/shjk0531/moye/backend/internal/domain/chat/message/controller"
@@ -33,7 +33,7 @@ import (
 )
 
 func RegisterRoutes(router *gin.Engine) {
-	// PostgreSQL 연결 (정형 데이터: User, Study, Notification 등)
+	// PostgreSQL 연결 (정형 데이터: User, Lounge, Notification 등)
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Seoul",
 		config.Config.Database.Host,
@@ -60,11 +60,11 @@ func RegisterRoutes(router *gin.Engine) {
 	userRootCtrl.RegisterPublicRoutes(public)
 	userRootCtrl.RegisterProtectedRoutes(protected)
 
-	// Study 도메인 라우트 등록 
-	studyRepo := studyRepository.NewRepository(pgDB)
-	studyCtrl := studyController.Init(studyRepo, pgDB)
-	studyCtrl.RegisterPublicRoutes(public)
-	studyCtrl.RegisterPrivateRoutes(protected)
+	// Lounge 도메인 라우트 등록 
+	loungeRepo := loungeRepository.NewRepository(pgDB)
+	loungeCtrl := loungeController.Init(loungeRepo, pgDB)
+	loungeCtrl.RegisterPublicRoutes(public)
+	loungeCtrl.RegisterPrivateRoutes(protected)
 
 	// Channel 도메인 라우트 등록
 	channelRepo := channelRepository.NewChannelRepository(pgDB)

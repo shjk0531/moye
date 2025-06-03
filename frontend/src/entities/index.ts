@@ -7,5 +7,5 @@ export * from './calendar';
 // Channel
 export * from './channel';
 
-// Study
-export * from './study';
+// Lounge
+export * from './lounge';

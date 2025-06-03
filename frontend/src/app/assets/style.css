@@ -30,12 +30,12 @@
     --custom-notice-bar-height: calc(var(--spacing) * 15);
     --custom-app-top-bar-height: 1rem;
     --custom-app-bottom-pannel-height: 3rem;
-    --custom-study-list-width: calc(var(--spacing) * 14);
+    --custom-lounge-list-width: calc(var(--spacing) * 14);
     --custom-item-list-width: calc(var(--spacing) * 60);
     --custom-side-bar-left-width: calc(
-        var(--custom-study-list-width) + var(--custom-item-list-width)
+        var(--custom-lounge-list-width) + var(--custom-item-list-width)
     );
-    --study-list-sutdy-icon-size: 1.5rem;
+    --lounge-list-sutdy-icon-size: 1.5rem;
 
     --custom-scrollbar-color: oklch(66.75% 0.00316 285.6);
     --custom-scrollbar-color-hover: oklch(78.73% 0.00195 285.56);

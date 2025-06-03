@@ -1,8 +1,8 @@
-export interface StudyChannelResponse {
-    items: StudyChannelItem[];
+export interface LoungeChannelResponse {
+    items: LoungeChannelItem[];
 }
 
-export interface StudyChannelItem {
+export interface LoungeChannelItem {
     item_type: 'channel' | 'group';
     channel?: ChannelDTO;
     group?: ChannelGroupDTO;

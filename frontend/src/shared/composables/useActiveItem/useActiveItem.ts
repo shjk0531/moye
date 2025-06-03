@@ -1,19 +1,19 @@
 // src/shared/composables/useActiveItem/useActiveItem.ts
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStudyStore } from '@/store';
+import { useLoungeStore } from '@/store';
 
 // 각 리스트 타입별 API 함수 import
-import { fetchChannels, type StudyChannelResponse } from '@/entities/channel';
+import { fetchChannels, type LoungeChannelResponse } from '@/entities/channel';
 import {
     fetchCalendars,
-    type StudyCalendarResponse,
+    type LoungeCalendarResponse,
 } from '@/entities/calendar';
 
 // API 함수 타입 정의
 interface ApiMapping {
-    fetchChannels: (studyId: string) => Promise<StudyChannelResponse>;
-    fetchCalendars: (studyId: string) => Promise<StudyCalendarResponse>;
+    fetchChannels: (loungeId: string) => Promise<LoungeChannelResponse>;
+    fetchCalendars: (loungeId: string) => Promise<LoungeCalendarResponse>;
 }
 
 // 리스트 타입별 API 함수 매핑
@@ -26,7 +26,7 @@ const apiMapping: Record<string, ApiMapping> = {
 // export function useActiveItem(listType: string) {
 //     const route = useRoute();
 //     const router = useRouter();
-//     const studyStore = useStudyStore();
+//     const loungeStore = useLoungeStore();
 
 //     // 지원하지 않는 listType인 경우 경고 로그 출력
 //     if (!apiMapping[listType]) {
@@ -35,19 +35,19 @@ const apiMapping: Record<string, ApiMapping> = {
 //         );
 //     }
 
-//     // URL에서 studyId를 추출합니다.
-//     const currentStudyId = computed(() => route.params.studyId as string);
+//     // URL에서 loungeId를 추출합니다.
+//     const currentLoungeId = computed(() => route.params.loungeId as string);
 
 //     // Pinia 스토어의 activeItems를 읽거나 업데이트합니다.
 //     const activeItemId = computed({
 //         get() {
 //             return (
-//                 studyStore.activeItems[currentStudyId.value]?.[listType] ?? null
+//                 loungeStore.activeItems[currentLoungeId.value]?.[listType] ?? null
 //             );
 //         },
 //         set(val: string) {
-//             studyStore.setActiveItem({
-//                 studyId: currentStudyId.value,
+//             loungeStore.setActiveItem({
+//                 loungeId: currentLoungeId.value,
 //                 listType,
 //                 itemId: val,
 //             });
@@ -57,7 +57,7 @@ const apiMapping: Record<string, ApiMapping> = {
 //     /**
 //      * URL에 목록 항목 ID가 없는 경우, 저장된 마지막 항목 ID로 리다이렉트합니다.
 //      * 마지막 항목 ID가 없는 경우, 첫 번째 항목으로 리다이렉트합니다.
-//      * @param defaultRoute - 예: '/study/1/channel'
+//      * @param defaultRoute - 예: '/lounge/1/channel'
 //      */
 //     async function checkAndRedirect(defaultRoute: string) {
 //         // route.params[`${listType}Id`]가 undefined 또는 null일 때,
@@ -79,8 +79,8 @@ const apiMapping: Record<string, ApiMapping> = {
 //                     const { fetchChannels, fetchCalendars } = apiMapping[listType];
 
 //                     // 그룹 및 아이템 데이터 로드
-//                     const channels = await fetchChannels(currentStudyId.value); // 채널 데이터 로드
-//                     const calendars = await fetchCalendars(currentStudyId.value); // 캘린더 데이터 로드
+//                     const channels = await fetchChannels(currentLoungeId.value); // 채널 데이터 로드
+//                     const calendars = await fetchCalendars(currentLoungeId.value); // 캘린더 데이터 로드
 
 //                     // // 첫 번째 아이템 ID 가져오기
 //                     // const firstItemId = findFirst(channels, calendars);
@@ -102,5 +102,5 @@ const apiMapping: Record<string, ApiMapping> = {
 //         }
 //     }
 
-//     // return { activeItemId, checkAndRedirect, currentStudyId };
+//     // return { activeItemId, checkAndRedirect, currentLoungeId };
 // }

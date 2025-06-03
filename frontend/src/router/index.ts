@@ -4,10 +4,15 @@ import { createRouter, createWebHistory } from 'vue-router';
 import authRoutes from './modules/auth';
 import settingsRoutes from './modules/settings';
 import appRoutes from './modules/app';
-import studyRoutes from './modules/study';
+import loungeRoutes from './modules/lounge';
 import { useUserStore } from '@/store/user';
 
-const routes = [...authRoutes, ...settingsRoutes, ...appRoutes, ...studyRoutes];
+const routes = [
+    ...authRoutes,
+    ...settingsRoutes,
+    ...appRoutes,
+    ...loungeRoutes,
+];
 
 const router = createRouter({
     history: createWebHistory(),

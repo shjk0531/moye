@@ -1,4 +1,4 @@
 // src/widgets/notice/index.ts
-export { default as StudyNotice } from './components/StudyNotice.vue';
+export { default as LoungeNotice } from './components/LoungeNotice.vue';
 export { default as CalendarNotice } from './components/CalendarNotice.vue';
 export { default as ChatNotice } from './components/ChatNotice.vue';

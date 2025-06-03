@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/kamva/mgm/v3"
+	channelModel "github.com/shjk0531/moye/backend/internal/domain/lounge/channel/model"
+	loungeModel "github.com/shjk0531/moye/backend/internal/domain/lounge/lounge/model"
 	notificationModel "github.com/shjk0531/moye/backend/internal/domain/notification/model"
 	recruitmentModel "github.com/shjk0531/moye/backend/internal/domain/recruitment/model"
-	channelModel "github.com/shjk0531/moye/backend/internal/domain/study/channel/model"
-	studyModel "github.com/shjk0531/moye/backend/internal/domain/study/study/model"
 	userModel "github.com/shjk0531/moye/backend/internal/domain/user/model"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -45,9 +45,9 @@ func main() {
 	// 각 도메인 모델의 마이그레이션 실행
 	err = db.AutoMigrate(
 		&userModel.User{},
-		&studyModel.Study{},
-		&studyModel.StudyMember{},
-		&studyModel.StudyMemberRole{},
+		&loungeModel.Lounge{},
+		&loungeModel.LoungeMember{},
+		&loungeModel.LoungeMemberRole{},
 		&recruitmentModel.Recruitment{},
 		&channelModel.Channel{},
 		&channelModel.ChannelOrder{},

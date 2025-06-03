@@ -20,14 +20,14 @@ const title = computed(() => {
 });
 
 const handleClick = async () => {
-    const studyId = route.params.studyId as string;
+    const loungeId = route.params.loungeId as string;
 
-    if (!studyId) {
-        console.error('유효한 studyId가 없습니다.');
+    if (!loungeId) {
+        console.error('유효한 loungeId가 없습니다.');
         return;
     }
 
-    // await navigateToItem('channel', studyId, router);
+    // await navigateToItem('channel', loungeId, router);
 };
 </script>
 

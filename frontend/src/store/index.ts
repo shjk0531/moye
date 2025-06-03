@@ -5,7 +5,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 // 각 모듈 스토어 내보내기
 export { useAppStore } from './app';
 export { useUserStore } from './user';
-export { useStudyStore } from './study';
+export { useLoungeStore } from './lounge';
 export { useNoticeStore } from './notice';
 
 // Pinia 인스턴스 생성

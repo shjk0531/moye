@@ -1,16 +1,16 @@
 import { apiClient } from '@/shared/api';
-import type { StudyChannelResponse } from '../models/types';
+import type { LoungeChannelResponse } from '../models/types';
 
 /**
  * 채널 목록 조회
- * @param studyId 스터디 ID
+ * @param loungeId 스터디 ID
  * @returns 채널 목록
  */
 export async function fetchChannels(
-    studyId: string,
-): Promise<StudyChannelResponse> {
-    const response = await apiClient.get<StudyChannelResponse>(
-        `/api/v1/studies/${studyId}/channels`,
+    loungeId: string,
+): Promise<LoungeChannelResponse> {
+    const response = await apiClient.get<LoungeChannelResponse>(
+        `/api/v1/lounges/${loungeId}/channels`,
     );
     console.log(response.data);
     return response.data;

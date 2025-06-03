@@ -1,5 +1,5 @@
 import { apiClient } from '@/shared/api';
-import type { StudyCalendarResponse } from '../model/types';
+import type { LoungeCalendarResponse } from '../model/types';
 
 // 실제 API 호출로 대체해야 합니다
 export const fetchCalendarEvents = async (
@@ -48,14 +48,14 @@ export interface CalendarDay {
 
 /**
  * 캘린더 목록 조회
- * @param studyId 스터디 ID
+ * @param loungeId 스터디 ID
  * @returns 캘린더 목록
  */
 export async function fetchCalendars(
-    studyId: string,
-): Promise<StudyCalendarResponse> {
-    const response = await apiClient.get<StudyCalendarResponse>(
-        `/api/v1/studies/${studyId}/calendars`,
+    loungeId: string,
+): Promise<LoungeCalendarResponse> {
+    const response = await apiClient.get<LoungeCalendarResponse>(
+        `/api/v1/lounges/${loungeId}/calendars`,
     );
     console.log(response.data);
     return response.data;

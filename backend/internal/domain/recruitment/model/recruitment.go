@@ -10,7 +10,7 @@ import (
 // Recruitment 모델은 모집 정보를 저장합니다.
 type Recruitment struct {
 	model.BaseModel
-	StudyID   uuid.UUID      `gorm:"not null;index" json:"study_id"`           // Study와 연결
+	LoungeID   uuid.UUID      `gorm:"not null;index" json:"lounge_id"`           // Lounge와 연결
 	StartDate time.Time `gorm:"not null" json:"start_date"`
 	EndDate   time.Time `gorm:"not null" json:"end_date"`
 	Criteria  string    `gorm:"not null" json:"criteria"` // 모집 기준 및 조건

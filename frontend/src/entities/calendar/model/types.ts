@@ -1,8 +1,8 @@
-export interface StudyCalendarResponse {
-    items: StudyCalendarItem[];
+export interface LoungeCalendarResponse {
+    items: LoungeCalendarItem[];
 }
 
-export interface StudyCalendarItem {
+export interface LoungeCalendarItem {
     itemType: 'calendar' | 'group';
     calendar?: CalendarDTO;
     group?: CalendarGroupDTO;

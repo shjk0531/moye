@@ -52,7 +52,7 @@
                                 currentChannelId !== ch.id,
                         }"
                         @click="
-                            router.push(`/study/${studyId}/channel/${ch.id}`)
+                            router.push(`/lounge/${loungeId}/channel/${ch.id}`)
                         "
                         @contextmenu.stop
                     >
@@ -77,7 +77,7 @@
                                 currentChannelId !== ch.id,
                         }"
                         @click="
-                            router.push(`/study/${studyId}/channel/${ch.id}`)
+                            router.push(`/lounge/${loungeId}/channel/${ch.id}`)
                         "
                         @contextmenu.stop
                     >
@@ -96,7 +96,9 @@
             currentChannelId !== item.channel!.id,
         }"
                 @click="
-                    router.push(`/study/${studyId}/channel/${item.channel!.id}`)
+                    router.push(
+                        `/lounge/${loungeId}/channel/${item.channel!.id}`,
+                    )
                 "
                 @contextmenu.stop
             >
@@ -140,18 +142,18 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStudyStore } from '@/store/study';
-import type { StudyChannelResponse } from '@/entities/channel/models/types';
+import { useLoungeStore } from '@/store/lounge';
+import type { LoungeChannelResponse } from '@/entities/channel/models/types';
 
-// 1) route에서 studyId, channelId 가져오기
+// 1) route에서 loungeId, channelId 가져오기
 const route = useRoute();
 const router = useRouter();
-const studyId = computed(() => route.params.studyId as string);
+const loungeId = computed(() => route.params.loungeId as string);
 const currentChannelId = computed(() => route.params.channelId as string);
 
 // 2) 스터디 스토어/응답 객체 정의
-const studyStore = useStudyStore();
-const response = ref<StudyChannelResponse>({ items: [] });
+const loungeStore = useLoungeStore();
+const response = ref<LoungeChannelResponse>({ items: [] });
 
 // 3) “그룹 내부 채널” ID들을 모아둘 Set
 const groupedChannelIds = ref<Set<string>>(new Set());
@@ -176,8 +178,8 @@ function processResponse() {
     });
 }
 
-async function fetchChannels(studyId: string) {
-    response.value = await studyStore.loadChannels(studyId);
+async function fetchChannels(loungeId: string) {
+    response.value = await loungeStore.loadChannels(loungeId);
     processResponse();
 }
 
@@ -217,12 +219,12 @@ function createGroup() {
 }
 
 onMounted(async () => {
-    await fetchChannels(studyId.value);
+    await fetchChannels(loungeId.value);
 });
 
-watch(studyId, (newStudyId, oldStudyId) => {
-    if (newStudyId && newStudyId !== oldStudyId) {
-        fetchChannels(newStudyId);
+watch(loungeId, (newLoungeId, oldLoungeId) => {
+    if (newLoungeId && newLoungeId !== oldLoungeId) {
+        fetchChannels(newLoungeId);
     }
 });
 </script>

@@ -22,12 +22,12 @@ const iconClasses = computed(
 const title = '캘린더';
 
 async function handleClick() {
-    const studyId = route.params.studyId as string;
-    if (!studyId) {
-        console.error('유효한 studyId가 없습니다.');
+    const loungeId = route.params.loungeId as string;
+    if (!loungeId) {
+        console.error('유효한 loungeId가 없습니다.');
         return;
     }
-    await router.push(`/study/${studyId}/calendar`);
+    await router.push(`/lounge/${loungeId}/calendar`);
 }
 </script>
 

@@ -3,10 +3,10 @@ package constants
 type UserPermissionName string
 
 const (
-	UserPermissionStudyCreate UserPermissionName = "study:create"
-	UserPermissionStudyReadAll UserPermissionName = "study:read:all"
-	UserPermissionStudyUpdateOwn UserPermissionName = "study:update:own"
-	UserPermissionStudyDeleteOwn UserPermissionName = "study:delete:own"
-	UserPermissionStudyUpdateAll UserPermissionName = "study:update:all"
-	UserPermissionStudyDeleteAll UserPermissionName = "study:delete:all"
+	UserPermissionLoungeCreate UserPermissionName = "lounge:create"
+	UserPermissionLoungeReadAll UserPermissionName = "lounge:read:all"
+	UserPermissionLoungeUpdateOwn UserPermissionName = "lounge:update:own"
+	UserPermissionLoungeDeleteOwn UserPermissionName = "lounge:delete:own"
+	UserPermissionLoungeUpdateAll UserPermissionName = "lounge:update:all"
+	UserPermissionLoungeDeleteAll UserPermissionName = "lounge:delete:all"
 )

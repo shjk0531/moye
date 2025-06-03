@@ -2,12 +2,12 @@
 
 export const PATHS = {
     ROOT: '/',
-    STUDIES: 'studies',
+    STUDIES: 'lounges',
     ME: 'me',
     CREATE: 'create',
 
-    STUDY_BASE: '/study',
-    STUDY_PARAM: 'studyId',
+    STUDY_BASE: '/lounge',
+    STUDY_PARAM: 'loungeId',
     STUDY_CHANNEL: 'channels',
     STUDY_CALENDAR: 'calendars',
     STUDY_CHANNEL_PARAM: 'channelId',

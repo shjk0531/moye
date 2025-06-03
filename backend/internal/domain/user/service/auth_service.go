@@ -120,9 +120,9 @@ func (s *authService) Register(user *model.User) error {
 
 	// 기본 권한 설정
 	permStrings := []string{
-		string(constants.UserPermissionStudyCreate),
-		string(constants.UserPermissionStudyUpdateOwn),
-		string(constants.UserPermissionStudyDeleteOwn),
+		string(constants.UserPermissionLoungeCreate),
+		string(constants.UserPermissionLoungeUpdateOwn),
+		string(constants.UserPermissionLoungeDeleteOwn),
 	}
 	user.Permissions = pq.StringArray(permStrings)
 
