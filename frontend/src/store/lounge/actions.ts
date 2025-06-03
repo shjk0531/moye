@@ -1,6 +1,6 @@
 // src/store/lounge/actions.ts
 import type { LoungeChannelResponse } from '@/entities/channel/models/types';
-import { fetchLoungeChannels } from '@/entities';
+import { fetchChannels } from '@/entities';
 import type { CurrentLoungeInfo } from './state';
 
 export interface SetActiveItemPayload {
@@ -16,7 +16,7 @@ export const actions = {
         loungeId: string,
     ): Promise<LoungeChannelResponse> {
         if (!this.channelsCache[loungeId]) {
-            const response = await fetchLoungeChannels(loungeId);
+            const response = await fetchChannels(loungeId);
             this.channelsCache[loungeId] = response;
             console.log('lounge store loadChannels response:', response);
         }
@@ -41,17 +41,14 @@ export const actions = {
     ): Promise<string | null> {
         const { items } = await this.loadChannels(loungeId);
 
-        // (1) 그룹 내부의 첫 채널 우선 — snake_case 사용
-        const groupItem = (items as any[]).find((i) => i.item_type === 'group');
-        if (groupItem?.group?.channels?.length) {
-            return groupItem.group.channels[0].id;
+        console.log('items[0]', items[0]);
+        const firstItem = items[0];
+        if (firstItem.item_type === 'channel') {
+            return firstItem.channel.id;
+        } else if (firstItem.item_type === 'group') {
+            return firstItem.group.channels[0].id;
         }
-
-        // (2) 개별 channel 아이템 중 첫 번째
-        const channelItem = (items as any[]).find(
-            (i) => i.item_type === 'channel',
-        );
-        return channelItem?.channel?.id ?? null;
+        return null;
     },
 
     /**
