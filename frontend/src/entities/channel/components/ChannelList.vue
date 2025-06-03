@@ -12,46 +12,86 @@
             <div
                 v-if="item.item_type === 'group'"
                 @click="toggleGroup(item.group!.id)"
-                class="panel-item cursor-pointer flex items-center hover:bg-gray-750 text-sm p-2 rounded-lg mx-2 my-0.5 text-gray-100 justify-between"
+                class="panel-item cursor-pointer flex items-center text-sm p-2 rounded-lg mx-2 my-0.5 justify-between text-gray-300 hover:text-gray-100"
             >
-                <span>{{ item.group!.name }}</span>
-                <span class="mr-2">
+                <span>
+                    {{ item.group!.name }}
+                    <span class="mr-2">
+                        <i
+                            :class="
+                expandedGroups[item.group!.id]
+                  ? 'mdi mdi-chevron-down'
+                  : 'mdi mdi-chevron-right'
+              "
+                        ></i>
+                    </span>
+                </span>
+                <span class="ml-2">
                     <i
-                        :class="
-                            expandedGroups[item.group!.id]
-                                ? 'mdi mdi-chevron-down text-gray-50'
-                                : 'mdi mdi-chevron-right text-gray-50'
-                        "
+                        class="mdi mdi-plus"
+                        @click.stop="addChannelToGroup(item.group!.id)"
                     ></i>
                 </span>
             </div>
 
-            <!-- 2) 해당 그룹이 펼쳐진 경우에만, 그룹 내부 채널들 보여주기 -->
-            <div
-                v-if="item.item_type === 'group' && expandedGroups[item.group!.id]"
-            >
+            <!-- 2) 그룹 내부 채널 렌더링: 
+           • expandedGroups[그룹ID] === true 이면 모든 채널 노출
+           • 아니면서, 현재 채널이 이 그룹 안에 있으면 해당 채널만 노출 -->
+            <div v-if="item.item_type === 'group'">
+                <!-- 그룹이 펼쳐진 상태 -->
+                <div v-if="expandedGroups[item.group!.id]">
+                    <div
+                        v-for="ch in item.group!.channels"
+                        :key="ch.id"
+                        class="panel-item cursor-pointer flex items-center text-sm p-2 rounded-lg mx-2 my-0.5"
+                        :class="{
+                            'text-gray-100 bg-gray-750':
+                                currentChannelId === ch.id,
+                            'text-gray-300 bg-gray-950 hover:bg-gray-750 hover:text-gray-100':
+                                currentChannelId !== ch.id,
+                        }"
+                        @click="
+                            router.push(`/study/${studyId}/channel/${ch.id}`)
+                        "
+                    >
+                        {{ ch.name }}
+                    </div>
+                </div>
+
+                <!-- 그룹은 접혀 있는데, 현재 채널이 이 그룹에 속해 있는 경우 -->
                 <div
-                    v-for="ch in item.group!.channels"
-                    :key="ch.id"
-                    class="panel-item cursor-pointer flex items-center hover:bg-gray-750 text-sm p-2 rounded-lg mx-2 my-0.5 text-gray-100"
-                    :class="{
-                        'bg-gray-750': currentChannelId === ch.id,
-                        'bg-gray-950': currentChannelId !== ch.id,
-                    }"
-                    @click="router.push(`/study/${studyId}/channel/${ch.id}`)"
+                    v-else-if="
+            item.group!.channels.some((ch) => ch.id === currentChannelId)
+          "
                 >
-                    {{ ch.name }}
+                    <div
+                        v-for="ch in item.group!.channels.filter((ch) => ch.id === currentChannelId)"
+                        :key="ch.id"
+                        class="panel-item cursor-pointer flex items-center text-sm p-2 rounded-lg mx-2 my-0.5"
+                        :class="{
+                            'text-gray-100 bg-gray-750':
+                                currentChannelId === ch.id,
+                            'text-gray-300 bg-gray-950 hover:bg-gray-750 hover:text-gray-100':
+                                currentChannelId !== ch.id,
+                        }"
+                        @click="
+                            router.push(`/study/${studyId}/channel/${ch.id}`)
+                        "
+                    >
+                        {{ ch.name }}
+                    </div>
                 </div>
             </div>
 
             <!-- 3) item_type==='channel'이면서, groupedChannelIds에 포함되지 않은 채널만 렌더링 -->
             <div
                 v-else-if="item.item_type === 'channel'"
-                class="panel-item cursor-pointer flex items-center hover:bg-gray-750 text-sm p-2 rounded-lg mx-2 my-0.5 text-gray-100"
+                class="panel-item cursor-pointer flex items-center text-sm p-2 rounded-lg mx-2 my-0.5"
                 :class="{
-                    'bg-gray-750': currentChannelId === item.channel!.id,
-                    'bg-gray-950': currentChannelId !== item.channel!.id,
-                }"
+          'text-gray-100 bg-gray-750': currentChannelId === item.channel!.id,
+          'text-gray-300 bg-gray-950 hover:bg-gray-750 hover:text-gray-100':
+            currentChannelId !== item.channel!.id,
+        }"
                 @click="
                     router.push(`/study/${studyId}/channel/${item.channel!.id}`)
                 "
@@ -76,7 +116,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStudyStore } from '@/store/study';
 import type { StudyChannelResponse } from '@/entities/channel/models/types';
 
-// 1) route에서 studyId 가져오기
+// 1) route에서 studyId, channelId 가져오기
 const route = useRoute();
 const router = useRouter();
 const studyId = computed(() => route.params.studyId as string);
@@ -103,6 +143,7 @@ function processResponse() {
     groupedChannelIds.value.clear();
     response.value.items.forEach((item) => {
         if (item.item_type === 'group' && item.group) {
+            // 초기에는 모든 그룹을 접힌 상태로 세팅
             expandedGroups[item.group.id] = false;
             item.group.channels.forEach((ch) => {
                 groupedChannelIds.value.add(ch.id);
@@ -119,6 +160,10 @@ async function fetchChannels(studyId: string) {
 /** 그룹 헤더를 클릭했을 때, 해당 그룹의 boolean을 토글 */
 function toggleGroup(groupId: string) {
     expandedGroups[groupId] = !expandedGroups[groupId];
+}
+
+function addChannelToGroup(groupId: string) {
+    console.log('addChannelToGroup', groupId);
 }
 
 // 5) 컴포넌트 마운트 시 한 번만 호출
