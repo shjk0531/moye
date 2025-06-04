@@ -27,3 +27,16 @@ export interface LoungeIcon {
 export interface LoungeIconResponse {
     icons: LoungeIcon[];
 }
+
+export interface LoungeInfo {
+    id: string;
+    name: string;
+    profile_url: string;
+    description: string;
+    tags: string[];
+    updated_at: string;
+}
+
+export interface LoungeListResponse {
+    lounges: LoungeInfo[];
+}

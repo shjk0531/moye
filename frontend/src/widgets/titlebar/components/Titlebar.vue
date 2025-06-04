@@ -3,7 +3,7 @@
     <div class="titlebar flex flex-row items-center justify-center">
         <div class="flex flex-row items-center justify-center">
             <div class="titleIcon bg-gray-400 w-2 h-2">
-                <!-- 스터디 아이콘이 존재하면 이미지를 렌더링 -->
+                <!-- 라운지 아이콘이 존재하면 이미지를 렌더링 -->
                 <img
                     v-if="loungeIcon"
                     :src="loungeIcon"

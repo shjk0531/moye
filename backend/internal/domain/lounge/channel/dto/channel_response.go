@@ -5,7 +5,7 @@ import (
 )
 
 // ──────────────────────────────────────────
-// 1) 최상위 응답: 스터디 채널 리스트
+// 1) 최상위 응답: 라운지 채널 리스트
 // ──────────────────────────────────────────
 type LoungeChannelsResponse struct {
     Items []LoungeChannelItem `json:"items"`

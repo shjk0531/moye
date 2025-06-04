@@ -13,7 +13,7 @@ export const getters = {
             return null;
         },
 
-    // 현재 스터디 이름/아이콘
+    // 현재 라운지 이름/아이콘
     getCurrentLoungeInfo: (state: LoungeState) => ({
         id: state.currentLoungeInfo.id,
         name: state.currentLoungeInfo.name,

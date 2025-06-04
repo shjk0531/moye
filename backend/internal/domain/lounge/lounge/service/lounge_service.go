@@ -17,9 +17,8 @@ import (
 type LoungeService interface {
 	CreateLounge(ctx context.Context, lounge *loungeModel.Lounge, userID uuid.UUID) error
 	GetLounge(id uuid.UUID) (*loungeModel.Lounge, error)
-	GetAllLounges() ([]*loungeModel.Lounge, error)
+	GetLoungeList() (dto.LoungeListResponse, error)
 	GetUserLounges(userID uuid.UUID) (dto.LoungeIconResponse, error)
-	GetSimpleLoungeList(page, size int) (dto.SimpleLoungeListResponse, error)
 }
 
 type loungeService struct {
@@ -45,7 +44,7 @@ func (s *loungeService) CreateLounge(ctx context.Context, lounge *loungeModel.Lo
         channelSvc := channelService.NewChannelService(channelRepo)
 
         // —————————————————————————————————————————————
-        // 2) 스터디 생성
+        // 2) 라운지 생성
         loungeID, err := s.repo.CreateLounge(lounge)
         if err != nil {
             fmt.Println("CreateLounge error", err)
@@ -60,7 +59,7 @@ func (s *loungeService) CreateLounge(ctx context.Context, lounge *loungeModel.Lo
 		}
 
 
-        // 4) 스터디 멤버(관리자) 등록
+        // 4) 라운지 멤버(관리자) 등록
         if err := s.memberService.AddLoungeMember(loungeID, userID, roleID); err != nil {
             fmt.Println("AddLoungeMember error", err)
             return err
@@ -101,11 +100,17 @@ func (s *loungeService) GetLounge(id uuid.UUID) (*loungeModel.Lounge, error) {
 	return s.repo.FindByID(id)
 }
 
-func (s *loungeService) GetAllLounges() ([]*loungeModel.Lounge, error) {
-	return s.repo.FindAll()
+func (s *loungeService) GetLoungeList() (dto.LoungeListResponse, error) {
+	lounges, err := s.repo.FindLoungeList()
+	if err != nil {
+		return dto.LoungeListResponse{}, err
+	}
+	return dto.LoungeListResponse{
+		Lounges: lounges,
+	}, nil
 }
 
-// 특정 사용자가 속한 모든 스터디 목록을 반환
+// 특정 사용자가 속한 모든 라운지 목록을 반환
 func (s *loungeService) GetUserLounges(userID uuid.UUID) (dto.LoungeIconResponse, error) {
 	icons, err := s.repo.FindLoungesByUserID(userID)
 	if err != nil {
@@ -114,25 +119,4 @@ func (s *loungeService) GetUserLounges(userID uuid.UUID) (dto.LoungeIconResponse
 	return dto.LoungeIconResponse{
 		Icons: icons,
 	}, nil
-}
-
-
-// GetSimpleLoungeList godoc
-// @Summary 스터디 목록 조회
-// @Description 스터디 목록을 조회
-// @Tags lounges
-// @Accept json
-// @Produce json
-// @Param page query int false "페이지 번호"
-// @Param size query int false "페이지 크기"
-func (s *loungeService) GetSimpleLoungeList(page, size int) (dto.SimpleLoungeListResponse, error) {
-    offset := (page - 1) * size 
-    simpleLounges, err := s.repo.GetSimpleLoungeList(offset, size)
-    if err != nil {
-        return dto.SimpleLoungeListResponse{}, err
-    }
-
-    return dto.SimpleLoungeListResponse{
-        Lounges: simpleLounges,
-    }, nil
 }

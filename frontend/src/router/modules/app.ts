@@ -4,6 +4,7 @@ import { ChatPage } from '@/pages';
 import { FriendListSidebar } from '@/widgets/sidebar';
 import { useUserStore } from '@/store/user';
 import { PATHS } from '@/router/paths';
+import { LoungeListPage } from '@/pages';
 
 const appRoutes: RouteRecordRaw[] = [
     {
@@ -16,16 +17,19 @@ const appRoutes: RouteRecordRaw[] = [
                 redirect: () => {
                     const store = useUserStore();
                     return store.checkAuth()
-                        ? `/${PATHS.ME}`
+                        ? `/${PATHS.FRIENDS}`
                         : `${PATHS.AUTH_BASE}/${PATHS.AUTH_LOGIN}`;
                 },
             },
             {
-                path: PATHS.STUDIES,
-                components: { page: ChatPage, sidebar: FriendListSidebar },
+                path: PATHS.LOUNGES,
+                components: {
+                    page: LoungeListPage,
+                    sidebar: FriendListSidebar,
+                },
             },
             {
-                path: PATHS.ME,
+                path: PATHS.FRIENDS,
                 components: { page: ChatPage, sidebar: FriendListSidebar },
             },
         ],

@@ -3,7 +3,7 @@ import type { LoungeChannelResponse } from '../models/types';
 
 /**
  * 채널 목록 조회
- * @param loungeId 스터디 ID
+ * @param loungeId 라운지 ID
  * @returns 채널 목록
  */
 export async function fetchChannels(

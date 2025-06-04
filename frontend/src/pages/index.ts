@@ -12,4 +12,6 @@ export { default as CalendarPage } from './calendar/CalendarPage.vue';
 // Setting
 export { default as SettingPage } from './setting/SettingPage.vue';
 
+// Lounge
 export { default as CreateLoungePage } from './lounge/CreateLoungePage.vue';
+export { default as LoungeListPage } from './lounge/LoungeListPage.vue';

@@ -38,16 +38,16 @@ const router = useRouter();
 const route = useRoute();
 const loungeStore = useLoungeStore();
 
-// 스터디 리스트
+// 라운지 리스트
 const lounges = ref<LoungeIcon[]>([]);
 
 // 현재 선택된 loungeId (URL 파라미터)
 const currentLoungeId = computed(() => {
-    const raw = route.params[PATHS.STUDY_PARAM];
+    const raw = route.params[PATHS.LOUNGE_PARAM];
     return Array.isArray(raw) ? raw[0] : raw ?? '';
 });
 
-// 스터디 아이콘 로드
+// 라운지 아이콘 로드
 async function loadLoungeData() {
     try {
         const { icons } = await fetchLoungeIcons();
@@ -59,17 +59,17 @@ async function loadLoungeData() {
 
 // Helpers: 경로 빌더
 function loungeBasePath(loungeId: string) {
-    return `${PATHS.STUDY_BASE}/${loungeId}`;
+    return `${PATHS.LOUNGE_BASE}/${loungeId}`;
 }
 function channelPath(loungeId: string, channelId: string) {
-    return `${loungeBasePath(loungeId)}/${PATHS.STUDY_CHANNEL}/${channelId}`;
+    return `${loungeBasePath(loungeId)}/${PATHS.LOUNGE_CHANNEL}/${channelId}`;
 }
 
 // 클릭 핸들러
 async function handleLoungeClick(lounge: LoungeIcon) {
     const loungeId = String(lounge.id);
 
-    // 1) 스토어에 스터디 정보 저장
+    // 1) 스토어에 라운지 정보 저장
     loungeStore.setCurrentLoungeInfo({
         id: lounge.id,
         name: lounge.name,
@@ -98,7 +98,7 @@ async function handleLoungeClick(lounge: LoungeIcon) {
     if (channelId) {
         router.push(channelPath(loungeId, channelId));
     } else {
-        // 혹시 채널이 하나도 없는 스터디라면 기본 페이지로
+        // 혹시 채널이 하나도 없는 라운지라면 기본 페이지로
         router.push(loungeBasePath(loungeId));
     }
 }

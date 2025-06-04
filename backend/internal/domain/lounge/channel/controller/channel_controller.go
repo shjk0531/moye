@@ -20,12 +20,12 @@ func NewChannelController(channelService service.ChannelService) *ChannelControl
 }
 
 // GetLoungeChannels godoc
-// @Summary 스터디의 채널 목록 조회
-// @Description 스터디에 속한 모든 채널과 채널 그룹을 조회합니다.
+// @Summary 라운지의 채널 목록 조회
+// @Description 라운지에 속한 모든 채널과 채널 그룹을 조회합니다.
 // @Tags channels
 // @Accept json
 // @Produce json
-// @Param lounge_id path string true "스터디 ID"
+// @Param lounge_id path string true "라운지 ID"
 // @Success 200 {object} dto.LoungeChannelsResponse
 // @Router /api/v1/lounges/{lounge_id}/channels [get]
 func (c *ChannelController) GetLoungeChannels(ctx *gin.Context) {
@@ -50,7 +50,7 @@ func (c *ChannelController) GetLoungeChannels(ctx *gin.Context) {
 // @Tags channels
 // @Accept json
 // @Produce json
-// @Param lounge_id path string true "스터디 ID"
+// @Param lounge_id path string true "라운지 ID"
 // @Param channel_name body dto.CreateChannelRequest true "채널 이름"
 // @Success 200 {object} dto.ChannelResponse
 // @Router /api/v1/lounges/{lounge_id}/channels [post]
@@ -77,12 +77,12 @@ func (c *ChannelController) CreateChannel(ctx *gin.Context) {
 }
 
 // ReorderChannels godoc
-// @Summary    스터디 내 채널/그룹 순서 재정렬
+// @Summary    라운지 내 채널/그룹 순서 재정렬
 // @Description 클라이언트가 보낸 배열 순서대로 position을 1부터 다시 설정합니다.
 // @Tags       channels
 // @Accept     json
 // @Produce    json
-// @Param      lounge_id path      string                   true "스터디 ID"
+// @Param      lounge_id path      string                   true "라운지 ID"
 // @Param      request  body      dto.ReorderChannelsRequest true "재정렬할 순서 리스트"
 // @Success    204
 // @Failure    400      {object} gin.H{"error": "string"}

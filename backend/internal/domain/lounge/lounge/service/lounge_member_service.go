@@ -18,7 +18,7 @@ func NewLoungeMemberService(repo repository.Repository) LoungeMemberService {
 	return &loungeMemberService{repo: repo}
 }
 
-// 스터디에 멤버 추가
+// 라운지에 멤버 추가
 func (s *loungeMemberService) AddLoungeMember(loungeID uuid.UUID, userID uuid.UUID, roleID uuid.UUID) error {
 	member := &model.LoungeMember{
 		LoungeID: loungeID,

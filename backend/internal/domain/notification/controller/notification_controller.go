@@ -50,7 +50,7 @@ func (c *Controller) PollNotifications(ctx *gin.Context) {
 }
 
 // SimulateNotification 은 테스트용 API로 알림을 생성하고 전송
-// (예: 다른 유저가 스터디 리더에게 지원 요청을 보냈을 때 알림)
+// (예: 다른 유저가 라운지 리더에게 지원 요청을 보냈을 때 알림)
 func (c *Controller) SimulateNotification(ctx *gin.Context) {
 	userIDStr := ctx.Query("user_id")
 	if userIDStr == "" {
@@ -63,7 +63,7 @@ func (c *Controller) SimulateNotification(ctx *gin.Context) {
 		return
 	}
 	// 알림 생성 (나중에 일정 알림 등 다른 타입으로 확장 가능)
-	notif := c.Service.CreateNotification(userID, "새 스터디 지원", "스터디에 새로운 지원 요청이 있습니다.")
+	notif := c.Service.CreateNotification(userID, "새 라운지 지원", "라운지에 새로운 지원 요청이 있습니다.")
 	c.Store[userID] = append(c.Store[userID], notif)
 
 	// 개인 알림 룸: "notification_{userID}"

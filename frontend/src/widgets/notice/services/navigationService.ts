@@ -69,7 +69,7 @@
 // /**
 //  * 사용자가 마지막으로 접속한 아이템으로 이동하는 함수
 //  * @param itemType - 이동할 아이템 타입 ('channel', 'calendar' 등)
-//  * @param loungeId - 스터디 ID
+//  * @param loungeId - 라운지 ID
 //  * @param router - Vue 라우터
 //  * @returns Promise<void>
 //  */

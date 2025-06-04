@@ -44,19 +44,19 @@ async function onCreate(payload: {
 
         toast.add({
             severity: 'success',
-            summary: '스터디 생성',
-            detail: '스터디가 성공적으로 생성되었습니다.',
+            summary: '라운지 생성',
+            detail: '라운지가 성공적으로 생성되었습니다.',
             life: 3000,
         });
 
-        // 생성 후 스터디 목록 페이지로 이동
+        // 생성 후 라운지 목록 페이지로 이동
         router.push('/lounge');
     } catch (error) {
-        console.error('스터디 생성 실패:', error);
+        console.error('라운지 생성 실패:', error);
         toast.add({
             severity: 'error',
             summary: '생성 실패',
-            detail: '스터디 생성에 실패했습니다.',
+            detail: '라운지 생성에 실패했습니다.',
             life: 5000,
         });
     }

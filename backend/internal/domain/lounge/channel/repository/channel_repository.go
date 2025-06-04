@@ -93,7 +93,7 @@ func (r *channelRepository) ShiftGroupOrders(groupID uuid.UUID, fromPos int) err
         Error
 }
 
-// 스터디 내 전체 순서(item_type: "channel"|"group", item_id)에 따른 채널/그룹 조회
+// 라운지 내 전체 순서(item_type: "channel"|"group", item_id)에 따른 채널/그룹 조회
 func (r *channelRepository) GetChannelOrders(loungeID uuid.UUID) ([]model.ChannelOrder, error) {
 	var orders []model.ChannelOrder
 	if err := r.db.
@@ -105,7 +105,7 @@ func (r *channelRepository) GetChannelOrders(loungeID uuid.UUID) ([]model.Channe
 	return orders, nil
 }
 
-// 스터디 내 모든 그룹과, 각 그룹의 순서(order) 및 채널을 미리 로드
+// 라운지 내 모든 그룹과, 각 그룹의 순서(order) 및 채널을 미리 로드
 func (r *channelRepository) GetChannelGroups(loungeID uuid.UUID) ([]model.ChannelGroup, error) {
 	var groups []model.ChannelGroup
 	if err := r.db.
@@ -121,7 +121,7 @@ func (r *channelRepository) GetChannelGroups(loungeID uuid.UUID) ([]model.Channe
 	return groups, nil
 }
 
-// 스터디에 속한 독립 채널(그룹 외 채널) 전체 조회
+// 라운지에 속한 독립 채널(그룹 외 채널) 전체 조회
 func (r *channelRepository) GetChannels(loungeID uuid.UUID) ([]model.Channel, error) {
 	var channels []model.Channel
 	if err := r.db.

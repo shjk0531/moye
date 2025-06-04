@@ -18,7 +18,6 @@ export const actions = {
         if (!this.channelsCache[loungeId]) {
             const response = await fetchChannels(loungeId);
             this.channelsCache[loungeId] = response;
-            console.log('lounge store loadChannels response:', response);
         }
         return this.channelsCache[loungeId];
     },
@@ -41,7 +40,6 @@ export const actions = {
     ): Promise<string | null> {
         const { items } = await this.loadChannels(loungeId);
 
-        console.log('items[0]', items[0]);
         const firstItem = items[0];
         if (firstItem.item_type === 'channel') {
             return firstItem.channel.id;
@@ -52,7 +50,7 @@ export const actions = {
     },
 
     /**
-     * 현재 스터디 정보 설정
+     * 현재 라운지 정보 설정
      */
     setCurrentLoungeInfo(this: any, loungeInfo: CurrentLoungeInfo) {
         this.currentLoungeInfo = {

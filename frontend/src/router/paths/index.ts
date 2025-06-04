@@ -2,16 +2,16 @@
 
 export const PATHS = {
     ROOT: '/',
-    STUDIES: 'lounges',
-    ME: 'me',
+    LOUNGES: 'lounges',
+    FRIENDS: 'friends',
     CREATE: 'create',
 
-    STUDY_BASE: '/lounge',
-    STUDY_PARAM: 'loungeId',
-    STUDY_CHANNEL: 'channels',
-    STUDY_CALENDAR: 'calendars',
-    STUDY_CHANNEL_PARAM: 'channelId',
-    STUDY_CALENDAR_PARAM: 'calendarId',
+    LOUNGE_BASE: '/lounge',
+    LOUNGE_PARAM: 'loungeId',
+    LOUNGE_CHANNEL: 'channels',
+    LOUNGE_CALENDAR: 'calendars',
+    LOUNGE_CHANNEL_PARAM: 'channelId',
+    LOUNGE_CALENDAR_PARAM: 'calendarId',
 
     AUTH_BASE: '/auth',
     AUTH_LOGIN: 'login',

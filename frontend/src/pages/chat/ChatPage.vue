@@ -46,7 +46,7 @@ const messages = ref<Message[]>([
         avatar: 'https://picsum.photos/200/300?random=1',
         username: '김민수',
         timestamp: '10:00 AM',
-        text: '안녕하세요! 오늘 스터디 시작하기 전에 간단히 자기소개 부탁드립니다.',
+        text: '안녕하세요! 오늘 라운지 시작하기 전에 간단히 자기소개 부탁드립니다.',
     },
     {
         id: 2,
@@ -81,7 +81,7 @@ const messages = ref<Message[]>([
         avatar: 'https://picsum.photos/200/300?random=6',
         username: '이지은',
         timestamp: '10:25 AM',
-        text: '저는 스터디원들의 학습 진도와 목표를 관리할 수 있는 대시보드를 만들어보면 좋을 것 같아요.',
+        text: '저는 라운지원들의 학습 진도와 목표를 관리할 수 있는 대시보드를 만들어보면 좋을 것 같아요.',
     },
     {
         id: 7,

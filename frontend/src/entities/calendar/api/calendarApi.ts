@@ -48,7 +48,7 @@ export interface CalendarDay {
 
 /**
  * 캘린더 목록 조회
- * @param loungeId 스터디 ID
+ * @param loungeId 라운지 ID
  * @returns 캘린더 목록
  */
 export async function fetchCalendars(

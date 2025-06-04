@@ -35,7 +35,6 @@ func (c *RootController) RegisterPublicRoutes(router *gin.RouterGroup) {
 	loungeAPI := router.Group("/v1/lounges")
 	{
 		loungeAPI.GET("", c.loungeCtrl.GetAllLounges)
-		loungeAPI.GET("/simple", c.loungeCtrl.GetSimpleLoungeList)
 	}
 }
 

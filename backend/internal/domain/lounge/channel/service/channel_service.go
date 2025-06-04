@@ -80,9 +80,9 @@ func (s *channelService) RemoveChannelFromGroup(groupID uuid.UUID, channelID uui
 }
 
 // GetLoungeChannels godoc
-// @Summary 스터디 내 채널 조회
-// @Description 스터디 내 채널 조회
-// @Param loungeID uuid.UUID true "스터디 ID"
+// @Summary 라운지 내 채널 조회
+// @Description 라운지 내 채널 조회
+// @Param loungeID uuid.UUID true "라운지 ID"
 // @Success 200 {object} dto.LoungeChannelsResponse
 // @Router /api/v1/lounges/{lounge_id}/channels [get]
 func (s *channelService) GetLoungeChannels(loungeID uuid.UUID) (*dto.LoungeChannelsResponse, error) {
@@ -156,7 +156,7 @@ func (s *channelService) GetLoungeChannels(loungeID uuid.UUID) (*dto.LoungeChann
 // GetChannelOrders godoc
 // @Summary 채널 순서 조회
 // @Description 채널 순서를 조회
-// @Param loungeID uuid.UUID true "스터디 ID"
+// @Param loungeID uuid.UUID true "라운지 ID"
 func (s *channelService) GetChannelOrders(loungeID uuid.UUID) ([]model.ChannelOrder, error) {
 	return s.repo.GetChannelOrders(loungeID)
 }
@@ -165,7 +165,7 @@ func (s *channelService) GetChannelOrders(loungeID uuid.UUID) ([]model.ChannelOr
 // @Summary 채널 순서 재정렬
 // @Description 채널 순서를 재정렬
 // @Param ctx context.Context true "context"
-// @Param loungeID uuid.UUID true "스터디 ID"
+// @Param loungeID uuid.UUID true "라운지 ID"
 // @Param items []dto.ReorderChannelItem true "재정렬할 순서 리스트"
 func (s *channelService) ReorderChannels(
     ctx context.Context,

@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -15,7 +14,7 @@ import (
 
 
 type LoungeController struct {
-	// 스터디 서비스만 사용 (중앙 서비스에서 가져옴)
+	// 라운지 서비스만 사용 (중앙 서비스에서 가져옴)
 	service service.LoungeService
 }
 
@@ -25,12 +24,12 @@ func NewLoungeController(s service.LoungeService) *LoungeController {
 }
 
 // CreateLounge godoc
-// @Summary 스터디 생성
-// @Description 새로운 스터디를 생성
+// @Summary 라운지 생성
+// @Description 새로운 라운지를 생성
 // @Tags lounges
 // @Accept json
 // @Produce json
-// @Param lounge_name body dto.CreateLoungeRequest true "스터디 이름"
+// @Param lounge_name body dto.CreateLoungeRequest true "라운지 이름"
 // @Success 200 {object} dto.LoungeResponse
 // @Router /api/v1/lounges [post]
 func (ctrl *LoungeController) CreateLounge(c *gin.Context) {
@@ -56,10 +55,10 @@ func (ctrl *LoungeController) CreateLounge(c *gin.Context) {
 		LeaderID: userID,
 	}
 
-	// 트랜잭션으로 스터디 및 관련 구성요소 생성 (컨텍스트 전달)
+	// 트랜잭션으로 라운지 및 관련 구성요소 생성 (컨텍스트 전달)
 	if err := ctrl.service.CreateLounge(c.Request.Context(), lounge, userID); err != nil {
 		fmt.Println("CreateLounge error", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 생성 실패"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "라운지 생성 실패"})
 		return
 	}
 
@@ -67,12 +66,12 @@ func (ctrl *LoungeController) CreateLounge(c *gin.Context) {
 }
 
 // GetLounge godoc
-// @Summary 스터디 조회
-// @Description ID로 스터디를 조회
+// @Summary 라운지 조회
+// @Description ID로 라운지를 조회
 // @Tags lounges
 // @Accept json
 // @Produce json
-// @Param id path string true "스터디 ID"
+// @Param id path string true "라운지 ID"
 // @Success 200 {object} dto.LoungeResponse
 // @Router /api/v1/lounges/{id} [get]
 func (ctrl *LoungeController) GetLounge(c *gin.Context) {
@@ -85,7 +84,7 @@ func (ctrl *LoungeController) GetLounge(c *gin.Context) {
 
 	lounge, err := ctrl.service.GetLounge(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "스터디를 찾을 수 없음"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "라운지를 찾을 수 없음"})
 		return
 	}
 
@@ -93,60 +92,26 @@ func (ctrl *LoungeController) GetLounge(c *gin.Context) {
 }
 
 // GetAllLounges godoc
-// @Summary 모든 스터디 목록 조회
-// @Description 모든 스터디 목록을 조회
+// @Summary 모든 라운지 목록 조회
+// @Description 모든 라운지 목록을 조회
 // @Tags lounges
 // @Accept json
 // @Produce json
 // @Success 200 {object} dto.LoungeResponse
 func (ctrl *LoungeController) GetAllLounges(c *gin.Context) {
-	lounges, err := ctrl.service.GetAllLounges()
+	lounges, err := ctrl.service.GetLoungeList()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "라운지 목록 조회 실패"})
 		return
 	}
 
 	c.JSON(http.StatusOK, lounges)
 }
 
-// GetSipleLoungeList godoc
-// @Summary 스터디 목록 조회
-// @Description 스터디 목록을 조회
-// @Tags lounges
-// @Accept json
-// @Produce json
-// @Success 200 {object} dto.SimpleLoungeListResponse
-// @Router /api/v1/lounges/simple [get]
-func (ctrl *LoungeController) GetSimpleLoungeList(c *gin.Context) {
-	pageStr, isPage := c.GetQuery("page")
-	sizeStr, isSize := c.GetQuery("size")
-	
-	page := 1
-	size := 10
-	
-	if isPage {
-		if p, err := strconv.Atoi(pageStr); err == nil {
-			page = p
-		}
-	}
-	if isSize {
-		if s, err := strconv.Atoi(sizeStr); err == nil {
-			size = s
-		}
-	}
-	
-	lounges, err := ctrl.service.GetSimpleLoungeList(page, size)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
-		return
-	}
-
-	c.JSON(http.StatusOK, lounges)
-}
 
 // GetUserLounges godoc
-// @Summary 사용자의 스터디 목록 조회
-// @Description 사용자의 스터디 목록을 조회
+// @Summary 사용자의 라운지 목록 조회
+// @Description 사용자의 라운지 목록을 조회
 // @Tags lounges
 // @Accept json
 // @Produce json
@@ -162,7 +127,7 @@ func (ctrl *LoungeController) GetUserLounges(c *gin.Context) {
 
 	lounges, err := ctrl.service.GetUserLounges(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "스터디 목록 조회 실패"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "라운지 목록 조회 실패"})
 		return
 	}
 

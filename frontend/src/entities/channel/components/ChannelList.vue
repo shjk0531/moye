@@ -151,7 +151,7 @@ const router = useRouter();
 const loungeId = computed(() => route.params.loungeId as string);
 const currentChannelId = computed(() => route.params.channelId as string);
 
-// 2) 스터디 스토어/응답 객체 정의
+// 2) 라운지 스토어/응답 객체 정의
 const loungeStore = useLoungeStore();
 const response = ref<LoungeChannelResponse>({ items: [] });
 

@@ -2,7 +2,7 @@
     <div class="flex h-screen w-screen">
         <!-- 사이드바 -->
         <div class="left-sidebar flex flex-col h-full dark:bg-gray-950">
-            <!-- 상단: 스터디 리스트 + 서브 사이드바 -->
+            <!-- 상단: 라운지 리스트 + 서브 사이드바 -->
             <div class="flex flex-1 overflow-hidden min-h-0">
                 <LoungeListSidebar />
                 <router-view name="sidebar" />
