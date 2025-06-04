@@ -1,0 +1,19 @@
+server_port: ':8080'
+
+# PostgreSQL 설정 (관계형 데이터)
+db_host: 'localhost'
+db_port: '5432'
+db_user: 'postgres'
+db_password: 'postgres'
+db_name: 'moye'
+db_sslmode: 'disable'
+
+# MongoDB 설정
+mongo_uri: 'mongodb://mongo_user:password@localhost:27017/moye?authSource=mongo_user'
+mongo_db: 'moye'
+
+# JWT 설정
+jwt_access_token_secret: 'your_access_token_secret'
+jwt_refresh_token_secret: 'your_refresh_token_secret'
+jwt_access_duration: '15m'
+jwt_refresh_duration: '168h'

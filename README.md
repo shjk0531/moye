@@ -79,6 +79,18 @@
 * Docker 컨테이너화로 효율적 관리
 * AWS 및 Nginx 리버스 프록시로 안정적 서비스 운영 및 로드밸런싱
 
+## 환경 설정
+
+`backend/scripts/setup-config.sh` 스크립트를 실행하면 환경 변수 값을 사용해
+`backend/configs/config.yaml` 파일을 생성할 수 있습니다.
+
+```bash
+cd backend/scripts
+./setup-config.sh
+```
+
+생성된 `config.yaml` 파일은 `.gitignore`에 포함되어 있어 저장소에 커밋되지 않습니다.
+
 ---
 
 ## 기술 스택 전환 배경
