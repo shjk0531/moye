@@ -86,6 +86,6 @@ func RegisterRoutes(router *gin.Engine) {
 
 	// chat 도메인 라우트 등록 (인증 필요)
 	msgRepo := chatRepository.NewRepository(mongoClient, config.Config.Mongo.DB)
-	msgCtrl := chatContainer.NewController(msgRepo)
-	msgCtrl.RegisterRoutes(protected)
+	msgCtrl := chatContainer.Init(msgRepo)
+	msgCtrl.RegisterPrivateRoutes(protected)
 }

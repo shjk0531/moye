@@ -6,7 +6,7 @@
             class="w-10 h-10 rounded-full mr-2"
             alt="avatar"
         />
-        <div class="message-content max-w-[80%]">
+        <div class="message-content max-w-[90%]">
             <div class="message-header">
                 <span class="username text-gray-50 text-md">
                     {{ message.username }}

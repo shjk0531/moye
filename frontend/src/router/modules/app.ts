@@ -14,12 +14,7 @@ const appRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: '',
-                redirect: () => {
-                    const store = useUserStore();
-                    return store.checkAuth()
-                        ? `/${PATHS.FRIENDS}`
-                        : `${PATHS.AUTH_BASE}/${PATHS.AUTH_LOGIN}`;
-                },
+                redirect: `/${PATHS.FRIENDS}`,
             },
             {
                 path: PATHS.LOUNGES,

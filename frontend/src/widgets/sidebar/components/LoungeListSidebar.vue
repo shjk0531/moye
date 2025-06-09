@@ -77,7 +77,9 @@ function handleTitleIconClick() {
     router.push({ path: PATHS.ROOT });
 }
 const isTitleActive = () =>
-    route.path === `/${PATHS.LOUNGES}` || route.path === `/${PATHS.FRIENDS}`;
+    route.path === PATHS.ROOT ||
+    route.path === `/${PATHS.LOUNGES}` ||
+    route.path === `/${PATHS.FRIENDS}`;
 function handleNewLoungeClick() {
     appStore.setLastRoute(route.path as string);
     router.push(`/${PATHS.CREATE}`);

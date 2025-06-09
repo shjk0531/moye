@@ -26,4 +26,19 @@ export const getters = {
     userProfile: (state: UserState): string | null => {
         return state.user?.profile || null;
     },
+
+    checkAuth(state: UserState) {
+        const token = state.accessToken;
+        if (!token && state.user) {
+            state.user = null;
+        }
+        return !!token;
+    },
+
+    getToken: (state: UserState): string | null => {
+        if (!state.user) {
+            return null;
+        }
+        return state.accessToken || null;
+    },
 };

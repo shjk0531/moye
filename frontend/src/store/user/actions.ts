@@ -13,26 +13,11 @@ export const actions = {
 
     login(this: UserState, user: User, token: string) {
         this.user = user;
-        localStorage.setItem('access_token', token);
+        this.accessToken = token;
     },
 
     logout(this: UserState) {
         this.user = null;
-        localStorage.removeItem('access_token');
-    },
-
-    checkAuth(this: UserState) {
-        const token = localStorage.getItem('access_token');
-        if (!token && this.user) {
-            this.user = null;
-        }
-        return !!token;
-    },
-
-    getToken(this: UserState) {
-        if (!this.user) {
-            return null;
-        }
-        return localStorage.getItem('access_token');
+        this.accessToken = null;
     },
 };

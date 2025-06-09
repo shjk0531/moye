@@ -6,45 +6,39 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shjk0531/moye/backend/internal/domain/chat/message/model"
-	"github.com/shjk0531/moye/backend/internal/domain/chat/message/repository"
+	"github.com/shjk0531/moye/backend/internal/domain/chat/message/service"
 )
 
-type Controller struct {
-	repo repository.Repository
+type MessageController struct {
+	messageService service.MessageService
 }
 
-func NewController(repo repository.Repository) *Controller {
-	return &Controller{repo: repo}
+func NewMessageController(messageService service.MessageService) *MessageController {
+	return &MessageController{messageService: messageService}
 }
 
-// RegisterRoutes는 /messages 경로 하위의 라우트를 등록합니다.
-func (ctrl *Controller) RegisterRoutes(rg *gin.RouterGroup) {
-	r := rg.Group("/messages")
-	r.POST("/", ctrl.CreateMessage)
-	r.GET("/chatroom/:chatroom_id", ctrl.GetMessagesByChatRoom)
-}
-
-func (ctrl *Controller) CreateMessage(c *gin.Context) {
+func (ctrl *MessageController) CreateMessage(c *gin.Context) {
 	var msg model.Message
 	if err := c.ShouldBindJSON(&msg); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := ctrl.repo.InsertMessage(&msg); err != nil {
+	message, err := ctrl.messageService.SaveMessage(msg.ChannelID, msg.UserID, msg.Content, msg.Type)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "메시지 생성 실패"})
 		return
 	}
-	c.JSON(http.StatusCreated, msg)
+	c.JSON(http.StatusCreated, message)
 }
 
-func (ctrl *Controller) GetMessagesByChatRoom(c *gin.Context) {
+func (ctrl *MessageController) GetMessagesByChatRoom(c *gin.Context) {
 	chatRoomIDStr := c.Param("chatroom_id")
 	chatRoomID, err := strconv.Atoi(chatRoomIDStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 채팅방 ID"})
 		return
 	}
-	messages, err := ctrl.repo.FindMessagesByChatRoomID(uint(chatRoomID))
+	messages, err := ctrl.messageService.FindMessagesByChatRoomID(chatRoomID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "메시지 조회 실패"})
 		return
