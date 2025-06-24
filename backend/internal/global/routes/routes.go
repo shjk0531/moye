@@ -88,4 +88,6 @@ func RegisterRoutes(router *gin.Engine) {
 	msgRepo := chatRepository.NewRepository(mongoClient, config.Config.Mongo.DB)
 	msgCtrl := chatContainer.Init(msgRepo)
 	msgCtrl.RegisterPrivateRoutes(protected)
+
+	RegisterWebSocketRoutes(router, mongoClient)
 }

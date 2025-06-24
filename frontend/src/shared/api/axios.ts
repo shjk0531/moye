@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
-import router from '@/router';
 import { useUserStore } from '@/store';
 import { handleAuthError } from './authError';
 import { refreshAccessToken } from './tokenService';

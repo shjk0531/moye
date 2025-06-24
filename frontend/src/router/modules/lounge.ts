@@ -12,10 +12,12 @@ const loungeRoutes: RouteRecordRaw[] = [
         children: [
             {
                 path: `:${PATHS.LOUNGE_CHANNEL}/:${PATHS.LOUNGE_CHANNEL_PARAM}`,
+                name: 'chat',
                 components: { page: ChatPage, sidebar: ChannelListSidebar },
             },
             {
                 path: `:${PATHS.LOUNGE_CALENDAR}/:${PATHS.LOUNGE_CALENDAR_PARAM}`,
+                name: 'calendar',
                 components: {
                     page: CalendarPage,
                     sidebar: CalendarListSidebar,

@@ -1,6 +1,6 @@
 // API
 export * from './api';
-
+export * from './api/socket';
 // Config
 export * from './config';
 

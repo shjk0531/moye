@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shjk0531/moye/backend/internal/domain/chat/message/model"
@@ -32,13 +31,8 @@ func (ctrl *MessageController) CreateMessage(c *gin.Context) {
 }
 
 func (ctrl *MessageController) GetMessagesByChatRoom(c *gin.Context) {
-	chatRoomIDStr := c.Param("chatroom_id")
-	chatRoomID, err := strconv.Atoi(chatRoomIDStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 채팅방 ID"})
-		return
-	}
-	messages, err := ctrl.messageService.FindMessagesByChatRoomID(chatRoomID)
+	chatRoomID := c.Param("chatroom_id")
+	messages, err := ctrl.messageService.FindMessagesByChannelID(chatRoomID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "메시지 조회 실패"})
 		return

@@ -29,7 +29,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import type { LoungeIcon } from '@/entities/lounge';
-import { useLoungeStore } from '@/store/lounge'; // <-- 경로 주의!
+import { useLoungeStore } from '@/store/lounge';
 import { PATHS } from '@/router/paths';
 import { fetchLoungeIcons } from '@/entities';
 

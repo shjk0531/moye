@@ -1,13 +1,15 @@
 package service
 
 import (
+	"time"
+
 	"github.com/shjk0531/moye/backend/internal/domain/chat/message/model"
 	"github.com/shjk0531/moye/backend/internal/domain/chat/message/repository"
 )
 
 type MessageService interface {
 	SaveMessage(channelID string, userID string, content string, msgType string) (*model.Message, error)
-	FindMessagesByChatRoomID(chatRoomID int) ([]*model.Message, error)
+	FindMessagesByChannelID(channelID string) ([]*model.Message, error)
 }
 
 type messageService struct {
@@ -24,6 +26,7 @@ func (s *messageService) SaveMessage(channelID string, userID string, content st
 		UserID:    userID,
 		Content:   content,
 		Type:      msgType,
+		CreatedAt: time.Now(),
 	}
 
 	err := s.repo.InsertMessage(message)
@@ -34,6 +37,6 @@ func (s *messageService) SaveMessage(channelID string, userID string, content st
 	return message, nil
 }
 
-func (s *messageService) FindMessagesByChatRoomID(chatRoomID int) ([]*model.Message, error) {
-	return s.repo.FindMessagesByChatRoomID(uint(chatRoomID))
+func (s *messageService) FindMessagesByChannelID(channelID string) ([]*model.Message, error) {
+	return s.repo.FindMessagesByChannelID(channelID)
 }

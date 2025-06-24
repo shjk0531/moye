@@ -12,12 +12,27 @@ src/widgets/sidebar/components/ChannelListSidebar.vue
             </p>
         </div>
 
-        <ChannelList />
+        <ChannelList @selectChannel="onSelectChannel" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { ChannelList } from '@/entities/channel';
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+const loungeId = route.params.loungeId as string;
+
+function onSelectChannel(channelId: string) {
+    router.push({
+        name: 'chat',
+        params: {
+            loungeId,
+            channelId,
+        },
+    });
+}
 </script>
 
 <style scoped lang="scss"></style>

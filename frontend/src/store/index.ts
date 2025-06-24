@@ -7,6 +7,7 @@ export { useAppStore } from './app';
 export { useUserStore } from './user';
 export { useLoungeStore } from './lounge';
 export { useNoticeStore } from './notice';
+export { useChatStore } from './chat';
 
 // Pinia 인스턴스 생성
 const pinia = createPinia();

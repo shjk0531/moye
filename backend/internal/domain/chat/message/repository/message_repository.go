@@ -11,7 +11,7 @@ import (
 
 type Repository interface {
 	InsertMessage(msg *model.Message) error
-	FindMessagesByChatRoomID(chatRoomID uint) ([]*model.Message, error)
+	FindMessagesByChannelID(channelID string) ([]*model.Message, error)
 }
 
 type repository struct {
@@ -30,10 +30,10 @@ func (r *repository) InsertMessage(msg *model.Message) error {
 	return err
 }
 
-func (r *repository) FindMessagesByChatRoomID(chatRoomID uint) ([]*model.Message, error) {
+func (r *repository) FindMessagesByChannelID(channelID string) ([]*model.Message, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	filter := bson.M{"chatroom_id": chatRoomID}
+	filter := bson.M{"channel_id": channelID}
 	cursor, err := r.collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err

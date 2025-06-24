@@ -51,9 +51,7 @@
                             'text-gray-300 bg-gray-950 hover:bg-gray-750 hover:text-gray-100':
                                 currentChannelId !== ch.id,
                         }"
-                        @click="
-                            router.push(`/lounge/${loungeId}/channel/${ch.id}`)
-                        "
+                        @click="emit('selectChannel', ch.id)"
                         @contextmenu.stop
                     >
                         {{ ch.name }}
@@ -76,9 +74,7 @@
                             'text-gray-300 bg-gray-950 hover:bg-gray-750 hover:text-gray-100':
                                 currentChannelId !== ch.id,
                         }"
-                        @click="
-                            router.push(`/lounge/${loungeId}/channel/${ch.id}`)
-                        "
+                        @click="emit('selectChannel', ch.id)"
                         @contextmenu.stop
                     >
                         {{ ch.name }}
@@ -95,11 +91,7 @@
           'text-gray-300 bg-gray-950 hover:bg-gray-750 hover:text-gray-100':
             currentChannelId !== item.channel!.id,
         }"
-                @click="
-                    router.push(
-                        `/lounge/${loungeId}/channel/${item.channel!.id}`,
-                    )
-                "
+                @click="emit('selectChannel', item.channel!.id)"
                 @contextmenu.stop
             >
                 {{ item.channel!.name }}
@@ -165,6 +157,10 @@ const expandedGroups = reactive<Record<string, boolean>>({});
 const contextMenuVisible = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
+
+const emit = defineEmits<{
+    (e: 'selectChannel', channelId: string): void;
+}>();
 
 function processResponse() {
     groupedChannelIds.value.clear();
