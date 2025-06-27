@@ -32,6 +32,7 @@ import type { LoungeIcon } from '@/entities/lounge';
 import { useLoungeStore } from '@/store/lounge';
 import { PATHS } from '@/router/paths';
 import { fetchLoungeIcons } from '@/entities';
+import { useMemberStore } from '@/store/member';
 
 // router, store 세팅
 const router = useRouter();
@@ -88,7 +89,6 @@ async function handleLoungeClick(lounge: LoungeIcon) {
     const channelId =
         activeChannel || (await loungeStore.getFirstChannelId(loungeId)) || ''; // 채널이 하나도 없으면 빈문자열
 
-    console.log('channelId:', channelId);
     // 3) 스토어에도 저장하고, 라우팅
     loungeStore.setActiveItem({
         loungeId,

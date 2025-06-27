@@ -20,22 +20,22 @@ func NewLoungeRoleService(repo repository.Repository) LoungeRoleService {
 }
 
 // 역할 생성
-func (s *loungeRoleService) CreateLoungeRole(loungeMemberID uuid.UUID, name string, colorHex string) (uuid.UUID, error) {
+func (s *loungeRoleService) CreateLoungeRole(loungeMemberID uuid.UUID, role_name string, colorHex string) (uuid.UUID, error) {
 	role := &model.LoungeMemberRole{
 		LoungeMemberID: loungeMemberID,
-		Name:          name,
+		RoleName:          role_name,
 		ColorHex:      colorHex,
 	}
 	return s.repo.CreateRole(role)
 }
 
 // 역할 업데이트
-func (s *loungeRoleService) UpdateLoungeRole(loungeRoleID uuid.UUID, name string, colorHex string) error {
+func (s *loungeRoleService) UpdateLoungeRole(loungeRoleID uuid.UUID, role_name string, colorHex string) error {
 	role := &model.LoungeMemberRole{
 		BaseModel: globalModel.BaseModel{
 			ID: loungeRoleID,
 		},
-		Name:     name,
+		RoleName:     role_name,
 		ColorHex: colorHex,
 	}
 	return s.repo.UpdateRole(role)

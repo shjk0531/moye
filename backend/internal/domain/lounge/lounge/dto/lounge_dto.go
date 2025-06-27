@@ -45,3 +45,12 @@ type UserRoleDTO struct {
 	ColorHex  string    `json:"color_hex"`
 	RoleFlags int64     `json:"role_flags"`
 }
+
+// LoungeMemberInfoDTO 라운지 멤버의 상세 정보를 담는 DTO
+type LoungeMemberInfoDTO struct {
+    UserID     	uuid.UUID  `json:"user_id"`     // lounge_member.user_id
+    Nickname   	string     `json:"nickname"`    
+    Profile		string     `json:"profile"`
+    RoleName   *string    `json:"role_name"`   // nullable: 역할이 없을 수도 있으므로 포인터
+    RoleColor  *string    `json:"role_color"`  // nullable
+}

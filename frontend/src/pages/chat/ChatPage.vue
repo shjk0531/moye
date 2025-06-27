@@ -7,7 +7,7 @@
             <div
                 class="message-area flex flex-col flex-1 overflow-y-auto overflow-x-hidden"
             >
-                <ChatMessageList :messages="messages" />
+                <ChatMessageList />
             </div>
             <div class="chat-area pb-4 px-2">
                 <MessageInput @sendMessage="sendMessage" />
@@ -24,8 +24,8 @@ import { MessageInput } from '@/features/chat';
 import { ChatNotice } from '@/widgets/notice';
 import { MemberList } from '@/widgets/sidebar';
 import { PageLayout } from '@/shared/layout';
-import { useChatSocket, ChatMessageList } from '@/entities/chat';
-import { computed, onMounted, watch } from 'vue';
+import { ChatMessageList } from '@/entities/chat';
+import { onMounted, watch } from 'vue';
 import { useChatStore } from '@/store/chat';
 import { useRoute } from 'vue-router';
 
@@ -51,8 +51,6 @@ watch(
 function sendMessage(content: string) {
     chatStore.sendMessage(content);
 }
-
-const messages = computed(() => chatStore.messages);
 </script>
 
 <style scoped>

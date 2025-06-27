@@ -11,6 +11,7 @@ import (
 type RootController struct {
 	services      service.Service
 	loungeCtrl     *LoungeController
+	loungeMemberCtrl *LoungeMemberController
 }
 
 func Init(loungeRepo repository.Repository, db *gorm.DB) *RootController {
@@ -19,10 +20,12 @@ func Init(loungeRepo repository.Repository, db *gorm.DB) *RootController {
 
 	// 각 컨트롤러 초기화
 	loungeCtrl := NewLoungeController(services.GetLoungeService())
+	loungeMemberCtrl := NewLoungeMemberController(services.GetLoungeMemberService())
 
 	return &RootController{
 		services: services,
 		loungeCtrl: loungeCtrl,
+		loungeMemberCtrl: loungeMemberCtrl,
 	}
 }
 
@@ -44,5 +47,6 @@ func (c *RootController) RegisterPrivateRoutes(router *gin.RouterGroup) {
 		loungeAPI.POST("", c.loungeCtrl.CreateLounge)
 		loungeAPI.GET("/:lounge_id", c.loungeCtrl.GetLounge)
 		loungeAPI.GET("/user", c.loungeCtrl.GetUserLounges)
+		loungeAPI.GET("/:lounge_id/members", c.loungeMemberCtrl.GetLoungeMembers)
 	}
 }

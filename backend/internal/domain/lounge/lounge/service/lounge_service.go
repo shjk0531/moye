@@ -8,8 +8,12 @@ import (
 	channelRepository "github.com/shjk0531/moye/backend/internal/domain/lounge/channel/repository"
 	channelService "github.com/shjk0531/moye/backend/internal/domain/lounge/channel/service"
 
+	userRepository "github.com/shjk0531/moye/backend/internal/domain/user/repository"
+	userService "github.com/shjk0531/moye/backend/internal/domain/user/service"
+
 	"github.com/shjk0531/moye/backend/internal/domain/lounge/lounge/dto"
 	loungeModel "github.com/shjk0531/moye/backend/internal/domain/lounge/lounge/model"
+
 	"github.com/shjk0531/moye/backend/internal/domain/lounge/lounge/repository"
 	"gorm.io/gorm"
 )
@@ -43,13 +47,24 @@ func (s *loungeService) CreateLounge(ctx context.Context, lounge *loungeModel.Lo
         channelRepo := channelRepository.NewChannelRepository(tx)
         channelSvc := channelService.NewChannelService(channelRepo)
 
+		userRepo := userRepository.NewRepository(tx)
+		userSvc := userService.NewUserService(userRepo)
+
         // —————————————————————————————————————————————
         // 2) 라운지 생성
+		lounge.LeaderID = userID
         loungeID, err := s.repo.CreateLounge(lounge)
         if err != nil {
             fmt.Println("CreateLounge error", err)
             return err
         }
+
+		// 요청자 정보 조회
+		user, err := userSvc.GetUser(userID)
+		if err != nil {
+			return err
+		}
+		
 
 		// 3) "관리자" 롤 생성
 		roleID, err := s.roleService.CreateLoungeRole(userID, "관리자", "#000000")
@@ -60,7 +75,7 @@ func (s *loungeService) CreateLounge(ctx context.Context, lounge *loungeModel.Lo
 
 
         // 4) 라운지 멤버(관리자) 등록
-        if err := s.memberService.AddLoungeMember(loungeID, userID, roleID); err != nil {
+        if err := s.memberService.AddLoungeMember(loungeID, userID, user.Nickname, user.Profile, roleID); err != nil {
             fmt.Println("AddLoungeMember error", err)
             return err
         }

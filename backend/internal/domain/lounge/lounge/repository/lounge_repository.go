@@ -1,3 +1,4 @@
+// internal/domain/lounge/lounge/repository/lounge_repository.go
 package repository
 
 import (
@@ -16,6 +17,7 @@ type Repository interface {
 	UpdateRole(role *model.LoungeMemberRole) error
 	CreateLoungeMember(member *model.LoungeMember) error
 	CreateLounge(lounge *model.Lounge) (uuid.UUID, error)
+	FindMembersByLoungeID(lougeId uuid.UUID) ([]dto.LoungeMemberInfoDTO, error)
 }
 
 type repository struct {
@@ -100,4 +102,28 @@ func (r *repository) CreateLounge(lounge *model.Lounge) (uuid.UUID, error) {
 		return uuid.Nil, err
 	}
 	return lounge.ID, nil
+}
+
+// FindMembersByLoungeID는 특정 라운지에 속한 멤버들의 상세 정보를 반환합니다.
+// ProfileURL은 users.profile에서, 역할 정보는 lounge_member_roles에서 가져옵니다.
+func (r *repository) FindMembersByLoungeID(loungeID uuid.UUID) ([]dto.LoungeMemberInfoDTO, error) {
+    var dtos []dto.LoungeMemberInfoDTO
+
+    err := r.db.
+        Table("lounge_members").
+        Select([]string{
+            "lounge_members.user_id",
+            "lounge_members.nickname",
+            "users.profile",
+            "lm_roles.role_name       AS role_name",
+            "lm_roles.color_hex       AS role_color",
+        }).
+        Joins("LEFT JOIN users ON lounge_members.user_id = users.id").
+        Joins("LEFT JOIN lounge_member_roles AS lm_roles ON lounge_members.role_id = lm_roles.id").
+        Where("lounge_members.lounge_id = ?", loungeID).
+        Scan(&dtos).Error
+    if err != nil {
+        return nil, err
+    }
+    return dtos, nil
 }

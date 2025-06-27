@@ -50,7 +50,7 @@ class SocketClient {
             let msg: any;
             try {
                 msg = JSON.parse(ev.data);
-                console.log('msg', msg);
+                console.log('chat msg', msg);
             } catch {
                 return;
             }

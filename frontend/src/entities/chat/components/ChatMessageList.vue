@@ -9,12 +9,12 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatMessage } from '../models/types';
+import { useChatStore } from '@/store/chat';
 import MessageItem from './MessageItem.vue';
+import { computed } from 'vue';
 
-const props = defineProps<{
-    messages: ChatMessage[];
-}>();
+const chatStore = useChatStore();
+const messages = computed(() => chatStore.messages);
 </script>
 
 <style scoped></style>

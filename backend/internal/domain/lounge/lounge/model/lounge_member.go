@@ -1,3 +1,4 @@
+// internal/domain/lounge/lounge/model/lounge_member.go
 package model
 
 import (
@@ -11,7 +12,7 @@ type LoungeMember struct {
     UserID    uuid.UUID `gorm:"type:uuid;index;not null" json:"user_id"`
 	
 	Nickname   string    `gorm:"not null" json:"nickname"`
-    ProfileURL string    `gorm:"not null" json:"profile_url"`
+    Profile    *string    `gorm:"" json:"profile"`
     RoleFlags  int64     `gorm:"not null;default:0" json:"role_flags"`   // 권한 비트 필드
 
     RoleID     uuid.UUID `gorm:"type:uuid;index" json:"role_id"`     // lounge_member_roles.id 참조 (nullable)

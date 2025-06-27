@@ -1,3 +1,4 @@
+// internal/domain/user/model/user.go
 package model
 
 import (

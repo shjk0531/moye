@@ -1,3 +1,4 @@
+// internal/domain/lounge/lounge/model/lounge.go
 package model
 
 import (

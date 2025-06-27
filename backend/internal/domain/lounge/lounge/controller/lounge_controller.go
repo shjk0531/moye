@@ -14,11 +14,9 @@ import (
 
 
 type LoungeController struct {
-	// 라운지 서비스만 사용 (중앙 서비스에서 가져옴)
 	service service.LoungeService
 }
 
-// 중앙 서비스에서 LoungeService를 가져와 컨트롤러를 초기화
 func NewLoungeController(s service.LoungeService) *LoungeController {
 	return &LoungeController{service: s}
 }

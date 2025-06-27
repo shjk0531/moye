@@ -15,3 +15,8 @@ type LoungeListResponse struct {
 type LoungeIconResponse struct {
 	Icons []LoungeIconDTO `json:"icons"`
 }
+
+// LoungeMembers는 라운지의 멤버 정보를 조회하는 응답 DTO
+type LoungeMembersResponse struct {
+	Members []LoungeMemberInfoDTO `json:"members"`
+}
